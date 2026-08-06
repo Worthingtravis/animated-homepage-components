@@ -80,7 +80,14 @@ export function TreeLab({ species, treeKey }: { species: string; treeKey: string
   if (!tree) return <p className="text-muted-foreground">Unknown tree.</p>;
 
   const baseVm = (tree.fixtures[state.fixture] ?? {}) as Record<string, unknown>;
-  const vm = state.live ? { ...baseVm, progress: state.progress } : baseVm;
+  // With `frameAt`, the clock samples a coherent frame. Without it, we can only
+  // move `progress` and leave the rest of the fixture as-is.
+  const vm = state.live
+    ? ((tree.frameAt?.(state.progress) as Record<string, unknown>) ?? {
+        ...baseVm,
+        progress: state.progress,
+      })
+    : baseVm;
   const shown: LeafNode[] = state.compareAll
     ? leaves
     : leaves.filter((leaf) => leaf.ref === state.leafRef);
@@ -101,6 +108,12 @@ export function TreeLab({ species, treeKey }: { species: string; treeKey: string
       <section aria-label="Fixtures" className="space-y-2">
         <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Fixture
+          {/* With frameAt driving, the fixture is not what is on screen. Say so. */}
+          {state.live && tree.frameAt ? (
+            <span className="ml-3 normal-case tracking-normal">
+              — overridden while the clock runs
+            </span>
+          ) : null}
         </h2>
         <div className="flex flex-wrap gap-2">
           {Object.keys(tree.fixtures).map((name) => (
@@ -170,6 +183,7 @@ export function TreeLab({ species, treeKey }: { species: string; treeKey: string
             )}
           >
             {state.live ? "Pause clock" : "Run clock"}
+            {tree.frameAt ? null : <span className="ml-2 text-xs opacity-70">(progress only)</span>}
           </button>
         </div>
       </section>

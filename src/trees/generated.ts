@@ -12,6 +12,14 @@ import { AuroraHeadlineBaseline as motion_auroraHeadline_canon_baseline, meta as
 import { AuroraHeadlineStackedRule as motion_auroraHeadline_canon_stackedRule, meta as motion_auroraHeadline_canon_stackedRuleMeta } from "./motion/aurora-headline/branches/canon/stacked-rule/stacked-rule";
 import { meta as motion_auroraHeadline_experimentalMeta } from "./motion/aurora-headline/branches/experimental/branch.meta";
 import { AuroraHeadlineOrbitGlow as motion_auroraHeadline_experimental_orbitGlow, meta as motion_auroraHeadline_experimental_orbitGlowMeta } from "./motion/aurora-headline/branches/experimental/orbit-glow/orbit-glow";
+import { meta as species_narrativeMeta } from "./narrative/species.meta";
+import { meta as narrative_stepRevealMeta } from "./narrative/step-reveal/tree.meta";
+import * as narrative_stepRevealFixtures from "./narrative/step-reveal/step-reveal.fixtures";
+import { meta as narrative_stepReveal_canonMeta } from "./narrative/step-reveal/branches/canon/branch.meta";
+import { StepRevealNumberedRail as narrative_stepReveal_canon_numberedRail, meta as narrative_stepReveal_canon_numberedRailMeta } from "./narrative/step-reveal/branches/canon/numbered-rail/numbered-rail";
+import { StepRevealWideCards as narrative_stepReveal_canon_wideCards, meta as narrative_stepReveal_canon_wideCardsMeta } from "./narrative/step-reveal/branches/canon/wide-cards/wide-cards";
+import { meta as narrative_stepReveal_experimentalMeta } from "./narrative/step-reveal/branches/experimental/branch.meta";
+import { StepRevealStageSwap as narrative_stepReveal_experimental_stageSwap, meta as narrative_stepReveal_experimental_stageSwapMeta } from "./narrative/step-reveal/branches/experimental/stage-swap/stage-swap";
 
 export const FOREST: SpeciesNode[] = [
   {
@@ -25,6 +33,8 @@ export const FOREST: SpeciesNode[] = [
       meta: motion_auroraHeadlineMeta,
       fixtures: motion_auroraHeadlineFixtures.ALL_FIXTURES as Record<string, unknown>,
       defaultFixture: motion_auroraHeadlineFixtures.DEFAULT_FIXTURE as string,
+      frameAt: motion_auroraHeadlineFixtures.frameAt as (progress: number) => unknown,
+
       branches: [
       {
         key: "canon",
@@ -53,6 +63,54 @@ export const FOREST: SpeciesNode[] = [
           ref: "experimental/orbit-glow",
           meta: motion_auroraHeadline_experimental_orbitGlowMeta,
           Component: motion_auroraHeadline_experimental_orbitGlow as ForestComponent,
+        },
+        ],
+      },
+      ],
+    },
+    ],
+  },
+  {
+    key: "narrative",
+    meta: species_narrativeMeta,
+    trees: [
+    {
+      key: "step-reveal",
+      species: "narrative",
+      ref: "narrative/step-reveal",
+      meta: narrative_stepRevealMeta,
+      fixtures: narrative_stepRevealFixtures.ALL_FIXTURES as Record<string, unknown>,
+      defaultFixture: narrative_stepRevealFixtures.DEFAULT_FIXTURE as string,
+      frameAt: narrative_stepRevealFixtures.frameAt as (progress: number) => unknown,
+
+      branches: [
+      {
+        key: "canon",
+        meta: narrative_stepReveal_canonMeta,
+        leaves: [
+        {
+          key: "numbered-rail",
+          ref: "canon/numbered-rail",
+          meta: narrative_stepReveal_canon_numberedRailMeta,
+          Component: narrative_stepReveal_canon_numberedRail as ForestComponent,
+        },
+        {
+          key: "wide-cards",
+          ref: "canon/wide-cards",
+          meta: narrative_stepReveal_canon_wideCardsMeta,
+          Component: narrative_stepReveal_canon_wideCards as ForestComponent,
+        },
+        ],
+      },
+      {
+        key: "experimental",
+        meta: narrative_stepReveal_experimentalMeta,
+        leaves: [
+        {
+          key: "stage-swap",
+          ref: "experimental/stage-swap",
+          meta: narrative_stepReveal_experimental_stageSwapMeta,
+          Component: narrative_stepReveal_experimental_stageSwap as ForestComponent,
         },
         ],
       },

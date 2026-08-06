@@ -8,7 +8,7 @@
  * along the animation.
  */
 
-import type { __VM_TYPE__ } from "./__TREE__.vm";
+import { clampProgress, resolve__VM_TYPE__State, type __VM_TYPE__ } from "./__TREE__.vm";
 
 const noop = () => {};
 
@@ -29,31 +29,46 @@ const BASE: __VM_TYPE__ = {
 
 const fixture = (overrides: Partial<__VM_TYPE__>): __VM_TYPE__ => ({ ...BASE, ...overrides });
 
-export const IDLE = fixture({});
+/**
+ * The continuum: a coherent VM at any point on the transport.
+ *
+ * Keep this in sync with the container — anything the container *derives* from
+ * transport (an active index, a state string, a position label) must be derived
+ * here too, through the same helpers in the `.vm.ts`. The lab's clock drives
+ * this function, so a desync shows up immediately instead of in production.
+ *
+ * Delete it only for trees with no transport at all.
+ */
+export function frameAt(progress: number, overrides: Partial<__VM_TYPE__> = {}): __VM_TYPE__ {
+  const clamped = clampProgress(progress);
+  return fixture({
+    progress: clamped,
+    state: resolve__VM_TYPE__State(BASE.items.length, clamped),
+    ...overrides,
+  });
+}
 
-export const ACTIVE_EARLY = fixture({ state: "active", progress: 0.15 });
+export const IDLE = frameAt(0);
 
-export const ACTIVE_MID = fixture({ state: "active", progress: 0.5 });
+export const ACTIVE_EARLY = frameAt(0.15);
 
-export const ACTIVE_LATE = fixture({ state: "active", progress: 0.92 });
+export const ACTIVE_MID = frameAt(0.5);
 
-export const REDUCED_MOTION = fixture({ state: "active", progress: 0.5, reducedMotion: true });
+export const ACTIVE_LATE = frameAt(0.92);
 
-export const EMPTY = fixture({ state: "empty", items: [], cta: null, body: null });
+export const REDUCED_MOTION = frameAt(0.5, { reducedMotion: true });
 
-export const NO_CHROME = fixture({ eyebrow: null, body: null, cta: null });
+export const EMPTY = frameAt(0, { state: "empty", items: [], cta: null, body: null });
 
-export const LONG_COPY = fixture({
-  state: "active",
-  progress: 0.4,
+export const NO_CHROME = frameAt(0.5, { eyebrow: null, body: null, cta: null });
+
+export const LONG_COPY = frameAt(0.4, {
   headline:
     "A headline long enough to wrap onto three lines on a narrow column and still hold its rhythm",
   body: "Body copy that runs long on purpose, because the shortest string is never the one that breaks the layout in production.",
 });
 
-export const MANY_ITEMS = fixture({
-  state: "active",
-  progress: 0.6,
+export const MANY_ITEMS = frameAt(0.6, {
   items: Array.from({ length: 12 }, (_, i) => ({
     id: `item-${i}`,
     label: `Item ${i + 1}`,

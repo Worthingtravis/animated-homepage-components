@@ -67,6 +67,13 @@ export type TreeNode = {
   meta: TreeMeta;
   fixtures: Record<string, unknown>;
   defaultFixture: string;
+  /**
+   * Optional pure sampler exported by the tree's fixtures. Given transport in
+   * 0..1 it returns a *coherent* VM for that instant — every derived field
+   * agreeing with every other. The lab's clock uses it when present; overriding
+   * `progress` alone would desync it from whatever the container derives.
+   */
+  frameAt?: (progress: number) => unknown;
   branches: BranchNode[];
 };
 

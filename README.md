@@ -52,8 +52,23 @@ src/trees/
           stacked-rule/
         experimental/
           orbit-glow/
+  narrative/                               ← a different kind of tree
+    step-reveal/                           ← transport is a position in a sequence
+      ...
   generated.ts                             ← registry, rebuilt from the filesystem by `pnpm sync`
 ```
+
+Two reference trees ship with the repo:
+
+- **`motion/aurora-headline`** — the minimal case. Passive, no callbacks, one
+  transport value.
+- **`narrative/step-reveal`** — the full case. A steerable "how it works"
+  sequence: autoplay, click-to-jump and reduced motion all resolve into one
+  contract, and each step arrives with its `position` (`past`/`active`/
+  `upcoming`) already decided, so no leaf ever does index arithmetic. Its three
+  leaves answer the same contract three structurally different ways — a rail
+  that keeps every step readable, a band where the active card claims the width,
+  and a stage where only one step exists at a time.
 
 ## Scaffolding
 
@@ -80,8 +95,10 @@ pnpm dev    # → /lab/<species>/<tree>
 ```
 
 Drive every leaf on a tree through every fixture. Toggle **Compare all** to see
-every variant side by side on the same data, and **Run clock** to drive
-`progress` live instead of using the frozen fixture value.
+every variant side by side on the same data, and **Run clock** to sample the
+tree's `frameAt` live instead of a frozen fixture — with compare-all on, that is
+the cheapest way to catch a leaf that disagrees with its siblings about what
+instant it is.
 
 ## What "conformant" means here
 
@@ -102,6 +119,14 @@ side effects.
 **Fixtures must** — export `ALL_FIXTURES` and `DEFAULT_FIXTURE`, and cover empty,
 long copy, many items, missing optional fields, reduced motion, and several
 frozen instants along the transport.
+
+**Fixtures should also export `frameAt(progress)`** — a pure sampler returning a
+*coherent* VM for any instant, with every derived field agreeing with every
+other. Frozen fixtures are samples of it, and the lab's clock drives it. Without
+it the lab can only nudge `progress`, which desyncs it from whatever the
+container derives (an active index, a state string, a position label) — exactly
+the bug the contract exists to prevent. Omit it only for trees with no
+transport.
 
 Deriving inline from `vm.progress` (`Math.sin(vm.progress * TAU)`), inline styles
 for animated transforms, and `data-*` attributes are all fine — that is

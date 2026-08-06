@@ -75,7 +75,12 @@ export function scanForest(root) {
       if (!branches.length) {
         problems.push(`tree "${species}/${tree}" has no branches yet`);
       }
-      trees.push({ key: tree, branches });
+      // Optional: a pure `frameAt(progress)` in the fixtures gives the lab a
+      // coherent VM at any instant instead of overriding `progress` alone.
+      const fixturesSource = fs.readFileSync(path.join(treeDir, `${tree}.fixtures.ts`), "utf8");
+      const hasFrameAt = /export function frameAt\b/.test(fixturesSource);
+
+      trees.push({ key: tree, branches, hasFrameAt });
     }
 
     forest.push({ key: species, trees });
@@ -140,6 +145,8 @@ ${leafEntries.join("\n")}
       meta: ${tVar}Meta,
       fixtures: ${tVar}Fixtures.ALL_FIXTURES as Record<string, unknown>,
       defaultFixture: ${tVar}Fixtures.DEFAULT_FIXTURE as string,
+${tree.hasFrameAt ? `      frameAt: ${tVar}Fixtures.frameAt as (progress: number) => unknown,\n` : ""}\
+
       branches: [
 ${branchEntries.join("\n")}
       ],

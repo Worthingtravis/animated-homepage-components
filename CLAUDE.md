@@ -37,7 +37,10 @@ tokens only. Switch on `vm.state`. Honour `vm.reducedMotion`.
 
 **Fixtures** (`*.fixtures.ts`): export `ALL_FIXTURES` + `DEFAULT_FIXTURE`, 8+
 entries covering empty / long copy / many items / missing optionals / reduced
-motion / frozen instants.
+motion / frozen instants. Also export `frameAt(progress)` — a pure sampler
+returning a coherent VM at any instant, deriving through the same `.vm.ts`
+helpers the container uses. Frozen fixtures are samples of it; the lab's clock
+drives it.
 
 **Only `*-connected.tsx`** may hold hooks, clocks, media queries or fetches.
 
