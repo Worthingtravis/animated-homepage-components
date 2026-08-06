@@ -1,0 +1,38 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The registry is generated from the folder layout — if it drifts, the
+      # commit is missing a `pnpm sync`.
+      - name: sync is committed
+        run: |
+          pnpm sync
+          git diff --exit-code src/trees/generated.ts
+
+      - run: pnpm typecheck
+
+      # Conformance: every leaf rendered against every fixture, plus the
+      # extract-vm purity greps.
+      - run: pnpm test
+
+      - run: pnpm build

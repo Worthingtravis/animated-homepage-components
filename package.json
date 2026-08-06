@@ -1,0 +1,52 @@
+{
+  "name": "animated-homepage-components",
+  "version": "0.1.0",
+  "private": false,
+  "license": "MIT",
+  "description": "A curated forest of animated homepage components. Every component conforms to the extract-vm pattern: pure presentation leaves driven by a shared ViewModel contract.",
+  "type": "module",
+  "scripts": {
+    "grow": "node tools/grow/cli.mjs",
+    "plant": "node tools/grow/cli.mjs plant",
+    "branch": "node tools/grow/cli.mjs branch",
+    "leaf": "node tools/grow/cli.mjs leaf",
+    "species": "node tools/grow/cli.mjs species",
+    "forest": "node tools/grow/cli.mjs forest",
+    "sync": "node tools/grow/cli.mjs sync",
+    "predev": "npm run sync",
+    "prebuild": "npm run sync",
+    "pretest": "npm run sync",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "verify": "npm run sync && npm run typecheck && npm run test && npm run build"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "next": "^15.5.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^22.15.3",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.2",
+    "eslint": "^9.34.0",
+    "eslint-config-next": "^15.5.4",
+    "jsdom": "^26.1.0",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "packageManager": "pnpm@9.11.0"
+}
