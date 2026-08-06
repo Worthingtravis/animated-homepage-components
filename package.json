@@ -17,6 +17,7 @@
     "prebuild": "npm run sync",
     "pretest": "npm run sync",
     "dev": "next dev",
+    "review": "bash scripts/review.sh",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

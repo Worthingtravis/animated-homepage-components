@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Name=Animated Homepage Components
+Comment=Start the dev server and open the forest — browse every tree, branch and leaf
+Exec=gnome-terminal --title="Animated Homepage Components" -- bash -lc "/mnt/ssd/development/animated-homepage-components/scripts/review.sh; exec bash"
+Path=/mnt/ssd/development/animated-homepage-components
+Icon=/mnt/ssd/development/animated-homepage-components/assets/forest-icon.png
+Terminal=false
+Categories=Development;WebDevelopment;
+Keywords=forest;components;vm;extract-vm;lab;
+StartupNotify=true
+Actions=Lab;
+
+[Desktop Action Lab]
+Name=Open the lab
+Exec=gnome-terminal --title="Animated Homepage Components — lab" -- bash -lc "ROUTE=/lab /mnt/ssd/development/animated-homepage-components/scripts/review.sh; exec bash"

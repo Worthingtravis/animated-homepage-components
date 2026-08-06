@@ -100,6 +100,32 @@ tree's `frameAt` live instead of a frozen fixture — with compare-all on, that 
 the cheapest way to catch a leaf that disagrees with its siblings about what
 instant it is.
 
+## Desktop shortcut
+
+```bash
+pnpm review                      # start the dev server and open the forest
+ROUTE=/lab PORT=3000 pnpm review # ...or a specific route/port
+```
+
+`scripts/review.sh` backs both that script and a desktop launcher
+(`assets/animated-homepage-components.desktop`). It installs dependencies on
+first run, starts the dev server, waits for it to actually answer, then opens a
+browser. If a server is already on the port it attaches instead of starting a
+second one — and in that case it leaves the existing server alone on exit.
+
+To install the launcher on another machine:
+
+```bash
+cp assets/animated-homepage-components.desktop ~/Desktop/
+chmod +x ~/Desktop/animated-homepage-components.desktop
+gio set ~/Desktop/animated-homepage-components.desktop metadata::trusted true
+cp assets/animated-homepage-components.desktop ~/.local/share/applications/   # menu entry
+```
+
+Edit the absolute paths in the `.desktop` file if the repo lives elsewhere. The
+launcher has a secondary **Open the lab** action (right-click the icon) that
+lands on `/lab` instead of the forest index.
+
 ## What "conformant" means here
 
 Enforced by `src/trees/conformance.test.tsx`, which renders **every leaf against
