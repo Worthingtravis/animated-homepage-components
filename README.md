@@ -58,6 +58,9 @@ src/trees/
   landing/                                 ← the first screen
     channel-hero/                          ← transport is a one-shot entrance
       ...
+  temporal/                                ← time itself
+    countdown/                             ← transport is depletion toward a deadline
+      ...
   chrome/                                  ← furniture
     section-tabs/                          ← holds OTHER trees; transport is one tab change
       section-tabs.transitions.ts          ← swappable motion presets, pure functions
@@ -65,7 +68,7 @@ src/trees/
   generated.ts                             ← registry, rebuilt from the filesystem by `pnpm sync`
 ```
 
-Five reference trees ship with the repo:
+Six reference trees ship with the repo:
 
 - **`motion/aurora-headline`** — the minimal case. Passive, no callbacks, one
   transport value.
@@ -100,6 +103,50 @@ Five reference trees ship with the repo:
   could not previously reach. Creator accents ride in on `vm.theme` as finished
   CSS colours — theming is data, and a leaf applies it without ever computing a
   contrast ratio.
+
+- **`temporal/countdown`** — the *clock* case, and the only tree that must
+  re-render on a tick. Everything else in the forest is clock-free at render
+  time; a countdown reopens that door, so the contract shuts it. See **Time, and
+  the thing that must not tick** below.
+
+## Time, and the thing that must not tick
+
+`temporal/countdown` is the first tree here whose whole job requires a running
+clock, and a running clock is exactly what the rest of the forest avoids. A
+browser clock sitting a few seconds either side of a boundary will answer
+differently than the render that produced the page — so the tree splits the
+problem rather than trusting the tab.
+
+| Who | Owns |
+|---|---|
+| the caller | picks `endsAt` (and optionally `startsAt`) from one authoritative instant |
+| the container | holds the single interval, splits the remainder, formats every string |
+| the leaf | reads padded strings and one `state` — never a `Date`, an epoch or a remainder |
+
+A leaf therefore *cannot* derive which window it is in, even by accident. It is
+handed `units` — `{ id, value: "07", label: "Hours", shortLabel: "h", fraction }`
+— already padded, already pluralised, and already trimmed to the magnitudes
+worth showing, so the same leaf holds a 124-day drop and a 90-second window
+without learning anything new.
+
+**`state: "none"` is the load-bearing part.** A surface with no deadline — an
+untimed mode, a drop with no close date — renders **nothing**. Every leaf is
+tested for it. A timer that fabricates a window is lying about the premise of
+the thing it sits on, and it fails silently because nothing crashes.
+
+Four leaves ship: `unit-blocks` (monospaced tiles, one hairline for the window),
+`inline-strip` (a single dense line for banners and bars — the one to drop into
+`chrome/section-tabs`), `ring-dial` (a depleting arc with the digits inside it)
+and the experimental `flip-stack` (split-flap cards whose hinge tilts on each
+unit's own `fraction` — the trick that gets mechanical motion out of a pure
+function, since a real split-flap would need to remember the previous digit).
+
+Two things it deliberately does **not** do. It never settles anything: `expired`
+is informational, and auto-failing at zero writes to somebody's ledger, which is
+a different feature and a different decision. And a custom duration is not a
+prop — periods that anchor to a wall-clock boundary need their length to divide
+the day evenly, so "90-minute timer" is a scheduling decision the caller makes
+before `endsAt` ever reaches this tree.
 
 ## Tabs, and the three axes
 

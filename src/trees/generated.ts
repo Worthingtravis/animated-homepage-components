@@ -45,6 +45,15 @@ import { StepRevealNumberedRail as narrative_stepReveal_canon_numberedRail, meta
 import { StepRevealWideCards as narrative_stepReveal_canon_wideCards, meta as narrative_stepReveal_canon_wideCardsMeta } from "./narrative/step-reveal/branches/canon/wide-cards/wide-cards";
 import { meta as narrative_stepReveal_experimentalMeta } from "./narrative/step-reveal/branches/experimental/branch.meta";
 import { StepRevealStageSwap as narrative_stepReveal_experimental_stageSwap, meta as narrative_stepReveal_experimental_stageSwapMeta } from "./narrative/step-reveal/branches/experimental/stage-swap/stage-swap";
+import { meta as species_temporalMeta } from "./temporal/species.meta";
+import { meta as temporal_countdownMeta } from "./temporal/countdown/tree.meta";
+import * as temporal_countdownFixtures from "./temporal/countdown/countdown.fixtures";
+import { meta as temporal_countdown_canonMeta } from "./temporal/countdown/branches/canon/branch.meta";
+import { CountdownInlineStrip as temporal_countdown_canon_inlineStrip, meta as temporal_countdown_canon_inlineStripMeta } from "./temporal/countdown/branches/canon/inline-strip/inline-strip";
+import { CountdownRingDial as temporal_countdown_canon_ringDial, meta as temporal_countdown_canon_ringDialMeta } from "./temporal/countdown/branches/canon/ring-dial/ring-dial";
+import { CountdownUnitBlocks as temporal_countdown_canon_unitBlocks, meta as temporal_countdown_canon_unitBlocksMeta } from "./temporal/countdown/branches/canon/unit-blocks/unit-blocks";
+import { meta as temporal_countdown_experimentalMeta } from "./temporal/countdown/branches/experimental/branch.meta";
+import { CountdownFlipStack as temporal_countdown_experimental_flipStack, meta as temporal_countdown_experimental_flipStackMeta } from "./temporal/countdown/branches/experimental/flip-stack/flip-stack";
 
 export const FOREST: SpeciesNode[] = [
   {
@@ -286,6 +295,60 @@ export const FOREST: SpeciesNode[] = [
           ref: "experimental/stage-swap",
           meta: narrative_stepReveal_experimental_stageSwapMeta,
           Component: narrative_stepReveal_experimental_stageSwap as ForestComponent,
+        },
+        ],
+      },
+      ],
+    },
+    ],
+  },
+  {
+    key: "temporal",
+    meta: species_temporalMeta,
+    trees: [
+    {
+      key: "countdown",
+      species: "temporal",
+      ref: "temporal/countdown",
+      meta: temporal_countdownMeta,
+      fixtures: temporal_countdownFixtures.ALL_FIXTURES as Record<string, unknown>,
+      defaultFixture: temporal_countdownFixtures.DEFAULT_FIXTURE as string,
+      frameAt: temporal_countdownFixtures.frameAt as (progress: number) => unknown,
+
+      branches: [
+      {
+        key: "canon",
+        meta: temporal_countdown_canonMeta,
+        leaves: [
+        {
+          key: "inline-strip",
+          ref: "canon/inline-strip",
+          meta: temporal_countdown_canon_inlineStripMeta,
+          Component: temporal_countdown_canon_inlineStrip as ForestComponent,
+        },
+        {
+          key: "ring-dial",
+          ref: "canon/ring-dial",
+          meta: temporal_countdown_canon_ringDialMeta,
+          Component: temporal_countdown_canon_ringDial as ForestComponent,
+        },
+        {
+          key: "unit-blocks",
+          ref: "canon/unit-blocks",
+          meta: temporal_countdown_canon_unitBlocksMeta,
+          Component: temporal_countdown_canon_unitBlocks as ForestComponent,
+        },
+        ],
+      },
+      {
+        key: "experimental",
+        meta: temporal_countdown_experimentalMeta,
+        leaves: [
+        {
+          key: "flip-stack",
+          ref: "experimental/flip-stack",
+          meta: temporal_countdown_experimental_flipStackMeta,
+          Component: temporal_countdown_experimental_flipStack as ForestComponent,
         },
         ],
       },
