@@ -50,6 +50,23 @@ designer can drive the component in the target app without a backend.
    is a branded surface with fixed literals, note the exception in a comment at
    the top of the leaf (this is the documented extract-vm carve-out).
 
+   **Editor mode needs no reconciling — that is the point.** A creator's look
+   travels as ambient CSS variables on the creator-page wrapper, so a leaf
+   inherits it by being dropped inside. Do **not** copy `CreatorSurface` into
+   laughingwhales; the real wrapper is already there in
+   `creator-page-client.tsx` and owns the live values. Copy it only into a
+   target that has no creator-page chrome of its own.
+
+   Five variables and a font are all a creator can move — `--primary`,
+   `--primary-foreground`, `--accent`, `--ring`, `--background`. Everything
+   else (`--card`, `--border`, `--muted`, `--foreground`, `--radius`) stays at
+   the platform's values. A leaf styled only in those neutrals will render
+   identically for every creator; that is a bug, and `conformance.test.tsx`
+   fails it before it can ship.
+
+   Never re-derive `--primary-foreground`. It is computed by `readableTextOn`
+   on both sides, and the platform's own default pink needs **black** text.
+
 5. **Bring an experiments page.** The target's fixture-driven page for this
    component, wired to `ALL_FIXTURES`. If the target has no `experiments/`
    convention, add a `/<route>/lab` sibling to the component's own route.

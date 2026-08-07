@@ -12,6 +12,9 @@ import path from "node:path";
 import { cleanup, render } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { CreatorSurface } from "@/lib/creator-surface";
+import { editorModeVars } from "@/lib/editor-mode";
+import { EDITOR_MODE_PRESETS } from "@/lib/editor-mode-presets";
 import { allLeaves, allTrees } from "@/lib/forest";
 
 import { FOREST } from "./generated";
@@ -110,6 +113,37 @@ describe("leaf purity (extract-vm phase 4)", () => {
       /\bNumber\s*\(\s*vm\.|vm\.[A-Za-z0-9_.[\]]*\.to(?:Fixed|LocaleString)\s*\(/,
       "formatting a VM value — it must arrive pre-formatted from the container",
     ],
+    /*
+     * Editor mode is INHERITED. A leaf that defines its own theming variable is
+     * re-inventing the mechanism the creator-page wrapper already provides, and
+     * becomes the one leaf a container has to thread a theme object into. This
+     * rule is what retired `PageNavTheme`'s `--nav-accent` / `--nav-track` /
+     * `--nav-glow`, and it is here so they cannot come back.
+     */
+    [
+      /["']--(?!primary|primary-foreground|accent|ring|background|foreground)[a-z][a-z0-9-]*["']\s*:/,
+      "bespoke CSS variable — theme by inheriting --primary/--accent/--ring, not by inventing a variable",
+    ],
+    [/["']#[0-9a-fA-F]{6}\b/, "hex colour literal — a creator's accent must be able to win"],
+    /*
+     * A filled surface whose fill a creator cannot move. `bg-foreground` and
+     * `text-background` are the tell: both name tokens editor mode never
+     * touches, so a call to action painted in them stays platform-coloured on
+     * every creator page no matter what the creator picks. All three
+     * channel-hero leaves shipped this — one in `bg-destructive`, one in
+     * `bg-foreground` — and it looked deliberate rather than broken, which is
+     * exactly why it needs a rule and not a review.
+     *
+     * A primary fill is `bg-primary` + `text-primary-foreground`, always.
+     */
+    [
+      /\bbg-foreground\b/,
+      "bg-foreground fill — editor mode cannot move it; use bg-primary",
+    ],
+    [
+      /\btext-background\b/,
+      "text-background on a fill — use text-primary-foreground, which is derived for contrast",
+    ],
   ];
 
   it.each(LEAF_SOURCES.map((file) => [file.rel, file] as const))(
@@ -153,6 +187,94 @@ describe("tree contracts (extract-vm phases 2, 3, 5)", () => {
       expect(/export const DEFAULT_FIXTURE/.test(file.source), file.rel).toBe(true);
     },
   );
+});
+
+/*
+ * Editor mode — the single surface that decides how every variant looks.
+ *
+ * On a creator page the only things a creator can move are `--primary`,
+ * `--primary-foreground`, `--accent`, `--ring`, `--background` and the font.
+ * A component styled purely in neutrals (`card` / `border` / `muted` /
+ * `foreground`) therefore renders identically no matter what the creator picks
+ * — it is not "theme-neutral", it is *deaf to the creator*, and it fails
+ * silently because nothing crashes.
+ *
+ * That failure is real and it is upstream right now: on laughingwhales.com,
+ * every section title header plus all of support, FAQ, recommended and
+ * screenshots contain zero accent references, so a creator's brand colour never
+ * reaches them. These tests exist so no leaf in this forest joins them.
+ */
+describe("editor mode (creator-page hand-off)", () => {
+  const ACCENT_TOKEN =
+    /\b(?:text|bg|border|ring|from|via|to|fill|stroke|shadow|outline|decoration|divide|accent)-(?:primary|accent|ring)\b/;
+
+  it.each(LEAF_SOURCES.map((file) => [file.rel, file] as const))(
+    "%s reaches for the creator's accent",
+    (_rel, file) => {
+      expect(
+        ACCENT_TOKEN.test(file.source),
+        `${file.rel} styles itself only in neutral tokens, so a creator's accent can never reach it. ` +
+          "Give it at least one primary/accent/ring token.",
+      ).toBe(true);
+    },
+  );
+
+  /**
+   * The wrapper must actually put the creator's colours on the air. This is the
+   * contract `CreatorSurface` shares with upstream's `creator-page-client.tsx`
+   * — if the variable list here drifts, a leaf verified in this lab is being
+   * verified against something the creator page does not do.
+   */
+  it("puts exactly the creator-page variables on the surface", () => {
+    const vars = editorModeVars(EDITOR_MODE_PRESETS.Ink);
+    expect(Object.keys(vars).sort()).toEqual(
+      ["--accent", "--background", "--primary", "--primary-foreground", "--ring"].sort(),
+    );
+  });
+
+  it("derives a legible foreground rather than assuming white", () => {
+    // The documented trap: #9CCB1A with white text measured 1.91:1 upstream.
+    expect(editorModeVars(EDITOR_MODE_PRESETS.Lime)["--primary-foreground"]).toBe("#000000");
+    // A dark accent still takes white.
+    expect(editorModeVars(EDITOR_MODE_PRESETS.Ocean)["--primary-foreground"]).toBe("#ffffff");
+    // Worth pinning: the PLATFORM DEFAULT pink (#FF69B4) sits at luminance 0.62
+    // — just over the line — so even a stock creator page needs black on its
+    // primary fill. A leaf that hardcodes white breaks for every default page.
+    expect(editorModeVars(EDITOR_MODE_PRESETS.Default)["--primary-foreground"]).toBe("#000000");
+  });
+
+  /**
+   * Every leaf, every preset. A leaf renders inside the same wrapper it will
+   * land in when harvested, so anything that breaks under a creator's palette
+   * breaks here first.
+   */
+  const themed = trees.flatMap((tree) =>
+    allLeaves(tree).flatMap((leaf) =>
+      Object.entries(EDITOR_MODE_PRESETS).map(
+        ([presetName, mode]) =>
+          [
+            `${leaf.ref} · ${presetName}`,
+            leaf,
+            tree.fixtures[tree.defaultFixture],
+            presetName,
+            mode,
+          ] as const,
+      ),
+    ),
+  );
+
+  it.each(themed)("%s", (_label, leaf, vm, _presetName, mode) => {
+    const { Component } = leaf;
+    const { container } = render(
+      <CreatorSurface mode={mode}>
+        <Component {...(vm as object)} />
+      </CreatorSurface>,
+    );
+    const surface = container.querySelector<HTMLElement>("[data-creator-surface]");
+    expect(surface?.style.getPropertyValue("--primary")).toBe(mode.themeAccent);
+    expect(container.innerHTML).not.toContain("NaN");
+    expect(container.innerHTML).not.toContain("undefined");
+  });
 });
 
 describe("every leaf survives every fixture", () => {

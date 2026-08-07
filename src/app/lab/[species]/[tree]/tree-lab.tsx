@@ -15,6 +15,12 @@ import { allLeaves, findTree, type LeafNode } from "@/lib/forest";
 import { cn } from "@/lib/utils";
 import { FOREST } from "@/trees/generated";
 
+/*
+ * Editor mode is deliberately NOT lab state. It lives at the root
+ * (`EditorModeProvider`) and themes the whole app, because a creator page is
+ * themed edge to edge — see `src/app/editor-mode-shell.tsx`. This component
+ * owns only what is genuinely about driving one tree.
+ */
 type LabState = {
   fixture: string;
   leafRef: string;
@@ -188,9 +194,14 @@ export function TreeLab({ species, treeKey }: { species: string; treeKey: string
         </div>
       </section>
 
+      {/*
+        No surface here — the whole app is already inside one. Every leaf below
+        inherits the same `--primary` the header and the dock are wearing, which
+        is exactly the arrangement a creator page has.
+      */}
       <section
         aria-label="Preview"
-        className={cn("grid gap-6", state.compareAll ? "lg:grid-cols-2" : "grid-cols-1")}
+        className={cn("grid gap-6", state.compareAll ? "xl:grid-cols-2" : "grid-cols-1")}
       >
         {shown.map((leaf) => {
           const { Component } = leaf;

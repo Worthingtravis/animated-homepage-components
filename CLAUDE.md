@@ -32,6 +32,20 @@ hand-made folder is how drift starts. If a generated file is wrong, fix
 `<img>`, no `dark:`, no hardcoded colors, no formatting of VM values. Semantic
 tokens only. Switch on `vm.state`. Honour `vm.reducedMotion`.
 
+**Editor mode** (`src/lib/editor-mode.ts`): the ONE surface that decides how
+every variant looks, mirroring laughingwhales.com's creator page. It is
+**ambient CSS on a wrapper, never a VM field** — a leaf participates by being
+styled in the tokens the wrapper moves, not by taking a prop. Never add a
+`theme` field to a VM; never invent a `--my-component-accent` variable.
+
+A creator can move exactly five things: `--primary`, `--primary-foreground`
+(derived, never stored), `--accent`, `--ring`, `--background`, plus the font.
+So every leaf must reach for `primary`/`accent`/`ring` somewhere — a leaf
+styled purely in `card`/`border`/`muted`/`foreground` is not neutral, it is
+**deaf to the creator**, and it fails silently because nothing crashes. A
+primary fill is always `bg-primary` + `text-primary-foreground`; `bg-foreground`
+and `text-background` are banned.
+
 **VMs** (`*.vm.ts`): pre-formatted strings only, actions as callbacks, transport
 (`progress`) as a prop, zero side effects.
 

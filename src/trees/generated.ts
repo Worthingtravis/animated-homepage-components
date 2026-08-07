@@ -4,6 +4,23 @@
 
 import type { ForestComponent, SpeciesNode } from "@/lib/forest";
 
+import { meta as species_chromeMeta } from "./chrome/species.meta";
+import { meta as chrome_pageNavMeta } from "./chrome/page-nav/tree.meta";
+import * as chrome_pageNavFixtures from "./chrome/page-nav/page-nav.fixtures";
+import { meta as chrome_pageNav_canonMeta } from "./chrome/page-nav/branches/canon/branch.meta";
+import { PageNavBrandBar as chrome_pageNav_canon_brandBar, meta as chrome_pageNav_canon_brandBarMeta } from "./chrome/page-nav/branches/canon/brand-bar/brand-bar";
+import { PageNavGlassTrack as chrome_pageNav_canon_glassTrack, meta as chrome_pageNav_canon_glassTrackMeta } from "./chrome/page-nav/branches/canon/glass-track/glass-track";
+import { PageNavPillTrack as chrome_pageNav_canon_pillTrack, meta as chrome_pageNav_canon_pillTrackMeta } from "./chrome/page-nav/branches/canon/pill-track/pill-track";
+import { meta as chrome_pageNav_experimentalMeta } from "./chrome/page-nav/branches/experimental/branch.meta";
+import { PageNavFloatingCapsule as chrome_pageNav_experimental_floatingCapsule, meta as chrome_pageNav_experimental_floatingCapsuleMeta } from "./chrome/page-nav/branches/experimental/floating-capsule/floating-capsule";
+import { meta as species_landingMeta } from "./landing/species.meta";
+import { meta as landing_channelHeroMeta } from "./landing/channel-hero/tree.meta";
+import * as landing_channelHeroFixtures from "./landing/channel-hero/channel-hero.fixtures";
+import { meta as landing_channelHero_broadcastMeta } from "./landing/channel-hero/branches/broadcast/branch.meta";
+import { ChannelHeroLiveMarquee as landing_channelHero_broadcast_liveMarquee, meta as landing_channelHero_broadcast_liveMarqueeMeta } from "./landing/channel-hero/branches/broadcast/live-marquee/live-marquee";
+import { meta as landing_channelHero_canonMeta } from "./landing/channel-hero/branches/canon/branch.meta";
+import { ChannelHeroSplitDock as landing_channelHero_canon_splitDock, meta as landing_channelHero_canon_splitDockMeta } from "./landing/channel-hero/branches/canon/split-dock/split-dock";
+import { ChannelHeroStackedBillboard as landing_channelHero_canon_stackedBillboard, meta as landing_channelHero_canon_stackedBillboardMeta } from "./landing/channel-hero/branches/canon/stacked-billboard/stacked-billboard";
 import { meta as species_motionMeta } from "./motion/species.meta";
 import { meta as motion_auroraHeadlineMeta } from "./motion/aurora-headline/tree.meta";
 import * as motion_auroraHeadlineFixtures from "./motion/aurora-headline/aurora-headline.fixtures";
@@ -22,6 +39,108 @@ import { meta as narrative_stepReveal_experimentalMeta } from "./narrative/step-
 import { StepRevealStageSwap as narrative_stepReveal_experimental_stageSwap, meta as narrative_stepReveal_experimental_stageSwapMeta } from "./narrative/step-reveal/branches/experimental/stage-swap/stage-swap";
 
 export const FOREST: SpeciesNode[] = [
+  {
+    key: "chrome",
+    meta: species_chromeMeta,
+    trees: [
+    {
+      key: "page-nav",
+      species: "chrome",
+      ref: "chrome/page-nav",
+      meta: chrome_pageNavMeta,
+      fixtures: chrome_pageNavFixtures.ALL_FIXTURES as Record<string, unknown>,
+      defaultFixture: chrome_pageNavFixtures.DEFAULT_FIXTURE as string,
+      frameAt: chrome_pageNavFixtures.frameAt as (progress: number) => unknown,
+
+      branches: [
+      {
+        key: "canon",
+        meta: chrome_pageNav_canonMeta,
+        leaves: [
+        {
+          key: "brand-bar",
+          ref: "canon/brand-bar",
+          meta: chrome_pageNav_canon_brandBarMeta,
+          Component: chrome_pageNav_canon_brandBar as ForestComponent,
+        },
+        {
+          key: "glass-track",
+          ref: "canon/glass-track",
+          meta: chrome_pageNav_canon_glassTrackMeta,
+          Component: chrome_pageNav_canon_glassTrack as ForestComponent,
+        },
+        {
+          key: "pill-track",
+          ref: "canon/pill-track",
+          meta: chrome_pageNav_canon_pillTrackMeta,
+          Component: chrome_pageNav_canon_pillTrack as ForestComponent,
+        },
+        ],
+      },
+      {
+        key: "experimental",
+        meta: chrome_pageNav_experimentalMeta,
+        leaves: [
+        {
+          key: "floating-capsule",
+          ref: "experimental/floating-capsule",
+          meta: chrome_pageNav_experimental_floatingCapsuleMeta,
+          Component: chrome_pageNav_experimental_floatingCapsule as ForestComponent,
+        },
+        ],
+      },
+      ],
+    },
+    ],
+  },
+  {
+    key: "landing",
+    meta: species_landingMeta,
+    trees: [
+    {
+      key: "channel-hero",
+      species: "landing",
+      ref: "landing/channel-hero",
+      meta: landing_channelHeroMeta,
+      fixtures: landing_channelHeroFixtures.ALL_FIXTURES as Record<string, unknown>,
+      defaultFixture: landing_channelHeroFixtures.DEFAULT_FIXTURE as string,
+      frameAt: landing_channelHeroFixtures.frameAt as (progress: number) => unknown,
+
+      branches: [
+      {
+        key: "broadcast",
+        meta: landing_channelHero_broadcastMeta,
+        leaves: [
+        {
+          key: "live-marquee",
+          ref: "broadcast/live-marquee",
+          meta: landing_channelHero_broadcast_liveMarqueeMeta,
+          Component: landing_channelHero_broadcast_liveMarquee as ForestComponent,
+        },
+        ],
+      },
+      {
+        key: "canon",
+        meta: landing_channelHero_canonMeta,
+        leaves: [
+        {
+          key: "split-dock",
+          ref: "canon/split-dock",
+          meta: landing_channelHero_canon_splitDockMeta,
+          Component: landing_channelHero_canon_splitDock as ForestComponent,
+        },
+        {
+          key: "stacked-billboard",
+          ref: "canon/stacked-billboard",
+          meta: landing_channelHero_canon_stackedBillboardMeta,
+          Component: landing_channelHero_canon_stackedBillboard as ForestComponent,
+        },
+        ],
+      },
+      ],
+    },
+    ],
+  },
   {
     key: "motion",
     meta: species_motionMeta,

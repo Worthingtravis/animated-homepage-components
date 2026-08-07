@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" width="240" height="64" role="img" aria-label="Placeholder game wordmark">
+  <rect width="240" height="64" rx="8" fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-width="2" />
+  <text x="120" y="41" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="700" letter-spacing="6" fill="currentColor">WORDMARK</text>
+</svg>

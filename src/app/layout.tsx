@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { EditorModeProvider } from "@/lib/editor-mode-context";
+
+import { EditorModeShell } from "./editor-mode-shell";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,8 +16,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-dvh antialiased">
+        {/*
+          Editor mode wraps EVERYTHING — header included. A creator page is
+          themed edge to edge, so chrome that kept the platform's colours while
+          the preview wore the creator's would be showing a comparison nobody
+          will ever see.
+        */}
+        <EditorModeProvider>
+          <EditorModeShell>
         <header className="border-b border-border">
-          <nav className="mx-auto flex max-w-6xl items-baseline gap-6 px-6 py-4">
+          <nav className="mx-auto flex w-full max-w-6xl items-baseline gap-6 px-6 py-4 xl:max-w-[88rem] 2xl:max-w-[104rem]">
             <Link href="/" className="text-sm font-semibold text-foreground">
               🌲 the forest
             </Link>
@@ -29,7 +40,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </a>
           </nav>
         </header>
-        <main className="mx-auto max-w-6xl px-6 py-10">{children}</main>
+        {/*
+          Widths step up rather than going edge-to-edge: the lab's compare-all
+          puts several leaves side by side and a full-bleed leaf (brand-bar)
+          needs room to read as full-bleed, but prose on the forest index still
+          has to stay a readable measure. The header uses the same steps so the
+          two never drift out of alignment.
+        */}
+        <main className="mx-auto w-full max-w-6xl px-6 py-10 xl:max-w-[88rem] 2xl:max-w-[104rem]">
+          {children}
+        </main>
+          </EditorModeShell>
+        </EditorModeProvider>
       </body>
     </html>
   );

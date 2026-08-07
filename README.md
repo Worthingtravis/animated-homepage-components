@@ -55,10 +55,13 @@ src/trees/
   narrative/                               ← a different kind of tree
     step-reveal/                           ← transport is a position in a sequence
       ...
+  landing/                                 ← the first screen
+    channel-hero/                          ← transport is a one-shot entrance
+      ...
   generated.ts                             ← registry, rebuilt from the filesystem by `pnpm sync`
 ```
 
-Two reference trees ship with the repo:
+Four reference trees ship with the repo:
 
 - **`motion/aurora-headline`** — the minimal case. Passive, no callbacks, one
   transport value.
@@ -69,6 +72,45 @@ Two reference trees ship with the repo:
   leaves answer the same contract three structurally different ways — a rail
   that keeps every step readable, a band where the active card claims the width,
   and a stage where only one step exists at a time.
+- **`landing/channel-hero`** — the portable case. A streamer's first screen:
+  identity, a live/offline strip, an action row, and a "start anywhere" grid.
+  Its contract is a deliberate superset of laughingwhales.com's `HomeHeroVM`, so
+  `adaptHomeHero()` lifts that page's hero into this forest in one pure call —
+  and the `Ported — laughingwhales home hero` fixture renders through every leaf
+  in the conformance suite, which makes the portability claim a passing test
+  rather than a promise.
+
+- **`chrome/page-nav`** — the *theming* case. One nav contract covering
+  laughingwhales.com's creator page tab bar and a brand · links · CTA marketing
+  bar. Its two Canon track leaves are the `default` and `pill` styles the
+  creator page builder already offers, so `leafForTabStyle()` maps a saved
+  setting straight to a leaf ref; the other two leaves are looks that dropdown
+  could not previously reach. Creator accents ride in on `vm.theme` as finished
+  CSS colours — theming is data, and a leaf applies it without ever computing a
+  contrast ratio.
+
+## Porting a hero in from a consuming app
+
+`landing/channel-hero` is the worked example. A hero VM that already exists in a
+Next.js app does not have to be rewritten to enter the forest — it has to be
+*lifted*:
+
+```ts
+import { adaptHomeHero } from "@/trees/landing/channel-hero/channel-hero.vm";
+import { BASE } from "laughingwhales/src/app/view-models/home-hero.fixtures";
+
+const vm = adaptHomeHero(BASE, {
+  channelName: "laughingwhales",
+  channelHandle: "@laughingwhales",
+});
+```
+
+`adaptHomeHero` takes a *structural* type (`HomeHeroVMLike`), so this repo never
+imports from the consuming app — anything shaped like that VM satisfies it. The
+fields the forest adds (`status`, `progress`, `reducedMotion`) all accept a
+null/zero value that renders as the static marketing hero the app already ships.
+Going the other way, `/harvest` copies a leaf out; the leaf's props are the VM,
+so the app supplies the same object it already had.
 
 ## Scaffolding
 
@@ -99,6 +141,60 @@ every variant side by side on the same data, and **Run clock** to sample the
 tree's `frameAt` live instead of a frozen fixture — with compare-all on, that is
 the cheapest way to catch a leaf that disagrees with its siblings about what
 instant it is.
+
+## Editor mode
+
+One **editor mode** decides how every variant looks. It is a transcription of
+laughingwhales.com's creator page builder: the same fields, the same merge
+rules, the same derived values.
+
+It lives at the **root**, not in the lab, and themes every route edge to edge —
+header, index pages, lab chrome and leaves all inherit the same `--primary`.
+That is deliberate: a creator page does not theme its hero differently from its
+nav, so chrome that kept the platform's colours while the preview wore the
+creator's would be showing a comparison nobody will ever see. Upstream tints the
+owner's editor rail with the owner's own accent for the same reason.
+
+The dock floats bottom-right on every page and persists to `localStorage`.
+
+The important part is what it *isn't*. Editor mode is **ambient CSS variables on
+a wrapper**, not a VM field:
+
+```tsx
+<div className="creator-page creator-style-default" style={cssVars}>
+```
+
+Because it is inherited CSS, a leaf needs no prop to participate — it only has
+to be styled in the tokens the wrapper moves. That is what makes a harvest a
+copy rather than a port: a leaf that themes correctly in the lab themes
+correctly on a creator page, with no adapter in between.
+
+A creator can move exactly five variables and a font:
+
+| variable | from | note |
+|---|---|---|
+| `--primary` | `themeAccent` | the brand colour |
+| `--primary-foreground` | *derived* | `readableTextOn(accent)` — never stored |
+| `--accent` | `themeAccentDark` | hover / glow |
+| `--ring` | `themeAccent` | focus |
+| `--background` | `themeBackground` | optional; null keeps the platform's |
+| `font-family` | `fontFamily` | a Google Font name, not a stack |
+
+Everything else — `--card`, `--border`, `--muted`, `--foreground`, `--radius` —
+stays at the platform's values, because upstream never sets them either. So a
+leaf styled purely in neutrals is not *theme-neutral*, it is **deaf to the
+creator**: it renders identically no matter what they pick, and it fails
+silently because nothing crashes.
+
+That failure is real and it is upstream right now — on laughingwhales.com every
+section title header, plus all of support, FAQ, recommended and screenshots,
+contains zero accent references. `conformance.test.tsx` renders all 13 leaves
+against 5 presets and fails any leaf that would join them.
+
+One preset is a trap on purpose. `readableTextOn` exists because a lime accent
+(`#9CCB1A`) put white text on a primary CTA at 1.91:1 — effectively invisible.
+Worth knowing: the platform's own **default pink (`#FF69B4`) needs black text
+too**, so a leaf that hardcodes a light foreground breaks on a stock page.
 
 ## Desktop shortcut
 
