@@ -13,6 +13,14 @@ import { PageNavGlassTrack as chrome_pageNav_canon_glassTrack, meta as chrome_pa
 import { PageNavPillTrack as chrome_pageNav_canon_pillTrack, meta as chrome_pageNav_canon_pillTrackMeta } from "./chrome/page-nav/branches/canon/pill-track/pill-track";
 import { meta as chrome_pageNav_experimentalMeta } from "./chrome/page-nav/branches/experimental/branch.meta";
 import { PageNavFloatingCapsule as chrome_pageNav_experimental_floatingCapsule, meta as chrome_pageNav_experimental_floatingCapsuleMeta } from "./chrome/page-nav/branches/experimental/floating-capsule/floating-capsule";
+import { meta as chrome_sectionTabsMeta } from "./chrome/section-tabs/tree.meta";
+import * as chrome_sectionTabsFixtures from "./chrome/section-tabs/section-tabs.fixtures";
+import { meta as chrome_sectionTabs_canonMeta } from "./chrome/section-tabs/branches/canon/branch.meta";
+import { SectionTabsPopoverMenu as chrome_sectionTabs_canon_popoverMenu, meta as chrome_sectionTabs_canon_popoverMenuMeta } from "./chrome/section-tabs/branches/canon/popover-menu/popover-menu";
+import { SectionTabsSideRail as chrome_sectionTabs_canon_sideRail, meta as chrome_sectionTabs_canon_sideRailMeta } from "./chrome/section-tabs/branches/canon/side-rail/side-rail";
+import { SectionTabsTopTrack as chrome_sectionTabs_canon_topTrack, meta as chrome_sectionTabs_canon_topTrackMeta } from "./chrome/section-tabs/branches/canon/top-track/top-track";
+import { meta as chrome_sectionTabs_experimentalMeta } from "./chrome/section-tabs/branches/experimental/branch.meta";
+import { SectionTabsHoverDock as chrome_sectionTabs_experimental_hoverDock, meta as chrome_sectionTabs_experimental_hoverDockMeta } from "./chrome/section-tabs/branches/experimental/hover-dock/hover-dock";
 import { meta as species_landingMeta } from "./landing/species.meta";
 import { meta as landing_channelHeroMeta } from "./landing/channel-hero/tree.meta";
 import * as landing_channelHeroFixtures from "./landing/channel-hero/channel-hero.fixtures";
@@ -86,6 +94,54 @@ export const FOREST: SpeciesNode[] = [
           ref: "experimental/floating-capsule",
           meta: chrome_pageNav_experimental_floatingCapsuleMeta,
           Component: chrome_pageNav_experimental_floatingCapsule as ForestComponent,
+        },
+        ],
+      },
+      ],
+    },
+    {
+      key: "section-tabs",
+      species: "chrome",
+      ref: "chrome/section-tabs",
+      meta: chrome_sectionTabsMeta,
+      fixtures: chrome_sectionTabsFixtures.ALL_FIXTURES as Record<string, unknown>,
+      defaultFixture: chrome_sectionTabsFixtures.DEFAULT_FIXTURE as string,
+      frameAt: chrome_sectionTabsFixtures.frameAt as (progress: number) => unknown,
+
+      branches: [
+      {
+        key: "canon",
+        meta: chrome_sectionTabs_canonMeta,
+        leaves: [
+        {
+          key: "popover-menu",
+          ref: "canon/popover-menu",
+          meta: chrome_sectionTabs_canon_popoverMenuMeta,
+          Component: chrome_sectionTabs_canon_popoverMenu as ForestComponent,
+        },
+        {
+          key: "side-rail",
+          ref: "canon/side-rail",
+          meta: chrome_sectionTabs_canon_sideRailMeta,
+          Component: chrome_sectionTabs_canon_sideRail as ForestComponent,
+        },
+        {
+          key: "top-track",
+          ref: "canon/top-track",
+          meta: chrome_sectionTabs_canon_topTrackMeta,
+          Component: chrome_sectionTabs_canon_topTrack as ForestComponent,
+        },
+        ],
+      },
+      {
+        key: "experimental",
+        meta: chrome_sectionTabs_experimentalMeta,
+        leaves: [
+        {
+          key: "hover-dock",
+          ref: "experimental/hover-dock",
+          meta: chrome_sectionTabs_experimental_hoverDockMeta,
+          Component: chrome_sectionTabs_experimental_hoverDock as ForestComponent,
         },
         ],
       },

@@ -17,6 +17,7 @@ It holds only because leaves own nothing. The first `useState` in a leaf ends it
 | New *family* of looks on an existing tree | `/grow-branch <species>/<tree>/<branch>` |
 | New look, same data | `/open-leaf <species>/<tree>/<branch> <leaf>` |
 | Move a component into a consuming app | `/harvest` |
+| Put existing sections behind tabs | use `chrome/section-tabs` — do NOT build tabs into the section |
 
 Delegate substantial work to the `forester` agent.
 
@@ -56,7 +57,22 @@ returning a coherent VM at any instant, deriving through the same `.vm.ts`
 helpers the container uses. Frozen fixtures are samples of it; the lab's clock
 drives it.
 
+**Section tabs** (`chrome/section-tabs`): the tree that holds other trees. Three
+axes stay separate — sections behind a tab (an input), chrome (a **leaf**), and
+motion (a **transition preset** in `section-tabs.transitions.ts`). Never fuse
+them: no `orientation` prop on a leaf, no transition name a leaf switches on. A
+preset is a pure `(phase, progress, direction) => CSSProperties`; the container
+resolves it into `panel.motion.style` and a leaf only spreads it. Reduced motion
+is handled in `resolveMotion`, before the preset runs — never inside a preset.
+
+**shadcn/Radix** (`src/components/ui/`): exported bare, unstyled — the look is
+the leaf's job. Always use them CONTROLLED, with open state and value from the
+VM, so no state crosses into a leaf. Radix owns the aria ids it generates; do
+not stamp `tab.triggerId` over them.
+
 **Only `*-connected.tsx`** may hold hooks, clocks, media queries or fetches.
+The organizer (`src/app/organize/`) is app-layer and may hold state, but every
+layout mutation must go through a pure function in `src/lib/section-layout.ts`.
 
 Deriving inline from `vm.progress`, inline styles for animated transforms, and
 `data-*` layout attributes are all allowed.

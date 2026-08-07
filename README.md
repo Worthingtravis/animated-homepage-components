@@ -58,10 +58,14 @@ src/trees/
   landing/                                 ← the first screen
     channel-hero/                          ← transport is a one-shot entrance
       ...
+  chrome/                                  ← furniture
+    section-tabs/                          ← holds OTHER trees; transport is one tab change
+      section-tabs.transitions.ts          ← swappable motion presets, pure functions
+      ...
   generated.ts                             ← registry, rebuilt from the filesystem by `pnpm sync`
 ```
 
-Four reference trees ship with the repo:
+Five reference trees ship with the repo:
 
 - **`motion/aurora-headline`** — the minimal case. Passive, no callbacks, one
   transport value.
@@ -80,6 +84,14 @@ Four reference trees ship with the repo:
   in the conformance suite, which makes the portability claim a passing test
   rather than a promise.
 
+- **`chrome/section-tabs`** — the *composition* case, and the only tree that
+  holds other trees. It puts any section behind a tab without the section
+  learning anything: panel content enters the contract as an opaque
+  `ReactNode`, so a hero is tabularized by being handed over, not by gaining an
+  `isActive` prop. Three axes move independently — which sections are behind
+  which tab (an input), how the tabs look (a leaf), and how panels change (a
+  transition preset). See **Tabs, and the three axes** below.
+
 - **`chrome/page-nav`** — the *theming* case. One nav contract covering
   laughingwhales.com's creator page tab bar and a brand · links · CTA marketing
   bar. Its two Canon track leaves are the `default` and `pill` styles the
@@ -88,6 +100,79 @@ Four reference trees ship with the repo:
   could not previously reach. Creator accents ride in on `vm.theme` as finished
   CSS colours — theming is data, and a leaf applies it without ever computing a
   contrast ratio.
+
+## Tabs, and the three axes
+
+`chrome/section-tabs` is the tree you reach for when the page has more sections
+than screen. A normal tab component fuses three unrelated decisions into one
+file; this one keeps them apart, and each is swapped without touching the other
+two.
+
+| Axis | Lives in | Swap it by |
+|---|---|---|
+| which sections are behind which tab | the caller's layout | passing different `tabs` |
+| how the tabs **look** | a **leaf** | `variant="canon/side-rail"` |
+| how panels **change** | a **transition preset** | `transition="slide-x"` |
+
+```tsx
+<SectionTabsConnected
+  variant="canon/side-rail"     // ← chrome
+  transition="slide-x"          // ← motion
+  tabs={[{ id: "home", label: "Home", content: <ChannelHero {...vm} /> }]}
+/>
+```
+
+**Chrome** is four leaves today: `top-track` (a scrolling segmented bar),
+`side-rail` (tabs beside the panel, with room for a hint line), `popover-menu`
+(one trigger, everything else in a disclosure — the only leaf whose footprint
+does not grow with the tab count) and the experimental `hover-dock` (markers
+that name themselves on hover). They use Radix under `src/components/ui/`, held
+**controlled** so no state crosses into a leaf, which is what buys roving
+tabindex and collision-aware popovers without breaking purity.
+
+**Motion** lives in `section-tabs.transitions.ts`. A preset is a pure function
+of an instant:
+
+```ts
+(phase, progress, direction, reducedMotion) → CSSProperties
+```
+
+Not a class and not a keyframe — which is why every preset composes with every
+leaf, why the lab can freeze a change at t=0.35 and see all four leaves agree,
+and why a preset is tested by calling it. `resolveMotion` short-circuits on
+reduced motion *before* the preset runs, so a new preset cannot forget it.
+
+Every panel arrives at a leaf with its motion already resolved into
+`panel.motion.style`. A leaf spreads it. A leaf never computes it.
+
+### Responsiveness
+
+Most of it is plain CSS in the leaf. `vm.layout` (`"wide" | "narrow"`) exists
+only for the cases where narrow means a *different element* rather than a
+smaller one — `side-rail` genuinely restructures into a strip and moves its
+hint into a hover card, and a breakpoint cannot move text between two elements
+that are never both present. Hover and popover content is always **portalled**,
+because a card rendered inside the `overflow-x-auto` track that holds it is the
+most common way a working popover ships clipped.
+
+## The organizer
+
+```bash
+pnpm dev    # → /organize
+```
+
+Every leaf in the forest is a draggable card. Drop one on a tab and it moves
+behind that tab; the live result underneath rebuilds through the real container
+with the real chrome. Tab chrome, transition and duration are dropdowns, so the
+axes above are something you feel rather than read.
+
+The rules are not in the drag handlers. Every mutation goes through a pure
+function in `src/lib/section-layout.ts` — which is why the keyboard-friendly
+"Move to…" select is a peer of dragging rather than a degraded fallback, and
+why "a tab deleted while active" is a unit test instead of a thing you find by
+dragging. Layouts persist to `localStorage` and are reconciled against the
+forest on load, so a stale entry drops sections that no longer exist instead of
+rendering a blank page.
 
 ## Porting a hero in from a consuming app
 

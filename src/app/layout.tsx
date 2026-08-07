@@ -32,6 +32,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/lab" className="text-sm text-muted-foreground hover:text-foreground">
               lab
             </Link>
+            <Link href="/organize" className="text-sm text-muted-foreground hover:text-foreground">
+              organize
+            </Link>
             <a
               href="https://github.com/Worthingtravis/animated-homepage-components"
               className="ml-auto text-sm text-muted-foreground hover:text-foreground"
