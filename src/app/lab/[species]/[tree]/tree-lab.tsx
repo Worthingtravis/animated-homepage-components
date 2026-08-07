@@ -12,6 +12,7 @@ import { useEffect, useReducer } from "react";
 import Link from "next/link";
 
 import { allLeaves, findTree, type LeafNode } from "@/lib/forest";
+import { LAB_CYCLE_MS } from "@/lib/lab-clock";
 import { cn } from "@/lib/utils";
 import { FOREST } from "@/trees/generated";
 
@@ -55,7 +56,8 @@ function labReducer(state: LabState, action: LabAction): LabState {
   }
 }
 
-const CYCLE_MS = 6000;
+/** Shared with any tree whose `frameAt` needs to match the lab's rate. */
+const CYCLE_MS = LAB_CYCLE_MS;
 
 export function TreeLab({ species, treeKey }: { species: string; treeKey: string }) {
   const tree = findTree(FOREST, species, treeKey);
