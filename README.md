@@ -109,6 +109,96 @@ Six reference trees ship with the repo:
   time; a countdown reopens that door, so the contract shuts it. See **Time, and
   the thing that must not tick** below.
 
+## Every tree, every leaf
+
+Each tree links to its **contract** — read that first, it is the thing every
+leaf on the tree answers. Leaf links go to the presentation component itself;
+its props *are* the VM above it. Lab routes are local (`pnpm dev`, or
+`ROUTE=/lab/<species>/<tree> pnpm review`).
+
+### chrome — persistent furniture
+
+**[page-nav](src/trees/chrome/page-nav/)** ·
+[contract](src/trees/chrome/page-nav/page-nav.vm.ts) ·
+[fixtures](src/trees/chrome/page-nav/page-nav.fixtures.ts) ·
+`/lab/chrome/page-nav`
+
+| Leaf | |
+|---|---|
+| [`canon/glass-track`](src/trees/chrome/page-nav/branches/canon/glass-track/glass-track.tsx) | The creator nav's `default` style — soft rounded glass track, active item filled in the page accent |
+| [`canon/pill-track`](src/trees/chrome/page-nav/branches/canon/pill-track/pill-track.tsx) | The creator nav's `pill` style — full capsule track and triggers |
+| [`canon/brand-bar`](src/trees/chrome/page-nav/branches/canon/brand-bar/brand-bar.tsx) | Full-width marketing bar — brand left, bare links right, one loud CTA |
+| [`experimental/floating-capsule`](src/trees/chrome/page-nav/branches/experimental/floating-capsule/floating-capsule.tsx) | Detaches on scroll — a flat strip that draws in, rounds off and floats |
+
+**[section-tabs](src/trees/chrome/section-tabs/)** ·
+[contract](src/trees/chrome/section-tabs/section-tabs.vm.ts) ·
+[transitions](src/trees/chrome/section-tabs/section-tabs.transitions.ts) ·
+`/lab/chrome/section-tabs`
+
+| Leaf | |
+|---|---|
+| [`canon/top-track`](src/trees/chrome/section-tabs/branches/canon/top-track/top-track.tsx) | Horizontal segmented track — scrolls rather than wraps, edge chevrons, portalled previews |
+| [`canon/side-rail`](src/trees/chrome/section-tabs/branches/canon/side-rail/side-rail.tsx) | Tabs beside the panel with a hint line; restructures into a strip when narrow |
+| [`canon/popover-menu`](src/trees/chrome/section-tabs/branches/canon/popover-menu/popover-menu.tsx) | One trigger, everything else in a disclosure — the only leaf whose footprint does not grow with the tab count |
+| [`experimental/hover-dock`](src/trees/chrome/section-tabs/branches/experimental/hover-dock/hover-dock.tsx) | Markers that name themselves on hover — maximum panel, minimum standing chrome |
+
+### landing — the first screen
+
+**[channel-hero](src/trees/landing/channel-hero/)** ·
+[contract](src/trees/landing/channel-hero/channel-hero.vm.ts) ·
+[fixtures](src/trees/landing/channel-hero/channel-hero.fixtures.ts) ·
+`/lab/landing/channel-hero`
+
+| Leaf | |
+|---|---|
+| [`canon/split-dock`](src/trees/landing/channel-hero/branches/canon/split-dock/split-dock.tsx) | 60/40 split — the closest match to laughingwhales.com's hero |
+| [`canon/stacked-billboard`](src/trees/landing/channel-hero/branches/canon/stacked-billboard/stacked-billboard.tsx) | One centred column; status becomes a pill, links become a divided list |
+| [`broadcast/live-marquee`](src/trees/landing/channel-hero/branches/broadcast/live-marquee/live-marquee.tsx) | Broadcast furniture — tally bar, lower-third slab, links on a ticker rail |
+
+### motion — defined by movement
+
+**[aurora-headline](src/trees/motion/aurora-headline/)** ·
+[contract](src/trees/motion/aurora-headline/aurora-headline.vm.ts) ·
+[fixtures](src/trees/motion/aurora-headline/aurora-headline.fixtures.ts) ·
+`/lab/motion/aurora-headline`
+
+| Leaf | |
+|---|---|
+| [`canon/baseline`](src/trees/motion/aurora-headline/branches/canon/baseline/baseline.tsx) | The scaffold's starting point — what `pnpm plant` writes, kept as the reference |
+| [`canon/stacked-rule`](src/trees/motion/aurora-headline/branches/canon/stacked-rule/stacked-rule.tsx) | Editorial stack — the rule under the eyebrow fills as transport advances |
+| [`experimental/orbit-glow`](src/trees/motion/aurora-headline/branches/experimental/orbit-glow/orbit-glow.tsx) | An aurora blob orbits behind the type; chips ride the same angle |
+
+### narrative — defined by sequence
+
+**[step-reveal](src/trees/narrative/step-reveal/)** ·
+[contract](src/trees/narrative/step-reveal/step-reveal.vm.ts) ·
+[fixtures](src/trees/narrative/step-reveal/step-reveal.fixtures.ts) ·
+`/lab/narrative/step-reveal`
+
+| Leaf | |
+|---|---|
+| [`canon/numbered-rail`](src/trees/narrative/step-reveal/branches/canon/numbered-rail/numbered-rail.tsx) | Vertical rail — all steps legible at once, a fill travels the spine |
+| [`canon/wide-cards`](src/trees/narrative/step-reveal/branches/canon/wide-cards/wide-cards.tsx) | Horizontal band — the active card claims the width, the rest compress |
+| [`experimental/stage-swap`](src/trees/narrative/step-reveal/branches/experimental/stage-swap/stage-swap.tsx) | One step owns the stage; the rest collapse to ghost ordinals |
+
+### temporal — defined by a deadline
+
+**[countdown](src/trees/temporal/countdown/)** ·
+[contract](src/trees/temporal/countdown/countdown.vm.ts) ·
+[fixtures](src/trees/temporal/countdown/countdown.fixtures.ts) ·
+[container](src/trees/temporal/countdown/countdown-connected.tsx) ·
+`/lab/temporal/countdown`
+
+| Leaf | |
+|---|---|
+| [`canon/unit-blocks`](src/trees/temporal/countdown/branches/canon/unit-blocks/unit-blocks.tsx) | Monospaced tiles per unit, with the window drawn as one hairline underneath |
+| [`canon/inline-strip`](src/trees/temporal/countdown/branches/canon/inline-strip/inline-strip.tsx) | A single dense line for banners and bars — short labels, underline as the window |
+| [`canon/ring-dial`](src/trees/temporal/countdown/branches/canon/ring-dial/ring-dial.tsx) | A depleting arc with the digits inside it — the glance and the detail in one place |
+| [`experimental/flip-stack`](src/trees/temporal/countdown/branches/experimental/flip-stack/flip-stack.tsx) | Split-flap cards whose hinge tilts on each unit's own cycle — no state, no jump cut |
+
+`pnpm forest` prints this same shape from the filesystem, and is the version
+that cannot go stale.
+
 ## Time, and the thing that must not tick
 
 `temporal/countdown` is the first tree here whose whole job requires a running
