@@ -1,11 +1,14 @@
-import Link from "next/link";
+import { CuratedSurface } from "../curated-surface";
+import { LabIndexSection } from "../site-sections";
 
-import { allLeaves, allTrees } from "@/lib/forest";
-import { FOREST } from "@/trees/generated";
-
+/**
+ * The lab's front door. Same arrangement as the home page: the heading is the
+ * page's, the body is the `lab` surface — the tree list when nobody has touched
+ * it, and whatever was arranged when somebody has. The tree list stays on the
+ * shelf either way, so curating this page can never be a way to lose the only
+ * route into a lab.
+ */
 export default function LabIndexPage() {
-  const trees = allTrees(FOREST);
-
   return (
     <div className="space-y-6">
       <div>
@@ -14,22 +17,10 @@ export default function LabIndexPage() {
           Pick a tree to drive every leaf on it through every fixture — no hooks, no network.
         </p>
       </div>
-      <ul className="grid gap-3 sm:grid-cols-2">
-        {trees.map((tree) => (
-          <li key={tree.ref}>
-            <Link
-              href={`/lab/${tree.species}/${tree.key}`}
-              className="block rounded-lg border border-border bg-card p-4 hover:border-ring"
-            >
-              <span className="font-medium text-foreground">{tree.meta.label}</span>
-              <span className="ml-2 text-xs text-muted-foreground">{tree.ref}</span>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {allLeaves(tree).length} leaves · {Object.keys(tree.fixtures).length} fixtures
-              </p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+
+      <CuratedSurface surface="lab" heading="This page" ariaLabel="Lab sections">
+        <LabIndexSection />
+      </CuratedSurface>
     </div>
   );
 }

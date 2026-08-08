@@ -13,6 +13,14 @@ import { PageNavGlassTrack as chrome_pageNav_canon_glassTrack, meta as chrome_pa
 import { PageNavPillTrack as chrome_pageNav_canon_pillTrack, meta as chrome_pageNav_canon_pillTrackMeta } from "./chrome/page-nav/branches/canon/pill-track/pill-track";
 import { meta as chrome_pageNav_experimentalMeta } from "./chrome/page-nav/branches/experimental/branch.meta";
 import { PageNavFloatingCapsule as chrome_pageNav_experimental_floatingCapsule, meta as chrome_pageNav_experimental_floatingCapsuleMeta } from "./chrome/page-nav/branches/experimental/floating-capsule/floating-capsule";
+import { meta as chrome_paneDockMeta } from "./chrome/pane-dock/tree.meta";
+import * as chrome_paneDockFixtures from "./chrome/pane-dock/pane-dock.fixtures";
+import { meta as chrome_paneDock_canonMeta } from "./chrome/pane-dock/branches/canon/branch.meta";
+import { PaneDockDoorRow as chrome_paneDock_canon_doorRow, meta as chrome_paneDock_canon_doorRowMeta } from "./chrome/pane-dock/branches/canon/door-row/door-row";
+import { PaneDockEdgeStrips as chrome_paneDock_canon_edgeStrips, meta as chrome_paneDock_canon_edgeStripsMeta } from "./chrome/pane-dock/branches/canon/edge-strips/edge-strips";
+import { PaneDockOneRail as chrome_paneDock_canon_oneRail, meta as chrome_paneDock_canon_oneRailMeta } from "./chrome/pane-dock/branches/canon/one-rail/one-rail";
+import { meta as chrome_paneDock_experimentalMeta } from "./chrome/pane-dock/branches/experimental/branch.meta";
+import { PaneDockCommandSheet as chrome_paneDock_experimental_commandSheet, meta as chrome_paneDock_experimental_commandSheetMeta } from "./chrome/pane-dock/branches/experimental/command-sheet/command-sheet";
 import { meta as chrome_sectionTabsMeta } from "./chrome/section-tabs/tree.meta";
 import * as chrome_sectionTabsFixtures from "./chrome/section-tabs/section-tabs.fixtures";
 import { meta as chrome_sectionTabs_canonMeta } from "./chrome/section-tabs/branches/canon/branch.meta";
@@ -21,6 +29,24 @@ import { SectionTabsSideRail as chrome_sectionTabs_canon_sideRail, meta as chrom
 import { SectionTabsTopTrack as chrome_sectionTabs_canon_topTrack, meta as chrome_sectionTabs_canon_topTrackMeta } from "./chrome/section-tabs/branches/canon/top-track/top-track";
 import { meta as chrome_sectionTabs_experimentalMeta } from "./chrome/section-tabs/branches/experimental/branch.meta";
 import { SectionTabsHoverDock as chrome_sectionTabs_experimental_hoverDock, meta as chrome_sectionTabs_experimental_hoverDockMeta } from "./chrome/section-tabs/branches/experimental/hover-dock/hover-dock";
+import { meta as species_disclosureMeta } from "./disclosure/species.meta";
+import { meta as disclosure_expandableCardMeta } from "./disclosure/expandable-card/tree.meta";
+import * as disclosure_expandableCardFixtures from "./disclosure/expandable-card/expandable-card.fixtures";
+import { meta as disclosure_expandableCard_canonMeta } from "./disclosure/expandable-card/branches/canon/branch.meta";
+import { ExpandableCardInlineDetail as disclosure_expandableCard_canon_inlineDetail, meta as disclosure_expandableCard_canon_inlineDetailMeta } from "./disclosure/expandable-card/branches/canon/inline-detail/inline-detail";
+import { ExpandableCardMediaGrid as disclosure_expandableCard_canon_mediaGrid, meta as disclosure_expandableCard_canon_mediaGridMeta } from "./disclosure/expandable-card/branches/canon/media-grid/media-grid";
+import { ExpandableCardRowList as disclosure_expandableCard_canon_rowList, meta as disclosure_expandableCard_canon_rowListMeta } from "./disclosure/expandable-card/branches/canon/row-list/row-list";
+import { meta as disclosure_expandableCard_experimentalMeta } from "./disclosure/expandable-card/branches/experimental/branch.meta";
+import { ExpandableCardFullBleed as disclosure_expandableCard_experimental_fullBleed, meta as disclosure_expandableCard_experimental_fullBleedMeta } from "./disclosure/expandable-card/branches/experimental/full-bleed/full-bleed";
+import { meta as species_findingMeta } from "./finding/species.meta";
+import { meta as finding_clipPickerMeta } from "./finding/clip-picker/tree.meta";
+import * as finding_clipPickerFixtures from "./finding/clip-picker/clip-picker.fixtures";
+import { meta as finding_clipPicker_canonMeta } from "./finding/clip-picker/branches/canon/branch.meta";
+import { ClipPickerOneColumn as finding_clipPicker_canon_oneColumn, meta as finding_clipPicker_canon_oneColumnMeta } from "./finding/clip-picker/branches/canon/one-column/one-column";
+import { ClipPickerQuoteFirst as finding_clipPicker_canon_quoteFirst, meta as finding_clipPicker_canon_quoteFirstMeta } from "./finding/clip-picker/branches/canon/quote-first/quote-first";
+import { ClipPickerShelfRail as finding_clipPicker_canon_shelfRail, meta as finding_clipPicker_canon_shelfRailMeta } from "./finding/clip-picker/branches/canon/shelf-rail/shelf-rail";
+import { meta as finding_clipPicker_experimentalMeta } from "./finding/clip-picker/branches/experimental/branch.meta";
+import { ClipPickerDeck as finding_clipPicker_experimental_deck, meta as finding_clipPicker_experimental_deckMeta } from "./finding/clip-picker/branches/experimental/deck/deck";
 import { meta as species_landingMeta } from "./landing/species.meta";
 import { meta as landing_channelHeroMeta } from "./landing/channel-hero/tree.meta";
 import * as landing_channelHeroFixtures from "./landing/channel-hero/channel-hero.fixtures";
@@ -109,6 +135,54 @@ export const FOREST: SpeciesNode[] = [
       ],
     },
     {
+      key: "pane-dock",
+      species: "chrome",
+      ref: "chrome/pane-dock",
+      meta: chrome_paneDockMeta,
+      fixtures: chrome_paneDockFixtures.ALL_FIXTURES as Record<string, unknown>,
+      defaultFixture: chrome_paneDockFixtures.DEFAULT_FIXTURE as string,
+      frameAt: chrome_paneDockFixtures.frameAt as (progress: number) => unknown,
+
+      branches: [
+      {
+        key: "canon",
+        meta: chrome_paneDock_canonMeta,
+        leaves: [
+        {
+          key: "door-row",
+          ref: "canon/door-row",
+          meta: chrome_paneDock_canon_doorRowMeta,
+          Component: chrome_paneDock_canon_doorRow as ForestComponent,
+        },
+        {
+          key: "edge-strips",
+          ref: "canon/edge-strips",
+          meta: chrome_paneDock_canon_edgeStripsMeta,
+          Component: chrome_paneDock_canon_edgeStrips as ForestComponent,
+        },
+        {
+          key: "one-rail",
+          ref: "canon/one-rail",
+          meta: chrome_paneDock_canon_oneRailMeta,
+          Component: chrome_paneDock_canon_oneRail as ForestComponent,
+        },
+        ],
+      },
+      {
+        key: "experimental",
+        meta: chrome_paneDock_experimentalMeta,
+        leaves: [
+        {
+          key: "command-sheet",
+          ref: "experimental/command-sheet",
+          meta: chrome_paneDock_experimental_commandSheetMeta,
+          Component: chrome_paneDock_experimental_commandSheet as ForestComponent,
+        },
+        ],
+      },
+      ],
+    },
+    {
       key: "section-tabs",
       species: "chrome",
       ref: "chrome/section-tabs",
@@ -151,6 +225,114 @@ export const FOREST: SpeciesNode[] = [
           ref: "experimental/hover-dock",
           meta: chrome_sectionTabs_experimental_hoverDockMeta,
           Component: chrome_sectionTabs_experimental_hoverDock as ForestComponent,
+        },
+        ],
+      },
+      ],
+    },
+    ],
+  },
+  {
+    key: "disclosure",
+    meta: species_disclosureMeta,
+    trees: [
+    {
+      key: "expandable-card",
+      species: "disclosure",
+      ref: "disclosure/expandable-card",
+      meta: disclosure_expandableCardMeta,
+      fixtures: disclosure_expandableCardFixtures.ALL_FIXTURES as Record<string, unknown>,
+      defaultFixture: disclosure_expandableCardFixtures.DEFAULT_FIXTURE as string,
+      frameAt: disclosure_expandableCardFixtures.frameAt as (progress: number) => unknown,
+
+      branches: [
+      {
+        key: "canon",
+        meta: disclosure_expandableCard_canonMeta,
+        leaves: [
+        {
+          key: "inline-detail",
+          ref: "canon/inline-detail",
+          meta: disclosure_expandableCard_canon_inlineDetailMeta,
+          Component: disclosure_expandableCard_canon_inlineDetail as ForestComponent,
+        },
+        {
+          key: "media-grid",
+          ref: "canon/media-grid",
+          meta: disclosure_expandableCard_canon_mediaGridMeta,
+          Component: disclosure_expandableCard_canon_mediaGrid as ForestComponent,
+        },
+        {
+          key: "row-list",
+          ref: "canon/row-list",
+          meta: disclosure_expandableCard_canon_rowListMeta,
+          Component: disclosure_expandableCard_canon_rowList as ForestComponent,
+        },
+        ],
+      },
+      {
+        key: "experimental",
+        meta: disclosure_expandableCard_experimentalMeta,
+        leaves: [
+        {
+          key: "full-bleed",
+          ref: "experimental/full-bleed",
+          meta: disclosure_expandableCard_experimental_fullBleedMeta,
+          Component: disclosure_expandableCard_experimental_fullBleed as ForestComponent,
+        },
+        ],
+      },
+      ],
+    },
+    ],
+  },
+  {
+    key: "finding",
+    meta: species_findingMeta,
+    trees: [
+    {
+      key: "clip-picker",
+      species: "finding",
+      ref: "finding/clip-picker",
+      meta: finding_clipPickerMeta,
+      fixtures: finding_clipPickerFixtures.ALL_FIXTURES as Record<string, unknown>,
+      defaultFixture: finding_clipPickerFixtures.DEFAULT_FIXTURE as string,
+      frameAt: finding_clipPickerFixtures.frameAt as (progress: number) => unknown,
+
+      branches: [
+      {
+        key: "canon",
+        meta: finding_clipPicker_canonMeta,
+        leaves: [
+        {
+          key: "one-column",
+          ref: "canon/one-column",
+          meta: finding_clipPicker_canon_oneColumnMeta,
+          Component: finding_clipPicker_canon_oneColumn as ForestComponent,
+        },
+        {
+          key: "quote-first",
+          ref: "canon/quote-first",
+          meta: finding_clipPicker_canon_quoteFirstMeta,
+          Component: finding_clipPicker_canon_quoteFirst as ForestComponent,
+        },
+        {
+          key: "shelf-rail",
+          ref: "canon/shelf-rail",
+          meta: finding_clipPicker_canon_shelfRailMeta,
+          Component: finding_clipPicker_canon_shelfRail as ForestComponent,
+        },
+        ],
+      },
+      {
+        key: "experimental",
+        meta: finding_clipPicker_experimentalMeta,
+        leaves: [
+        {
+          key: "deck",
+          ref: "experimental/deck",
+          meta: finding_clipPicker_experimental_deckMeta,
+          Component: finding_clipPicker_experimental_deck as ForestComponent,
         },
         ],
       },

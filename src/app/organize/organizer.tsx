@@ -45,31 +45,29 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useCallback, useMemo, useState } from "react";
 
-import { buildCatalog, indexCatalog, type CatalogSection } from "@/lib/section-catalog";
+import type { CatalogSection } from "@/lib/section-catalog";
 import {
   SHELF,
   addTab,
   containerOf,
-  emptyLayout,
   moveSection,
-  reconcile,
   removeTab,
   renameTab,
   sectionsIn,
   tabContainerId,
-  type SectionLayout,
 } from "@/lib/section-layout";
+import { SURFACES, type SurfaceId } from "@/lib/site-layout";
 import { cn } from "@/lib/utils";
 import { FOREST } from "@/trees/generated";
 import { SectionTabsConnected } from "@/trees/chrome/section-tabs/section-tabs-connected";
 import { TRANSITIONS } from "@/trees/chrome/section-tabs/section-tabs.transitions";
 import { allLeaves, findTree } from "@/lib/forest";
 
-import { SectionFull, SectionPreview } from "./section-preview";
-
-const STORAGE_KEY = "forest.section-layout";
+import { SectionFull, SectionPreview } from "../section-render";
+import { useSiteLayout } from "../site-layout-provider";
 
 /**
  * Where the pointer is, not which box is nearest.
@@ -91,12 +89,6 @@ const collisionDetection: CollisionDetection = (args) => {
   if (intersecting.length > 0) return intersecting;
   return closestCorners(args);
 };
-
-/** The starting arrangement — three named tabs and everything else on the shelf. */
-function seedLayout(sectionIds: string[]): SectionLayout {
-  const base = addTab(addTab(addTab(emptyLayout(), "Home", "home"), "About", "about"), "Shop", "shop");
-  return reconcile({ ...base, activeTabId: "home" }, sectionIds);
-}
 
 /* ------------------------------------------------------------ draggables */
 
@@ -248,41 +240,27 @@ function Column({
 /* ------------------------------------------------------------- organizer */
 
 export function Organizer() {
-  const catalog = useMemo(() => buildCatalog(FOREST), []);
-  const byId = useMemo(() => indexCatalog(catalog), [catalog]);
-  const catalogIds = useMemo(() => catalog.map((section) => section.id), [catalog]);
+  /*
+   * The layout is not this component's. It belongs to the site (see
+   * `site-layout-provider.tsx`), because the pages that render it are other
+   * routes. What IS local is which surface you are currently pointing at — that
+   * is a view of the board, not part of the site's shape, and it should not
+   * survive a reload as a stale opinion about where you were.
+   */
+  const { catalog, byId, layoutFor, update, reset } = useSiteLayout();
+  const [surface, setSurface] = useState<SurfaceId>("home");
+  const layout = layoutFor(surface);
+  const setLayout = useCallback(
+    (move: (current: typeof layout) => typeof layout) => update(surface, move),
+    [update, surface],
+  );
 
   const displayLeaves = useMemo(() => {
     const tree = findTree(FOREST, "chrome", "section-tabs");
     return tree ? allLeaves(tree) : [];
   }, []);
 
-  const [layout, setLayout] = useState<SectionLayout>(() => seedLayout(catalogIds));
   const [dragging, setDragging] = useState<string | null>(null);
-
-  /*
-   * Read persisted state AFTER mount, never during the first render — the
-   * server cannot know what is in localStorage, and seeding from it would be a
-   * hydration mismatch. Reconciling on the way in is what keeps a stale entry
-   * from rendering tabs full of sections that no longer exist.
-   */
-  useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      setLayout(reconcile(JSON.parse(raw) as SectionLayout, catalogIds));
-    } catch {
-      // A corrupt entry is not worth failing the page over.
-    }
-  }, [catalogIds]);
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
-    } catch {
-      // Private mode / quota. It works, it just will not remember.
-    }
-  }, [layout]);
 
   const sensors = useSensors(
     // A small activation distance keeps a click on the handle from registering
@@ -304,9 +282,12 @@ export function Organizer() {
     [byId],
   );
 
-  const onMoveTo = useCallback((sectionId: string, containerId: string) => {
-    setLayout((current) => moveSection(current, sectionId, containerId, -1));
-  }, []);
+  const onMoveTo = useCallback(
+    (sectionId: string, containerId: string) => {
+      setLayout((current) => moveSection(current, sectionId, containerId, -1));
+    },
+    [setLayout],
+  );
 
   const onDragStart = useCallback((event: DragStartEvent) => {
     setDragging(String(event.active.id));
@@ -330,7 +311,7 @@ export function Organizer() {
       const index = isContainer ? -1 : sectionsIn(current, targetContainer).indexOf(overId);
       return moveSection(current, sectionId, targetContainer, index);
     });
-  }, []);
+  }, [setLayout]);
 
   const draggingSection = dragging ? byId.get(dragging) : undefined;
 
@@ -364,8 +345,50 @@ export function Organizer() {
     [layout.tabs, resolve],
   );
 
+  const surfaceMeta = SURFACES.find((entry) => entry.id === surface) ?? SURFACES[0];
+
   return (
     <div className="space-y-10">
+      {/* ------------------------------------------------------- surface */}
+      {/*
+        Which page am I arranging. It sits above the toolbar and not inside it
+        because everything below — the chrome, the transition, the board, the
+        preview — is scoped to this choice, and a switcher wearing the same
+        weight as "Duration" would read as one more setting rather than as the
+        thing the rest of the screen is about.
+      */}
+      <section className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <div
+          role="group"
+          aria-label="Page to arrange"
+          className="inline-flex rounded-lg border border-border bg-card p-1"
+        >
+          {SURFACES.map((entry) => (
+            <button
+              key={entry.id}
+              type="button"
+              aria-pressed={surface === entry.id}
+              onClick={() => setSurface(entry.id)}
+              className={cn(
+                "rounded-md px-4 py-2 text-sm font-medium transition-colors",
+                surface === entry.id
+                  ? "bg-primary text-primary-foreground shadow-sm ring-1 ring-ring"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {entry.label}
+            </button>
+          ))}
+        </div>
+        <p className="min-w-48 flex-1 text-sm text-muted-foreground">{surfaceMeta.description}</p>
+        <Link
+          href={surfaceMeta.path}
+          className="rounded-lg border border-border px-3 py-1.5 text-sm text-muted-foreground hover:border-ring hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          Open {surfaceMeta.path} →
+        </Link>
+      </section>
+
       {/* ------------------------------------------------------- toolbar */}
       <section className="flex flex-wrap items-end gap-4 rounded-2xl border border-border bg-card/50 p-4">
         <label className="flex flex-col gap-1 text-xs text-muted-foreground">
@@ -427,7 +450,7 @@ export function Organizer() {
           </button>
           <button
             type="button"
-            onClick={() => setLayout(seedLayout(catalogIds))}
+            onClick={() => reset(surface)}
             className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           >
             Reset
@@ -515,9 +538,13 @@ export function Organizer() {
       {/* ------------------------------------------------------- preview */}
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-4">
-          <h2 className="text-lg font-semibold text-foreground">Live result</h2>
+          <h2 className="text-lg font-semibold text-foreground">
+            Live result — {surfaceMeta.label}
+          </h2>
           <p className="text-xs text-muted-foreground">
-            The real container, the real chrome, the real sections.
+            {/* Not "a preview of". This is the same component `{surfaceMeta.path}`
+                mounts, reading the same value. */}
+            Exactly what {surfaceMeta.path} renders now.
           </p>
         </div>
         <div className="rounded-2xl border border-border bg-card/30 p-5">

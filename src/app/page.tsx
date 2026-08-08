@@ -1,11 +1,14 @@
-import Link from "next/link";
+import { CuratedSurface } from "./curated-surface";
+import { ForestIndexSection, ForestStatsSection } from "./site-sections";
 
-import { allLeaves, forestStats } from "@/lib/forest";
-import { FOREST } from "@/trees/generated";
-
+/**
+ * The front page — its own headline, and below it whatever shape the curator
+ * left the `home` surface in. Uncurated, that is the stats row and the forest
+ * index, rendered on the server exactly as they always were. Curated, the same
+ * two sections come back behind tabs, alongside anything else that was dragged
+ * in. Neither section knows which of those happened.
+ */
 export default function ForestPage() {
-  const stats = forestStats(FOREST);
-
   return (
     <div className="space-y-10">
       <section>
@@ -17,53 +20,14 @@ export default function ForestPage() {
           <strong className="text-foreground">leaf</strong> is one pure presentation component.
           Leaves on the same tree are drop-in interchangeable, because none of them own state.
         </p>
-        <dl className="mt-6 flex flex-wrap gap-6 text-sm">
-          {(
-            [
-              ["species", stats.species],
-              ["trees", stats.trees],
-              ["branches", stats.branches],
-              ["leaves", stats.leaves],
-            ] as const
-          ).map(([label, value]) => (
-            <div key={label}>
-              <dt className="text-muted-foreground">{label}</dt>
-              <dd className="text-2xl font-semibold text-foreground">{value}</dd>
-            </div>
-          ))}
-        </dl>
       </section>
 
-      {FOREST.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-border p-8 text-center text-muted-foreground">
-          The forest is empty. Plant a tree: <code>pnpm plant motion/aurora-headline</code>
-        </p>
-      ) : null}
-
-      {FOREST.map((species) => (
-        <section key={species.key} className="space-y-4">
-          <div>
-            <h2 className="text-xl font-semibold text-foreground">{species.meta.label}</h2>
-            <p className="text-sm text-muted-foreground">{species.meta.description}</p>
-          </div>
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {species.trees.map((tree) => (
-              <li key={tree.ref} className="rounded-xl border border-border bg-card p-5">
-                <Link href={`/lab/${tree.species}/${tree.key}`} className="group">
-                  <h3 className="font-medium text-foreground group-hover:text-primary">
-                    🌳 {tree.meta.label}
-                  </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{tree.meta.description}</p>
-                </Link>
-                <p className="mt-3 text-xs text-muted-foreground">
-                  {tree.branches.length} branches · {allLeaves(tree).length} leaves ·{" "}
-                  {Object.keys(tree.fixtures).length} fixtures
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+      <CuratedSurface surface="home" heading="This page" ariaLabel="Home sections">
+        <div className="space-y-10">
+          <ForestStatsSection />
+          <ForestIndexSection />
+        </div>
+      </CuratedSurface>
     </div>
   );
 }

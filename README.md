@@ -61,6 +61,10 @@ src/trees/
   temporal/                                ← time itself
     countdown/                             ← transport is depletion toward a deadline
       ...
+  disclosure/                              ← one thing opening into more of itself
+    expandable-card/                       ← transport is a single expansion
+      expandable-card.transitions.ts       ← the morph, as pure functions of two rects
+      ...
   chrome/                                  ← furniture
     section-tabs/                          ← holds OTHER trees; transport is one tab change
       section-tabs.transitions.ts          ← swappable motion presets, pure functions
@@ -68,7 +72,7 @@ src/trees/
   generated.ts                             ← registry, rebuilt from the filesystem by `pnpm sync`
 ```
 
-Six reference trees ship with the repo:
+Nine reference trees ship with the repo:
 
 - **`motion/aurora-headline`** — the minimal case. Passive, no callbacks, one
   transport value.
@@ -95,6 +99,18 @@ Six reference trees ship with the repo:
   which tab (an input), how the tabs look (a leaf), and how panels change (a
   transition preset). See **Tabs, and the three axes** below.
 
+- **`chrome/pane-dock`** — the *budget* case. It answers one question — where do
+  a workspace's CLOSED panes go? — and exists because the obvious answer is
+  wrong in a way that takes months to see. Faced with "a person must be able to
+  reach a pane this screen did not open for them", the natural move is to leave
+  a one-click strip on the edge for each one. Every strip is individually cheap
+  and individually correct; the fifth one turns the screen into a frame around a
+  picture nobody can find. Its four leaves spend wildly different amounts of
+  screen on the same two arrays — four edges, one rail, one row, or nothing at
+  all — and `canon/edge-strips` reproduces the expensive answer faithfully so
+  the case against it is something you look at rather than something you are
+  told. See **Docks, and the cost of a door** below.
+
 - **`chrome/page-nav`** — the *theming* case. One nav contract covering
   laughingwhales.com's creator page tab bar and a brand · links · CTA marketing
   bar. Its two Canon track leaves are the `default` and `pill` styles the
@@ -103,6 +119,28 @@ Six reference trees ship with the repo:
   could not previously reach. Creator accents ride in on `vm.theme` as finished
   CSS colours — theming is data, and a leaf applies it without ever computing a
   contrast ratio.
+
+- **`finding/clip-picker`** — the *recognition* case. It answers "what do I send
+  this streamer?", and it exists because the obvious answer — a search box and a
+  grid — is a demand that the viewer already knows the words. Most do not; they
+  know a feeling, a game, and roughly when. So the contract carries two ways in
+  on one surface: shelves the streamer pre-established (the default state, and
+  the one that has to be good) and transcript search for the viewer who does
+  have the words, bridged by `suggestions` — searches the *streamer* curated,
+  which turn "I can't describe it" into one tap. Sending lives on the card, so
+  the confirmation lands where the eye already is. See **Finding, and the words
+  you don't have** below.
+
+- **`disclosure/expandable-card`** — the *measurement* case. A grid where
+  pressing a card opens it into its own detail, with the card appearing to
+  become the panel. That effect is normally bought from a layout-animation
+  library, and the price is that the animation, the open state, the escape key
+  and the scroll lock all end up inside the component — which is to say, inside
+  something that owns state, which ends a leaf. Here the morph is arithmetic on
+  two rectangles in a pure function, the container takes both measurements, and
+  four structurally different leaves — including one with no overlay at all —
+  get the same shared element without implementing any of it. See **Morphing,
+  and where a measurement belongs** below.
 
 - **`temporal/countdown`** — the *clock* case, and the only tree that must
   re-render on a tick. Everything else in the forest is clock-free at render
@@ -141,6 +179,48 @@ its props *are* the VM above it. Lab routes are local (`pnpm dev`, or
 | [`canon/side-rail`](src/trees/chrome/section-tabs/branches/canon/side-rail/side-rail.tsx) | Tabs beside the panel with a hint line; restructures into a strip when narrow |
 | [`canon/popover-menu`](src/trees/chrome/section-tabs/branches/canon/popover-menu/popover-menu.tsx) | One trigger, everything else in a disclosure — the only leaf whose footprint does not grow with the tab count |
 | [`experimental/hover-dock`](src/trees/chrome/section-tabs/branches/experimental/hover-dock/hover-dock.tsx) | Markers that name themselves on hover — maximum panel, minimum standing chrome |
+
+**[pane-dock](src/trees/chrome/pane-dock/)** ·
+[contract](src/trees/chrome/pane-dock/pane-dock.vm.ts) ·
+[fixtures](src/trees/chrome/pane-dock/pane-dock.fixtures.ts) ·
+`/lab/chrome/pane-dock`
+
+| Leaf | |
+|---|---|
+| [`canon/door-row`](src/trees/chrome/pane-dock/branches/canon/door-row/door-row.tsx) | One labelled button per docked pane, in a single row under the purpose line — one place to look, read in the reading direction |
+| [`canon/edge-strips`](src/trees/chrome/pane-dock/branches/canon/edge-strips/edge-strips.tsx) | A strip on the edge of the column each pane would open into. Maximum placement information; the labels turn sideways and the content ends up ringed |
+| [`canon/one-rail`](src/trees/chrome/pane-dock/branches/canon/one-rail/one-rail.tsx) | Every door in one left rail, grouped by role, labels the right way up — the only leaf where a door can explain itself without a hover |
+| [`experimental/command-sheet`](src/trees/chrome/pane-dock/branches/experimental/command-sheet/command-sheet.tsx) | Zero standing chrome — one counted trigger, everything else behind it. The only leaf whose footprint does not grow with the dock |
+
+### disclosure — one item opening into more of itself
+
+**[expandable-card](src/trees/disclosure/expandable-card/)** ·
+[contract](src/trees/disclosure/expandable-card/expandable-card.vm.ts) ·
+[transitions](src/trees/disclosure/expandable-card/expandable-card.transitions.ts) ·
+[fixtures](src/trees/disclosure/expandable-card/expandable-card.fixtures.ts) ·
+[container](src/trees/disclosure/expandable-card/expandable-card-connected.tsx) ·
+`/lab/disclosure/expandable-card`
+
+| Leaf | |
+|---|---|
+| [`canon/media-grid`](src/trees/disclosure/expandable-card/branches/canon/media-grid/media-grid.tsx) | **Start here.** Media tiles opening into a centred dialog — a tile and a panel are the same shape at two sizes, which is what the morph was designed for |
+| [`canon/row-list`](src/trees/disclosure/expandable-card/branches/canon/row-list/row-list.tsx) | A narrow playlist column, thumbnail and action per row. Scans by title, not by picture — and puts the morph's non-uniform scale under the most stress |
+| [`canon/inline-detail`](src/trees/disclosure/expandable-card/branches/canon/inline-detail/inline-detail.tsx) | No overlay at all: the detail opens as a row in the flow. Nothing is covered, the page never locks, and the source card stays visible |
+| [`experimental/full-bleed`](src/trees/disclosure/expandable-card/branches/experimental/full-bleed/full-bleed.tsx) | The picture is the card — type rides on the media behind a scrim, and the panel takes most of the viewport |
+
+### finding — retrieval, against a vague memory
+
+**[clip-picker](src/trees/finding/clip-picker/)** ·
+[contract](src/trees/finding/clip-picker/clip-picker.vm.ts) ·
+[fixtures](src/trees/finding/clip-picker/clip-picker.fixtures.ts) ·
+`/lab/finding/clip-picker`
+
+| Leaf | |
+|---|---|
+| [`canon/one-column`](src/trees/finding/clip-picker/branches/canon/one-column/one-column.tsx) | **Start here.** Phone-first: purpose, search, curated suggestions, shelves. One card per row, full-width Send, nothing behind a hover |
+| [`canon/shelf-rail`](src/trees/finding/clip-picker/branches/canon/shelf-rail/shelf-rail.tsx) | Desktop-first: each shelf is a horizontal rail, so several shelves are a glance apart. Results deliberately stay a ranked vertical list |
+| [`canon/quote-first`](src/trees/finding/clip-picker/branches/canon/quote-first/quote-first.tsx) | Search-led: the sentence is the headline at reading size and the clip is the caption. For the regular who already has the words |
+| [`experimental/deck`](src/trees/finding/clip-picker/branches/experimental/deck/deck.tsx) | One clip at a time, full width, swipe for the next — judging instead of comparing. Pages on native scroll-snap, so it holds no state |
 
 ### landing — the first screen
 
@@ -238,6 +318,104 @@ prop — periods that anchor to a wall-clock boundary need their length to divid
 the day evenly, so "90-minute timer" is a scheduling decision the caller makes
 before `endsAt` ever reaches this tree.
 
+## Morphing, and where a measurement belongs
+
+`disclosure/expandable-card` is the tree for a grid whose cards open. The effect
+everyone recognises is the shared element: press a card and it appears to
+*become* the panel. The usual way to get it is a layout-animation library, and
+the usual result is a component that owns the open state, the escape key, the
+outside click, the scroll lock and the animation — five responsibilities in the
+file whose job was to look good.
+
+The claim this tree makes is smaller than it sounds:
+
+> A shared-element morph is not an animation. It is **two rectangles and a
+> subtraction**, and both rectangles are measurements.
+
+Measurements belong to the container, everywhere else in this forest. So they
+belong to the container here, and what is left for a leaf is arithmetic it
+receives rather than performs:
+
+| Axis | Lives in | Swap it by |
+|---|---|---|
+| which card is open | the container's state | pressing one |
+| what the cards and panel **look like** | a **leaf** | `variant="canon/row-list"` |
+| how the panel **arrives** | a **transition preset** | `transition="sheet"` |
+
+```tsx
+<ExpandableCardConnected
+  variant="canon/media-grid"   // ← look
+  transition="morph"           // ← motion
+  records={clips}              // ← data
+/>
+```
+
+### The whole morph
+
+The panel is laid out where it finally belongs, then transformed so that at t=0
+it exactly covers the card, relaxing to identity as t→1. Both ends are known up
+front, so every frame in between is arithmetic — no library, no keyframes, and
+nothing that has to observe a DOM node while it animates.
+
+```ts
+const scaleX = lerp(origin.width / target.width, 1, t);
+const dx     = lerp(origin.x - target.x, 0, t);
+// transformOrigin: "top left" — so the composite is offset + scale·p
+```
+
+That is `flip()` in
+[`expandable-card.transitions.ts`](src/trees/disclosure/expandable-card/expandable-card.transitions.ts),
+and it is the piece worth copying out of this repo on its own. The scale is
+non-uniform — a wide card into a tall panel is not a zoom — so the content
+inside is counter-scaled by the reciprocal, which keeps type undistorted and
+makes the content briefly wider than the surface. Hence the one thing a leaf
+must do: **clip the panel**. There is a test for it.
+
+Three obligations, and they are all a leaf has:
+
+1. spread `{...card.anchor}` on each card — that is the rect the morph starts
+   from, and it is a `data-*` attribute, not behaviour;
+2. put `panel.id` on the panel and spread `panel.motion.surface` there;
+3. clip that surface.
+
+[`expandable-card.leaves.test.tsx`](src/trees/disclosure/expandable-card/expandable-card.leaves.test.tsx)
+asserts all three against **every leaf on the tree, including ones not written
+yet** — because a leaf that quietly drops one looks perfect in the lab on a
+frozen fixture and does nothing at all when a person presses it.
+
+### Both rectangles are allowed to be missing
+
+`origin` and `target` are nullable, and that is the load-bearing part rather
+than defensive typing. On the server, in a test, and on the very first frame of
+the very first opening there is nothing to measure. A preset that needed the
+numbers would emit `NaN` into a transform — which fails silently, on first paint
+only, on machines that are not yours. So `morph` degrades to `lift`, and the
+degradation is what allows it to be the default. `resolveMotion` is also where
+reduced motion short-circuits, *before* the preset runs, so a new preset cannot
+forget it.
+
+Measuring the panel deserves its own sentence: the morph transforms the panel,
+so measuring it while transformed measures the transform. The container
+neutralises the transform, reads the rect and puts it back inside one
+synchronous layout effect — the classic FLIP read, and the reason nothing
+flickers.
+
+### The proof it is not modal-shaped
+
+`canon/inline-detail` renders no overlay. The detail opens as a row in the flow,
+the page never locks, nothing is covered, and the source card stays visible —
+and it gets the identical measured morph, because a panel laid out in flow is
+just a different `target`. It is handed `motion.backdrop` like every other leaf
+and renders no backdrop at all. A field a leaf does not need is a field a leaf
+does not render; that is the difference between a contract and a component with
+options.
+
+What the container deliberately does **not** do: trap focus. It moves focus into
+the panel and returns it to the card on close — the part that is always right —
+but a trap written at the container would be guessing at a structure each leaf
+owns. A leaf that needs one should use a Radix dialog from `src/components/ui/`,
+held controlled, like `chrome/section-tabs` does.
+
 ## Tabs, and the three axes
 
 `chrome/section-tabs` is the tree you reach for when the page has more sections
@@ -292,6 +470,148 @@ that are never both present. Hover and popover content is always **portalled**,
 because a card rendered inside the `overflow-x-auto` track that holds it is the
 most common way a working popover ships clipped.
 
+## Docks, and the cost of a door
+
+`chrome/pane-dock` is the only tree here whose subject is *what a screen does
+not show you*. It was planted after reading a real workspace whose layout table
+had, over five weeks, been corrected four separate times — each correction
+turning a pane from "not mounted here" into "collapsed to a strip here", and
+each defended with the same sentence, which is a good one:
+
+> A posture says what you LAND on, not what you may reach.
+
+Every one of those corrections was right. The aggregate was a send page — one
+job, one button that mattered — carrying five collapsed strips on four edges, a
+nine-item icon rail, and three labels rotated ninety degrees. Forty per cent of
+the controls on screen did nothing but move furniture.
+
+The error is not in the principle. It is one word underneath it:
+
+> Reachability is a **door**, not a **strip**.
+
+"You may reach this pane" is a claim about what happens when someone asks. It
+does not, by itself, buy a permanently visible affordance — and a permanently
+visible affordance is not free, because its real cost is not the pixels it
+occupies but the ranking it demands from the reader. Five equally-weighted edges
+say five equally important things on a screen whose job is one thing.
+
+So the tree splits the two decisions that had been fused:
+
+1. **Which panes are open** — the caller's posture. An input. Still a preset,
+   still says what you land on.
+2. **How the closed ones are offered** — a leaf. A budget.
+
+Three things in the contract keep that split honest:
+
+- **`PaneDockDoor` has no `content`.** A docked pane is *not mounted*. The door
+  is a button that asks for the pane, never a wrapper around a hidden subtree —
+  so "collapsed" cannot quietly decay into "rendered, then hidden with CSS",
+  which is the state where the strips cost everything and buy nothing.
+- **`purpose.title` is not nullable.** A surface that cannot say in one line
+  what it is for has no way to rank anything on it, and the failure is silent:
+  every pane looks locally reasonable and the sentence that would have sorted
+  them was never written down.
+- **`state: "solo"`** is its own string. When nothing is docked, a leaf renders
+  no dock at all — and it gets there by switching on a state rather than asking
+  `docked.length === 0`, because a derived check is how an empty rail survives
+  its own emptiness.
+
+`canon/edge-strips` implements the expensive answer faithfully, rotated labels
+and all. It is not a straw man: placement-as-affordance is real information and
+the gesture is symmetrical with putting a pane away. It is there so that
+"compare all 4" on one fixture settles the argument with a picture instead of a
+paragraph — and so that a surface which genuinely wants four edges can have
+them, on the same VM, by changing one string.
+
+## Finding, and the words you don't have
+
+`finding/clip-picker` starts from a claim: **a search box is a demand that the
+person already knows the words.** On a send page that demand is close to fatal.
+The viewer arrived from a Twitch panel, has watched this streamer for a month,
+and remembers "the bit where he screamed at the fish" — which is not a query,
+because they do not know whether he said "fish", "it", or nothing at all.
+
+So the contract carries two ways in and refuses to make them two screens:
+
+1. **Shelves the streamer curated.** `browse` is the default state, not a
+   fallback. Zero typing, and the thing that has to be good.
+2. **Transcript search**, for the viewer who does have the words.
+
+The piece that makes it one surface is `search.suggestions` — **searches the
+streamer curated**. "the fish incident · 12 moments" is not a chip that filters
+a list; it is a query someone else already wrote, and tapping it moves a person
+who could not describe what they wanted directly into `results`. It is the only
+control on the screen that works for the state everybody actually arrives in.
+
+Three decisions in the VM are load-bearing:
+
+- **A match is a data structure.** `quote: TranscriptSegment[]` arrives already
+  split into matched and unmatched runs, so a leaf maps and styles and never
+  sees the query, never runs a regex, never calls `.split()`. Four leaves
+  highlight identically for free, and accent-folding or stemming becomes one
+  change in `splitTranscript` rather than four.
+- **`state` separates "no query" from "no results".** `browse` and `empty` look
+  nothing alike and mean opposite things — one is the front door, one is a dead
+  end that must offer a way out. A leaf deriving this from `results.length === 0`
+  would render the dead end on first paint, which is the exact bug.
+- **Send lives on the card.** There is no selected-item field anywhere in this
+  VM. A picker with a selection has two places to look at once, which is the
+  failure `chrome/pane-dock` documents; here you press Send on the thing you are
+  looking at, and *that thing* changes to say so. `ClipSendAction` carries its
+  own state, its own label and a `null` callback the moment it is unavailable,
+  so "says Sent but is still pressable" cannot be written four times.
+
+The leaves disagree about who is arriving, which is a real product choice and
+therefore one prop: `one-column` bets on a stranger on a phone, `shelf-rail` on
+a desktop viewer who reads rails fluently, `quote-first` on a regular who has
+the words, and `experimental/deck` on someone who will bounce before they finish
+reading a grid. The deck holds no state at all — its position lives in the DOM's
+scroll offset via `snap-x snap-mandatory`, which is the whole reason a stateless
+one-at-a-time pager is possible on a tree whose leaves may not own state.
+
+### Lifting it into an app that already has a send panel
+
+Three tiers, and they are not the same kind of work.
+
+**Copy the file.** `clip-picker.vm.ts` imports nothing — no `@/`, no React, no
+DOM. `splitTranscript`, `resolveSendAction`, `resolveClipPickerState`,
+`formatClipDuration` and `formatResultLabel` are portable by being pasted, and
+[`clip-picker.vm.test.ts`](src/trees/finding/clip-picker/clip-picker.vm.test.ts)
+is what makes that safe rather than optimistic: it pins the edges that bite —
+overlapping self-repeating queries, regex metacharacters (it never builds a
+regex), a trailing space that would otherwise kill a match, a match at the very
+first or last character, and the invariant that no query may ever add or drop a
+character of the line. Take the tests with the function; they are most of the
+value.
+
+**Adapt the shape.** `adaptSendPanel()` takes a *structural* type
+(`SendPanelVMLike`), so this repo never imports the consuming app — anything
+with those fields satisfies it. Same play as `adaptHomeHero` below, and the
+`Ported — yapdrop send panel` fixture puts a real panel's shape through the
+conformance suite, so "your shortlist renders through four leaves with no
+selection step" is a passing test rather than a claim.
+
+**Expect the adapter to be wrong somewhere, and say where.** The first version
+of `adaptSendPanel` mapped every un-sendable step — including a streamer who
+simply has drops paused — onto `offline`, which every leaf renders as one
+sentence with the shelves gone. That deleted the shortlist at the exact moment
+it is the reason to come back later, and it contradicted the source product's
+own note about why the picks exist. The fix separates two things the first
+version had fused: **`state` is what there is to show; permission is a
+`notice`.** A paused panel now browses, carries the streamer's sentence as a
+banner, and blocks every card with "Paused" rather than "Queue full" — pinned by
+[`clip-picker.paused.test.tsx`](src/trees/finding/clip-picker/clip-picker.paused.test.tsx),
+which asserts it once per leaf because a leaf could otherwise swallow the notice
+and still pass conformance.
+
+**Decide the product question.** The mapping deliberately has no field for a
+selected clip, and that is the one thing an adapter cannot smuggle in. Worth
+noticing before that argument starts: in yapdrop's own `QuickPickVM`, every row
+already carries `onSend: (() => void) | null`. **The curated path there never
+had a chooser step** — only the paste-a-URL path does. So the question is not
+"should we remove the selection step", it is "why does the typed path need one
+when the curated path never did", which is a much smaller thing to answer.
+
 ## The organizer
 
 ```bash
@@ -310,6 +630,29 @@ why "a tab deleted while active" is a unit test instead of a thing you find by
 dragging. Layouts persist to `localStorage` and are reconciled against the
 forest on load, so a stale entry drops sections that no longer exist instead of
 rendering a blank page.
+
+### It arranges this site, not a mock of it
+
+The organizer edits a **surface** — a named page whose shape is a value.
+`src/lib/site-layout.ts` holds one `SectionLayout` per surface (`home`, `lab`)
+and every write is still one of `section-layout.ts`'s pure moves lifted onto
+exactly one of them. `SiteLayoutProvider` at the root owns that value, because
+`/organize` writes it and `/` and `/lab` read it, so no single route can own it.
+Each page mounts `<CuratedSurface>` around the content it ships with, and the
+"Live result" panel on the organizer is that same component reading that same
+value — not a preview of the page, the page.
+
+Two properties keep this from being a way to break the site:
+
+- **A page with nothing in any tab renders the design it shipped with.** Empty
+  tabs are not curation, they are a page someone opened the organizer on and
+  walked away from. The shipped design is passed in as children, so the server
+  renders it, the static export contains it, and an unreadable `localStorage`
+  entry degrades to the site as shipped rather than to an empty tab bar.
+- **This site's own parts are sections too.** The forest index, the stats row
+  and the lab list are `builtin` entries in the catalog (`src/app/site-sections.tsx`),
+  so arranging a page can never delete its navigation — the tree list goes to
+  the shelf, and comes back.
 
 ## Porting a hero in from a consuming app
 
