@@ -65,7 +65,9 @@ export function TreeLab({ species, treeKey }: { species: string; treeKey: string
   const initial: LabState = {
     fixture: tree?.defaultFixture ?? "",
     leafRef: leaves[0]?.ref ?? "",
-    compareAll: false,
+    // Compare-all is the default: a tree's point is that its leaves are
+    // interchangeable, and you cannot see that one leaf at a time.
+    compareAll: leaves.length > 1,
     live: false,
     progress: 0,
   };
