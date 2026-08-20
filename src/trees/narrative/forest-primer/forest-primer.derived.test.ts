@@ -141,26 +141,124 @@ describe("chapter position and progress are decided here, not in a leaf", () => 
 
 describe("measureProgress", () => {
   const VIEWPORT = 900;
+  const LINE = VIEWPORT * 0.55;
+  const HEIGHT = 4000;
+  /** Where chapter `index` of six starts, as a fraction of the primer. */
+  const chapterStart = (index: number) => index / PRIMER_CHAPTER_COUNT;
 
-  it("is 0 for a primer sitting at the top of the document, unscrolled", () => {
-    // `/` renders the primer near the document top, above the 85% start line.
-    // Measured against a line it never has to cross, it used to open at ~0.33 —
-    // chapter 3 of 6 — before the reader had scrolled at all.
-    expect(measureProgress({ top: 96, height: 4000 }, VIEWPORT, 0)).toBe(0);
+  it("is 0 until the primer's top reaches the reading line", () => {
+    expect(measureProgress({ top: LINE, height: HEIGHT }, VIEWPORT)).toBe(0);
+    expect(measureProgress({ top: VIEWPORT, height: HEIGHT }, VIEWPORT)).toBe(0);
   });
 
-  it("is 0 for a primer further down the page that has not been reached", () => {
-    expect(measureProgress({ top: VIEWPORT, height: 4000 }, VIEWPORT, 0)).toBe(0);
+  /**
+   * The bug this replaces. The primer sits near the top of `/`, so a reader who
+   * has not scrolled is already looking at chapter 1 — it must be arriving, not
+   * waiting, and it must not be some later chapter either.
+   */
+  it("opens inside chapter 1 for a primer at the top of the document", () => {
+    const progress = measureProgress({ top: 96, height: HEIGHT }, VIEWPORT);
+    expect(progress).toBeGreaterThan(0);
+    expect(resolveChapterCursor(progress, PRIMER_CHAPTER_COUNT).activeIndex).toBe(0);
   });
 
   it("advances as the page scrolls", () => {
-    const first = measureProgress({ top: 96 - 400, height: 4000 }, VIEWPORT, 400);
-    const later = measureProgress({ top: 96 - 1200, height: 4000 }, VIEWPORT, 1200);
+    const first = measureProgress({ top: 96 - 400, height: HEIGHT }, VIEWPORT);
+    const later = measureProgress({ top: 96 - 1200, height: HEIGHT }, VIEWPORT);
     expect(first).toBeGreaterThan(0);
     expect(later).toBeGreaterThan(first);
   });
 
-  it("reaches 1 once the primer has been scrolled past", () => {
-    expect(measureProgress({ top: -4000, height: 4000 }, VIEWPORT, 6000)).toBe(1);
+  /**
+   * The whole point of the reading line: a chapter is active WHILE it is being
+   * read, not a screen after. Put each chapter's own top on the line and the
+   * cursor must name that chapter — which it cannot do if progress is measured
+   * against the element entering and leaving the viewport instead.
+   */
+  it("makes the chapter under the reading line the active one", () => {
+    for (let index = 0; index < PRIMER_CHAPTER_COUNT; index += 1) {
+      // Sample just inside the chapter, so a boundary does not decide the test.
+      const into = (chapterStart(index) + 0.5 / PRIMER_CHAPTER_COUNT) * HEIGHT;
+      const progress = measureProgress({ top: LINE - into, height: HEIGHT }, VIEWPORT);
+      expect(
+        resolveChapterCursor(progress, PRIMER_CHAPTER_COUNT).activeIndex,
+        `chapter ${index + 1} under the reading line`,
+      ).toBe(index);
+    }
+  });
+
+  /* ---------------------------------------------------------------- *
+   * Measured against the chapters themselves.
+   * ---------------------------------------------------------------- */
+
+  /** Six chapters laid out as a column, the fifth as oversized as the real one. */
+  const column = (offset: number, heights: number[]) => {
+    let top = offset;
+    return heights.map((height) => {
+      const extent = { top, bottom: top + height };
+      top += height;
+      return extent;
+    });
+  };
+  const HEIGHTS = [520, 550, 510, 490, 1400, 290];
+  const HOST = { top: 0, height: HEIGHTS.reduce((a, b) => a + b, 0) };
+
+  it("keeps a chapter active for the whole of its own height, not its share of the total", () => {
+    // The drift this replaces: chapter 5 is nearly three times the average, so
+    // a fraction-of-total cursor finished it and moved to 6 while the reader
+    // was still in the middle of it.
+    const chapters = column(-2000, HEIGHTS);
+    const fifth = chapters[4];
+    for (const line of [fifth.top + 20, (fifth.top + fifth.bottom) / 2, fifth.bottom - 20]) {
+      const viewport = line / 0.55;
+      const progress = measureProgress(HOST, viewport, chapters);
+      expect(
+        resolveChapterCursor(progress, PRIMER_CHAPTER_COUNT).activeIndex,
+        `reading line at ${Math.round(line)}`,
+      ).toBe(4);
+    }
+  });
+
+  it("names whichever chapter the reading line is inside", () => {
+    const chapters = column(-1500, HEIGHTS);
+    chapters.forEach((chapter, index) => {
+      const viewport = ((chapter.top + chapter.bottom) / 2) / 0.55;
+      const progress = measureProgress(HOST, viewport, chapters);
+      expect(
+        resolveChapterCursor(progress, PRIMER_CHAPTER_COUNT).activeIndex,
+        `chapter ${index + 1}`,
+      ).toBe(index);
+    });
+  });
+
+  it("runs a chapter's own progress from 0 to 1 across that chapter", () => {
+    const chapters = column(-1500, HEIGHTS);
+    const third = chapters[2];
+    const at = (line: number) =>
+      resolveChapterCursor(measureProgress(HOST, line / 0.55, chapters), PRIMER_CHAPTER_COUNT)
+        .chapterProgress;
+    expect(at(third.top + 1)).toBeLessThan(0.05);
+    expect(at(third.bottom - 1)).toBeGreaterThan(0.95);
+  });
+
+  it("is 0 above the first chapter and 1 below the last", () => {
+    const chapters = column(400, HEIGHTS);
+    expect(measureProgress(HOST, 400 / 0.55, chapters)).toBe(0);
+    const last = chapters[chapters.length - 1];
+    expect(measureProgress(HOST, (last.bottom + 10) / 0.55, chapters)).toBe(1);
+  });
+
+  it("falls back to the whole-element fraction when the chapters cannot be read", () => {
+    const line = LINE;
+    expect(measureProgress({ top: line - 2000, height: 4000 }, VIEWPORT, null)).toBeCloseTo(0.5, 5);
+    expect(measureProgress({ top: line - 2000, height: 4000 }, VIEWPORT, [])).toBeCloseTo(0.5, 5);
+  });
+
+  it("finishes while the last chapter is still on screen, not after it has left", () => {
+    // The primer's bottom exactly on the line: settled, and still visible.
+    const bottomOnLine = { top: LINE - HEIGHT, height: HEIGHT };
+    expect(measureProgress(bottomOnLine, VIEWPORT)).toBe(1);
+    expect(bottomOnLine.top + HEIGHT).toBeLessThan(VIEWPORT);
+    expect(measureProgress({ top: -HEIGHT, height: HEIGHT }, VIEWPORT)).toBe(1);
   });
 });

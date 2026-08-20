@@ -52,31 +52,85 @@ export type ForestPrimerConnectedProps = {
   body?: string | null;
 };
 
+/** Where the eye is: a fixed height down the viewport, a little below centre. */
+const READING_LINE = 0.55;
+
 /**
  * Where the primer sits in the scroll, as 0..1.
  *
- * The mapping is deliberately not "top of element hits top of viewport": a
- * chapter should be finished by the time it is a third of the way up the
- * screen, or the last chapter only completes once it has left. Start when the
- * top crosses 85% of the viewport, finish when the bottom crosses 15%.
+ * The primer's transport is not "how far past this element have we scrolled" —
+ * it is "how far INTO it are we reading". Those are a whole viewport apart, and
+ * the difference is the entire bug this replaces: measured against the element
+ * entering and leaving the viewport, progress only reached 1/6 once the reader
+ * had scrolled a sixth of the primer's height PAST its start line, by which
+ * point chapter 2 was already on screen. Every chapter therefore lit up about a
+ * screen after the reader had passed it, which reads as an animation firing
+ * late rather than as a chapter arriving.
  *
- * A primer that begins ABOVE that start line never crosses it — which is
- * exactly where this one sits on `/`, near the top of the document. Measured
- * against the line it would have to reach, it opens a third of the way through
- * itself: chapter 3 of 6, before the reader has scrolled at all. So the start
- * line is the later of the two: the 85% mark, or wherever the primer actually
- * begins. Anything further down the page is unaffected.
+ * So the measurement is a reading line — a fixed height down the viewport,
+ * a little below centre, where the eye actually is. Progress is that line's
+ * position expressed as a fraction of the primer's own height, which makes the
+ * cursor a statement about WHICH PART OF THE PRIMER IS BEING READ. A chapter
+ * occupying the middle sixth of the primer is the active one exactly while the
+ * reading line is inside it.
+ *
+ * It follows that 0 means the primer's top has not yet reached the line and 1
+ * means its bottom has passed it — so the last chapter finishes while it is
+ * still on screen, and a primer sitting near the top of the document (which is
+ * where this one sits on `/`) opens partway into chapter 1 rather than dimmed
+ * and waiting for a scroll that already happened.
+ *
+ * `chapters` is where the line actually is, chapter by chapter. Without it the
+ * fraction is taken against the primer's total height, which assumes every
+ * chapter is the same size — and chapter 5 is nearly three times the average,
+ * so the cursor would finish it and move on while the reader was still halfway
+ * down it. With it, chapter `i` is active for exactly as long as the line is
+ * inside chapter `i`, whatever that is worth in pixels. A leaf that does not
+ * lay its chapters out as a column simply does not supply it, and the fraction
+ * is the fallback.
  */
 export function measureProgress(
   rect: { top: number; height: number },
   viewportHeight: number,
-  scrollY: number,
+  chapters?: ReadonlyArray<{ top: number; bottom: number }> | null,
 ): number {
-  const documentTop = rect.top + scrollY;
-  const end = viewportHeight * 0.15;
-  const start = Math.min(viewportHeight * 0.85, documentTop);
-  const span = Math.max(1, rect.height - (start - end));
-  return clampProgress((start - rect.top) / span);
+  const line = viewportHeight * READING_LINE;
+
+  if (chapters && chapters.length > 0) {
+    const count = chapters.length;
+    if (line <= chapters[0].top) return 0;
+    if (line >= chapters[count - 1].bottom) return 1;
+    const index = chapters.findIndex((chapter) => line < chapter.bottom);
+    if (index < 0) return 1;
+    const chapter = chapters[index];
+    const within = clampProgress((line - chapter.top) / Math.max(1, chapter.bottom - chapter.top));
+    return clampProgress((index + within) / count);
+  }
+
+  return clampProgress((line - rect.top) / Math.max(1, rect.height));
+}
+
+/**
+ * The chapters as the leaf laid them out, or null if it did not lay them out as
+ * a top-to-bottom column. `data-chapter` is the only thing this container reads
+ * out of the leaf's DOM, and it reads it as GEOMETRY, never as content — the
+ * count has to match the chapters it handed over and they have to descend, or
+ * the measurement means nothing and the fraction takes over instead.
+ */
+function readChapterExtents(
+  host: HTMLElement,
+  expected: number,
+): Array<{ top: number; bottom: number }> | null {
+  const nodes = host.querySelectorAll<HTMLElement>("[data-chapter]");
+  if (nodes.length !== expected) return null;
+  const extents: Array<{ top: number; bottom: number }> = [];
+  for (const node of nodes) {
+    const rect = node.getBoundingClientRect();
+    const previous = extents[extents.length - 1];
+    if (previous && rect.top < previous.top) return null;
+    extents.push({ top: rect.top, bottom: rect.bottom });
+  }
+  return extents;
 }
 
 /** Scroll transport. Lives here so leaves stay pure. */
@@ -91,7 +145,7 @@ function useScrollProgress(enabled: boolean) {
       measureProgress(
         element.getBoundingClientRect(),
         window.innerHeight || 1,
-        window.scrollY,
+        readChapterExtents(element, PRIMER_CHAPTER_COUNT),
       ),
     );
   }, []);
