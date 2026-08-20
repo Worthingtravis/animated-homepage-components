@@ -63,6 +63,8 @@ import { ChannelHeroLiveMarquee as landing_channelHero_broadcast_liveMarquee, me
 import { meta as landing_channelHero_canonMeta } from "./landing/channel-hero/branches/canon/branch.meta";
 import { ChannelHeroSplitDock as landing_channelHero_canon_splitDock, meta as landing_channelHero_canon_splitDockMeta } from "./landing/channel-hero/branches/canon/split-dock/split-dock";
 import { ChannelHeroStackedBillboard as landing_channelHero_canon_stackedBillboard, meta as landing_channelHero_canon_stackedBillboardMeta } from "./landing/channel-hero/branches/canon/stacked-billboard/stacked-billboard";
+import { meta as landing_channelHero_keyArtMeta } from "./landing/channel-hero/branches/key-art/branch.meta";
+import { ChannelHeroPosterWall as landing_channelHero_keyArt_posterWall, meta as landing_channelHero_keyArt_posterWallMeta } from "./landing/channel-hero/branches/key-art/poster-wall/poster-wall";
 import { meta as species_motionMeta } from "./motion/species.meta";
 import { meta as motion_auroraHeadlineMeta } from "./motion/aurora-headline/tree.meta";
 import * as motion_auroraHeadlineFixtures from "./motion/aurora-headline/aurora-headline.fixtures";
@@ -441,6 +443,18 @@ export const FOREST: SpeciesNode[] = [
           ref: "canon/stacked-billboard",
           meta: landing_channelHero_canon_stackedBillboardMeta,
           Component: landing_channelHero_canon_stackedBillboard as ForestComponent,
+        },
+        ],
+      },
+      {
+        key: "key-art",
+        meta: landing_channelHero_keyArtMeta,
+        leaves: [
+        {
+          key: "poster-wall",
+          ref: "key-art/poster-wall",
+          meta: landing_channelHero_keyArt_posterWallMeta,
+          Component: landing_channelHero_keyArt_posterWall as ForestComponent,
         },
         ],
       },

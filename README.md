@@ -273,6 +273,7 @@ its props *are* the VM above it. Lab routes are local (`pnpm dev`, or
 | [`canon/split-dock`](src/trees/landing/channel-hero/branches/canon/split-dock/split-dock.tsx) | 60/40 split — the closest match to laughingwhales.com's hero |
 | [`canon/stacked-billboard`](src/trees/landing/channel-hero/branches/canon/stacked-billboard/stacked-billboard.tsx) | One centred column; status becomes a pill, links become a divided list |
 | [`broadcast/live-marquee`](src/trees/landing/channel-hero/branches/broadcast/live-marquee/live-marquee.tsx) | Broadcast furniture — tally bar, lower-third slab, links on a ticker rail |
+| [`key-art/poster-wall`](src/trees/landing/channel-hero/branches/key-art/poster-wall/poster-wall.tsx) | A printed one-sheet — links become a panel mosaic, the headline is a wordmark slab cut into it, actions set as a billing block. The entrance is a camera move onto finished art |
 
 ### motion — defined by movement
 
