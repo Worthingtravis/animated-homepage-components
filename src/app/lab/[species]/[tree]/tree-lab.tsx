@@ -34,7 +34,7 @@ type LabState = {
 type LabAction =
   | { type: "select_fixture"; fixture: string }
   | { type: "select_leaf"; leafRef: string }
-  | { type: "toggle_compare" }
+  | { type: "set_compare"; compareAll: boolean }
   | { type: "toggle_live" }
   | { type: "tick"; progress: number }
   | { type: "reset"; initial: LabState };
@@ -45,8 +45,8 @@ function labReducer(state: LabState, action: LabAction): LabState {
       return { ...state, fixture: action.fixture };
     case "select_leaf":
       return { ...state, leafRef: action.leafRef, compareAll: false };
-    case "toggle_compare":
-      return { ...state, compareAll: !state.compareAll };
+    case "set_compare":
+      return { ...state, compareAll: action.compareAll };
     case "toggle_live":
       return { ...state, live: !state.live };
     case "tick":
@@ -96,6 +96,7 @@ export function TreeLab({ species, treeKey }: { species: string; treeKey: string
         progress: state.progress,
       })
     : baseVm;
+  const canCompare = leaves.length > 1;
   const shown: LeafNode[] = state.compareAll
     ? leaves
     : leaves.filter((leaf) => leaf.ref === state.leafRef);
@@ -166,33 +167,75 @@ export function TreeLab({ species, treeKey }: { species: string; treeKey: string
               <span className="ml-2 font-mono text-xs opacity-70">{leaf.ref}</span>
             </button>
           ))}
-          <button
-            type="button"
-            aria-pressed={state.compareAll}
-            onClick={() => dispatch({ type: "toggle_compare" })}
-            className={cn(
-              "rounded-md border px-3 py-1.5 text-sm transition-colors",
-              state.compareAll
-                ? "border-ring bg-primary text-primary-foreground"
-                : "border-border bg-card text-muted-foreground hover:text-foreground",
-            )}
-          >
-            Compare all
-          </button>
+        </div>
+      </section>
+
+      {/*
+        Compare used to sit at the end of the leaf row wearing the same pill as a
+        leaf, so the one control that changes what the page *is* read as "one more
+        leaf". It gets its own section and a two-option switch: the alternative to
+        comparing is now visible instead of implied by an un-pressed toggle.
+      */}
+      <section aria-label="View" className="space-y-2">
+        <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">View</h2>
+        <div className="flex flex-wrap items-center gap-3">
+          {/*
+            A freshly planted tree has exactly one leaf, and "Compare all 1" is a
+            control whose two options render the same thing. Below two leaves the
+            switch has nothing to switch between, so it does not appear.
+          */}
+          {canCompare ? (
+            <div
+              role="group"
+              aria-label="Preview mode"
+              className="inline-flex rounded-lg border border-border bg-card p-1"
+            >
+              {(
+                [
+                  [false, "One leaf"],
+                  [true, `Compare all ${leaves.length}`],
+                ] as const
+              ).map(([compareAll, label]) => (
+                <button
+                  key={label}
+                  type="button"
+                  aria-pressed={state.compareAll === compareAll}
+                  onClick={() => dispatch({ type: "set_compare", compareAll })}
+                  className={cn(
+                    "rounded-md px-4 py-2 text-sm font-medium transition-colors",
+                    state.compareAll === compareAll
+                      ? "bg-primary text-primary-foreground shadow-sm ring-1 ring-ring"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          ) : null}
+
           <button
             type="button"
             aria-pressed={state.live}
             onClick={() => dispatch({ type: "toggle_live" })}
             className={cn(
-              "rounded-md border px-3 py-1.5 text-sm transition-colors",
+              "rounded-lg border px-4 py-2 text-sm font-medium transition-colors",
               state.live
-                ? "border-ring bg-primary text-primary-foreground"
-                : "border-border bg-card text-muted-foreground hover:text-foreground",
+                ? "border-ring bg-accent text-accent-foreground"
+                : "border-border bg-card text-muted-foreground hover:border-ring hover:text-foreground",
             )}
           >
             {state.live ? "Pause clock" : "Run clock"}
             {tree.frameAt ? null : <span className="ml-2 text-xs opacity-70">(progress only)</span>}
           </button>
+
+          <p className="text-sm text-muted-foreground">
+            {!canCompare
+              ? "This tree has one leaf. Open another to compare."
+              : state.compareAll
+                ? "Every leaf on this tree, same fixture, side by side."
+                : `Showing one leaf. Compare to see all ${leaves.length} at once.`}
+          </p>
         </div>
       </section>
 
