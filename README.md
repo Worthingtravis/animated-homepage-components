@@ -69,10 +69,14 @@ src/trees/
     section-tabs/                          ← holds OTHER trees; transport is one tab change
       section-tabs.transitions.ts          ← swappable motion presets, pure functions
       ...
+  commerce/                                ← something that can be bought
+    product-card/                          ← transport is one add-to-bag
+      product-card.vm.ts                   ← where every price, percent and measurement is made
+      ...
   generated.ts                             ← registry, rebuilt from the filesystem by `pnpm sync`
 ```
 
-Nine reference trees ship with the repo:
+Ten reference trees ship with the repo:
 
 - **`motion/aurora-headline`** — the minimal case. Passive, no callbacks, one
   transport value.
@@ -147,6 +151,15 @@ Nine reference trees ship with the repo:
   time; a countdown reopens that door, so the contract shuts it. See **Time, and
   the thing that must not tick** below.
 
+- **`commerce/product-card`** — the *arithmetic* case. A product card looks like
+  a content card and is not one: the discount badge, the struck price, the
+  rating and the dimensions are all results of calculations, and every one of
+  them is a bug that reaches a customer if a variant gets it wrong. So no number
+  crosses into a leaf — money arrives as `"$199"`, the discount as `"− 50%"`,
+  and both come out of the same call, which is why no two leaves on this tree
+  can disagree about what something costs. See **Money, and the number a leaf
+  must never see** below.
+
 ## Every tree, every leaf
 
 Each tree links to its **contract** — read that first, it is the thing every
@@ -191,6 +204,20 @@ its props *are* the VM above it. Lab routes are local (`pnpm dev`, or
 | [`canon/edge-strips`](src/trees/chrome/pane-dock/branches/canon/edge-strips/edge-strips.tsx) | A strip on the edge of the column each pane would open into. Maximum placement information; the labels turn sideways and the content ends up ringed |
 | [`canon/one-rail`](src/trees/chrome/pane-dock/branches/canon/one-rail/one-rail.tsx) | Every door in one left rail, grouped by role, labels the right way up — the only leaf where a door can explain itself without a hover |
 | [`experimental/command-sheet`](src/trees/chrome/pane-dock/branches/experimental/command-sheet/command-sheet.tsx) | Zero standing chrome — one counted trigger, everything else behind it. The only leaf whose footprint does not grow with the dock |
+
+### commerce — something that can be bought
+
+**[product-card](src/trees/commerce/product-card/)** ·
+[contract](src/trees/commerce/product-card/product-card.vm.ts) ·
+[fixtures](src/trees/commerce/product-card/product-card.fixtures.ts) ·
+[container](src/trees/commerce/product-card/product-card-connected.tsx) ·
+`/lab/commerce/product-card`
+
+| Leaf | |
+|---|---|
+| [`canon/spec-shelf`](src/trees/commerce/product-card/branches/canon/spec-shelf/spec-shelf.tsx) | **Start here.** Photograph in an inset panel, the facts a shopper compares on one chip shelf beneath it, name and price sharing the last line |
+| [`canon/detail-row`](src/trees/commerce/product-card/branches/canon/detail-row/detail-row.tsx) | The card on its side, for a cart or a comparison list. Takes the pre-joined `specLine` where its sibling takes the W/H/D rows — same strings, different room |
+| [`experimental/price-tag`](src/trees/commerce/product-card/branches/experimental/price-tag/price-tag.tsx) | The photograph is the card — type under a wash, the price hanging off the corner as a tag, and the commit as the whole bottom edge |
 
 ### disclosure — one item opening into more of itself
 
@@ -317,6 +344,56 @@ a different feature and a different decision. And a custom duration is not a
 prop — periods that anchor to a wall-clock boundary need their length to divide
 the day evenly, so "90-minute timer" is a scheduling decision the caller makes
 before `endsAt` ever reaches this tree.
+
+## Money, and the number a leaf must never see
+
+`commerce/product-card` is the tree where the extract-vm rule about
+pre-formatted strings stops being hygiene and starts being correctness.
+
+Look at what a product card actually displays. `"− 50%"` is two amounts and a
+rounding rule. `"$399"` struck through only exists when it is higher than the
+price beside it. `"$199"` is minor units, a currency and a locale. `"4.9"` is a
+mean with a decimal count somebody decided on. `"58 × 79 × 60 cm"` is three
+measurements, a separator and a unit. Every one of those is a `toFixed`, an
+`Intl.NumberFormat` or a `join` — and every one of them is a claim about a
+price, which is the one kind of bug a shop cannot ship twice.
+
+Let presentation do that arithmetic and the failure is not a crash. It is one
+variant saying `$199.00` and another saying `$199`; it is a 33.4% cut advertised
+as 33 in the grid and 34 on the detail page, because the two leaves reached for
+different rounding. Nothing throws. The suite stays green. The card simply
+contradicts itself in front of a customer.
+
+| Who | Owns |
+|---|---|
+| the caller | amounts in **minor units** (`19_900`), a currency, a raw rating |
+| the container | `formatMoney`, `percentOffLabel`, `compareAtPrice`, `specLine` — one call each, one answer each |
+| the leaf | strings it prints verbatim, and `vm.state` to decide where they go |
+
+The badge, the struck price and the saving line are three views of ONE
+subtraction, so they cannot drift apart:
+
+```ts
+percentOffLabel(19_900, 39_900)          // "− 50%"    — the badge
+compareAtPrice(19_900, 39_900, "USD")    // "$399"     — struck, only when higher
+formatMoney(39_900 - 19_900, "USD")      // "$200"     — "Save $200"
+```
+
+`percentOffLabel` rounds **down**, always. 49.6% off is advertised as 49, never
+50 — a designer would round the other way and a regulator reads the difference.
+That rule lives in one function, which is the entire argument for the tree.
+
+The fixtures are where it is checked. `sample()` derives every string from a raw
+record through the same helpers the container uses, so a fixture cannot describe
+a card the running component could not produce — and
+`product-card.fixtures.test.ts` asserts the card never says two things at once:
+no struck price without a badge, no `"Add to bag"` on a button that cannot be
+pressed, at most one accent-filled badge.
+
+The three leaves then prove the split is real. `canon/spec-shelf` renders the
+dimensions as a W/H/D block; `canon/detail-row` renders the same dimensions as
+one line; `experimental/price-tag` has room for neither and renders none. All
+three take their strings from the same VM, and none of them owns a number.
 
 ## Morphing, and where a measurement belongs
 

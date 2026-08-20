@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480" role="img" aria-label="Placeholder product photograph">
+  <defs>
+    <linearGradient id="panel" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#f2f1ee" />
+      <stop offset="1" stop-color="#e4e2dd" />
+    </linearGradient>
+    <linearGradient id="wood" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#e0b978" />
+      <stop offset="1" stop-color="#f0dbb6" />
+    </linearGradient>
+  </defs>
+  <rect width="480" height="480" fill="url(#panel)" />
+  <ellipse cx="240" cy="392" rx="126" ry="16" fill="#000000" fill-opacity="0.06" />
+  <g fill="url(#wood)" stroke="#c9a06a" stroke-width="2" stroke-linejoin="round">
+    <path d="M150 148h180l14 22H164z" />
+    <path d="M150 148l-4 62h20l4-62z" />
+    <path d="M330 148l4 62h-20l-4-62z" />
+    <path d="M146 236h188l10 26H140z" />
+    <path d="M156 262l-10 122h20l12-122z" />
+    <path d="M324 262l10 122h-20l-12-122z" />
+    <path d="M186 262l-6 108h16l6-108z" />
+    <path d="M294 262l6 108h-16l-6-108z" />
+  </g>
+</svg>

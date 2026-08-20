@@ -29,6 +29,14 @@ import { SectionTabsSideRail as chrome_sectionTabs_canon_sideRail, meta as chrom
 import { SectionTabsTopTrack as chrome_sectionTabs_canon_topTrack, meta as chrome_sectionTabs_canon_topTrackMeta } from "./chrome/section-tabs/branches/canon/top-track/top-track";
 import { meta as chrome_sectionTabs_experimentalMeta } from "./chrome/section-tabs/branches/experimental/branch.meta";
 import { SectionTabsHoverDock as chrome_sectionTabs_experimental_hoverDock, meta as chrome_sectionTabs_experimental_hoverDockMeta } from "./chrome/section-tabs/branches/experimental/hover-dock/hover-dock";
+import { meta as species_commerceMeta } from "./commerce/species.meta";
+import { meta as commerce_productCardMeta } from "./commerce/product-card/tree.meta";
+import * as commerce_productCardFixtures from "./commerce/product-card/product-card.fixtures";
+import { meta as commerce_productCard_canonMeta } from "./commerce/product-card/branches/canon/branch.meta";
+import { ProductCardDetailRow as commerce_productCard_canon_detailRow, meta as commerce_productCard_canon_detailRowMeta } from "./commerce/product-card/branches/canon/detail-row/detail-row";
+import { ProductCardSpecShelf as commerce_productCard_canon_specShelf, meta as commerce_productCard_canon_specShelfMeta } from "./commerce/product-card/branches/canon/spec-shelf/spec-shelf";
+import { meta as commerce_productCard_experimentalMeta } from "./commerce/product-card/branches/experimental/branch.meta";
+import { ProductCardPriceTag as commerce_productCard_experimental_priceTag, meta as commerce_productCard_experimental_priceTagMeta } from "./commerce/product-card/branches/experimental/price-tag/price-tag";
 import { meta as species_disclosureMeta } from "./disclosure/species.meta";
 import { meta as disclosure_expandableCardMeta } from "./disclosure/expandable-card/tree.meta";
 import * as disclosure_expandableCardFixtures from "./disclosure/expandable-card/expandable-card.fixtures";
@@ -225,6 +233,54 @@ export const FOREST: SpeciesNode[] = [
           ref: "experimental/hover-dock",
           meta: chrome_sectionTabs_experimental_hoverDockMeta,
           Component: chrome_sectionTabs_experimental_hoverDock as ForestComponent,
+        },
+        ],
+      },
+      ],
+    },
+    ],
+  },
+  {
+    key: "commerce",
+    meta: species_commerceMeta,
+    trees: [
+    {
+      key: "product-card",
+      species: "commerce",
+      ref: "commerce/product-card",
+      meta: commerce_productCardMeta,
+      fixtures: commerce_productCardFixtures.ALL_FIXTURES as Record<string, unknown>,
+      defaultFixture: commerce_productCardFixtures.DEFAULT_FIXTURE as string,
+      frameAt: commerce_productCardFixtures.frameAt as (progress: number) => unknown,
+
+      branches: [
+      {
+        key: "canon",
+        meta: commerce_productCard_canonMeta,
+        leaves: [
+        {
+          key: "detail-row",
+          ref: "canon/detail-row",
+          meta: commerce_productCard_canon_detailRowMeta,
+          Component: commerce_productCard_canon_detailRow as ForestComponent,
+        },
+        {
+          key: "spec-shelf",
+          ref: "canon/spec-shelf",
+          meta: commerce_productCard_canon_specShelfMeta,
+          Component: commerce_productCard_canon_specShelf as ForestComponent,
+        },
+        ],
+      },
+      {
+        key: "experimental",
+        meta: commerce_productCard_experimentalMeta,
+        leaves: [
+        {
+          key: "price-tag",
+          ref: "experimental/price-tag",
+          meta: commerce_productCard_experimental_priceTagMeta,
+          Component: commerce_productCard_experimental_priceTag as ForestComponent,
         },
         ],
       },
