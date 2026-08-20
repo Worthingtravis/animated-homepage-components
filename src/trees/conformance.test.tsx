@@ -174,7 +174,17 @@ describe("tree contracts (extract-vm phases 2, 3, 5)", () => {
   it.each(vmFiles.map((file) => [file.rel, file] as const))(
     "%s has no side effects",
     (_rel, file) => {
-      expect(/\buse(State|Effect|Ref|Memo|Callback)\b/.test(file.source), file.rel).toBe(false);
+      /*
+       * Anchored on the call/generic syntax, exactly like the leaf rules above,
+       * rather than on the bare word. A VM that *names* a hook is not a VM that
+       * *uses* one — `narrative/forest-primer` carries the sentence "the first
+       * useState in a leaf ends it" as copy, and a bare-word grep failed the
+       * one file in the forest whose job is to quote the rule.
+       */
+      expect(
+        /\buse(State|Effect|Ref|Memo|Callback)\s*[(<]/.test(file.source),
+        file.rel,
+      ).toBe(false);
       expect(/\bfetch\s*\(/.test(file.source), file.rel).toBe(false);
       expect(/\bwindow\./.test(file.source), file.rel).toBe(false);
     },

@@ -1,3 +1,5 @@
+import { ForestPrimerConnected } from "@/trees/narrative/forest-primer/forest-primer-connected";
+
 import { ForestIndexSection, ForestStatsSection } from "./site-sections";
 
 /**
@@ -11,16 +13,15 @@ import { ForestIndexSection, ForestStatsSection } from "./site-sections";
 export default function ForestPage() {
   return (
     <div className="space-y-10">
-      <section>
-        <h1 className="text-3xl font-semibold text-foreground">Animated homepage components</h1>
-        <p className="mt-3 max-w-2xl text-muted-foreground">
-          Every component here is split the same way: a{" "}
-          <strong className="text-foreground">tree</strong> owns the ViewModel contract, a{" "}
-          <strong className="text-foreground">branch</strong> is an aesthetic direction, and a{" "}
-          <strong className="text-foreground">leaf</strong> is one pure presentation component.
-          Leaves on the same tree are drop-in interchangeable, because none of them own state.
-        </p>
-      </section>
+      {/*
+       * The paragraph that used to sit here said what chapter 1 of the primer
+       * now draws — species, tree, branch, leaf, and why none of them own
+       * state. Saying it twice is how the two copies start disagreeing. The
+       * heading stays: a page needs an h1 whether or not the primer loaded.
+       */}
+      <h1 className="text-3xl font-semibold text-foreground">Animated homepage components</h1>
+
+      <ForestPrimerConnected />
 
       <ForestStatsSection />
       <ForestIndexSection />

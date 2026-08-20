@@ -72,6 +72,10 @@ import { AuroraHeadlineStackedRule as motion_auroraHeadline_canon_stackedRule, m
 import { meta as motion_auroraHeadline_experimentalMeta } from "./motion/aurora-headline/branches/experimental/branch.meta";
 import { AuroraHeadlineOrbitGlow as motion_auroraHeadline_experimental_orbitGlow, meta as motion_auroraHeadline_experimental_orbitGlowMeta } from "./motion/aurora-headline/branches/experimental/orbit-glow/orbit-glow";
 import { meta as species_narrativeMeta } from "./narrative/species.meta";
+import { meta as narrative_forestPrimerMeta } from "./narrative/forest-primer/tree.meta";
+import * as narrative_forestPrimerFixtures from "./narrative/forest-primer/forest-primer.fixtures";
+import { meta as narrative_forestPrimer_canonMeta } from "./narrative/forest-primer/branches/canon/branch.meta";
+import { ForestPrimerChaptered as narrative_forestPrimer_canon_chaptered, meta as narrative_forestPrimer_canon_chapteredMeta } from "./narrative/forest-primer/branches/canon/chaptered/chaptered";
 import { meta as narrative_stepRevealMeta } from "./narrative/step-reveal/tree.meta";
 import * as narrative_stepRevealFixtures from "./narrative/step-reveal/step-reveal.fixtures";
 import { meta as narrative_stepReveal_canonMeta } from "./narrative/step-reveal/branches/canon/branch.meta";
@@ -496,6 +500,30 @@ export const FOREST: SpeciesNode[] = [
     key: "narrative",
     meta: species_narrativeMeta,
     trees: [
+    {
+      key: "forest-primer",
+      species: "narrative",
+      ref: "narrative/forest-primer",
+      meta: narrative_forestPrimerMeta,
+      fixtures: narrative_forestPrimerFixtures.ALL_FIXTURES as Record<string, unknown>,
+      defaultFixture: narrative_forestPrimerFixtures.DEFAULT_FIXTURE as string,
+      frameAt: narrative_forestPrimerFixtures.frameAt as (progress: number) => unknown,
+
+      branches: [
+      {
+        key: "canon",
+        meta: narrative_forestPrimer_canonMeta,
+        leaves: [
+        {
+          key: "chaptered",
+          ref: "canon/chaptered",
+          meta: narrative_forestPrimer_canon_chapteredMeta,
+          Component: narrative_forestPrimer_canon_chaptered as ForestComponent,
+        },
+        ],
+      },
+      ],
+    },
     {
       key: "step-reveal",
       species: "narrative",

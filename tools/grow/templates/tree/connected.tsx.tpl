@@ -13,9 +13,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useForestLeaf } from "@/lib/use-forest-leaf";
 import {
   clampProgress,
-  resolve__VM_TYPE__State,
+  resolve__TREE_PASCAL__State,
   type __VM_TYPE__,
-  type __VM_TYPE__Item,
+  type __TREE_PASCAL__Item,
 } from "./__TREE__.vm";
 
 export type __VM_TYPE__ConnectedProps = {
@@ -74,7 +74,7 @@ export function __TREE_PASCAL__Connected({
   const reducedMotion = usePrefersReducedMotion();
   const progress = useProgress(durationMs, !reducedMotion);
 
-  const formattedItems = useMemo<__VM_TYPE__Item[]>(
+  const formattedItems = useMemo<__TREE_PASCAL__Item[]>(
     () =>
       items.map((item) => ({
         id: item.id,
@@ -86,7 +86,7 @@ export function __TREE_PASCAL__Connected({
   );
 
   const vm: __VM_TYPE__ = {
-    state: resolve__VM_TYPE__State(formattedItems.length, progress),
+    state: resolve__TREE_PASCAL__State(formattedItems.length, progress),
     progress,
     reducedMotion,
     eyebrow: "__TREE_TITLE__",

@@ -8,7 +8,7 @@
  * along the animation.
  */
 
-import { clampProgress, resolve__VM_TYPE__State, type __VM_TYPE__ } from "./__TREE__.vm";
+import { clampProgress, resolve__TREE_PASCAL__State, type __VM_TYPE__ } from "./__TREE__.vm";
 
 const noop = () => {};
 
@@ -43,7 +43,7 @@ export function frameAt(progress: number, overrides: Partial<__VM_TYPE__> = {}):
   const clamped = clampProgress(progress);
   return fixture({
     progress: clamped,
-    state: resolve__VM_TYPE__State(BASE.items.length, clamped),
+    state: resolve__TREE_PASCAL__State(BASE.items.length, clamped),
     ...overrides,
   });
 }

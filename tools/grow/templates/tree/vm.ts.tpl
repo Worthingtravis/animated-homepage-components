@@ -15,11 +15,11 @@
  *  - No hooks, no fetches, no side effects in this file.
  */
 
-export type __VM_TYPE__State = "idle" | "active" | "empty";
+export type __TREE_PASCAL__State = "idle" | "active" | "empty";
 
 export type __VM_TYPE__ = {
   /** Explicit visual state. Leaves switch on this — never on derived checks. */
-  state: __VM_TYPE__State;
+  state: __TREE_PASCAL__State;
 
   /**
    * Animation transport, normalized 0..1. The connected container drives it from
@@ -37,13 +37,13 @@ export type __VM_TYPE__ = {
   body: string | null;
 
   /** TODO: replace with this tree's real payload — all strings, all pre-formatted. */
-  items: __VM_TYPE__Item[];
+  items: __TREE_PASCAL__Item[];
 
   /** Optional call-to-action. `null` when the tree renders without one. */
   cta: { label: string; href: string; onActivate?: () => void } | null;
 };
 
-export type __VM_TYPE__Item = {
+export type __TREE_PASCAL__Item = {
   id: string;
   label: string;
   /** Pre-formatted — e.g. "18.25 USDC", "3 min read", "Mar 4, 2026". */
@@ -64,7 +64,7 @@ export function clampProgress(value: number): number {
  * Collapse transport to a discrete state so leaves never branch on numbers.
  * Extend this as the tree grows real states.
  */
-export function resolve__VM_TYPE__State(itemCount: number, progress: number): __VM_TYPE__State {
+export function resolve__TREE_PASCAL__State(itemCount: number, progress: number): __TREE_PASCAL__State {
   if (itemCount === 0) return "empty";
   return progress > 0 ? "active" : "idle";
 }

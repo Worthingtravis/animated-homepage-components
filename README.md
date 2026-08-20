@@ -76,10 +76,22 @@ src/trees/
   generated.ts                             ← registry, rebuilt from the filesystem by `pnpm sync`
 ```
 
-Ten reference trees ship with the repo:
+Eleven reference trees ship with the repo:
 
 - **`motion/aurora-headline`** — the minimal case. Passive, no callbacks, one
   transport value.
+- **`narrative/forest-primer`** — the *dogfood* case, and the front page. A
+  scroll-driven, six-chapter explanation of this repository's own architecture,
+  built under the rules it describes: every species name, count, path and
+  render total in it is derived from `FOREST` in the container and arrives as a
+  finished string, each chapter arrives with its `position` and its own
+  `progress` already decided, and each diagram is a discriminated `figure` the
+  leaf draws — never JSX in the VM. A primer about derived structure that
+  hardcoded "10 trees" would be the exact failure it warns about, so
+  `forest-primer.derived.test.ts` pins its claims to the repository: the
+  example path has to exist on disk, and the render count it advertises has to
+  be the number the conformance suite actually runs.
+
 - **`narrative/step-reveal`** — the full case. A steerable "how it works"
   sequence: autoplay, click-to-jump and reduced motion all resolve into one
   contract, and each step arrives with its `position` (`past`/`active`/
@@ -276,6 +288,16 @@ its props *are* the VM above it. Lab routes are local (`pnpm dev`, or
 | [`experimental/orbit-glow`](src/trees/motion/aurora-headline/branches/experimental/orbit-glow/orbit-glow.tsx) | An aurora blob orbits behind the type; chips ride the same angle |
 
 ### narrative — defined by sequence
+
+**[forest-primer](src/trees/narrative/forest-primer/)** ·
+[contract](src/trees/narrative/forest-primer/forest-primer.vm.ts) ·
+[fixtures](src/trees/narrative/forest-primer/forest-primer.fixtures.ts) ·
+[container](src/trees/narrative/forest-primer/forest-primer-connected.tsx) ·
+`/lab/narrative/forest-primer`
+
+| Leaf | |
+|---|---|
+| [`canon/chaptered`](src/trees/narrative/forest-primer/branches/canon/chaptered/chaptered.tsx) | Numbered chapters down a ruled column — nested boxes, a filled track with a knob, a struck computation, two grids of ticks and a route chain, all drawn in CSS |
 
 **[step-reveal](src/trees/narrative/step-reveal/)** ·
 [contract](src/trees/narrative/step-reveal/step-reveal.vm.ts) ·
