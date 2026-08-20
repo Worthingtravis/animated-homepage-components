@@ -64,7 +64,12 @@ import { meta as landing_channelHero_canonMeta } from "./landing/channel-hero/br
 import { ChannelHeroSplitDock as landing_channelHero_canon_splitDock, meta as landing_channelHero_canon_splitDockMeta } from "./landing/channel-hero/branches/canon/split-dock/split-dock";
 import { ChannelHeroStackedBillboard as landing_channelHero_canon_stackedBillboard, meta as landing_channelHero_canon_stackedBillboardMeta } from "./landing/channel-hero/branches/canon/stacked-billboard/stacked-billboard";
 import { meta as landing_channelHero_keyArtMeta } from "./landing/channel-hero/branches/key-art/branch.meta";
+import { ChannelHeroOverPrint as landing_channelHero_keyArt_overPrint, meta as landing_channelHero_keyArt_overPrintMeta } from "./landing/channel-hero/branches/key-art/over-print/over-print";
 import { ChannelHeroPosterWall as landing_channelHero_keyArt_posterWall, meta as landing_channelHero_keyArt_posterWallMeta } from "./landing/channel-hero/branches/key-art/poster-wall/poster-wall";
+import { meta as landing_layeredPosterMeta } from "./landing/layered-poster/tree.meta";
+import * as landing_layeredPosterFixtures from "./landing/layered-poster/layered-poster.fixtures";
+import { meta as landing_layeredPoster_canonMeta } from "./landing/layered-poster/branches/canon/branch.meta";
+import { LayeredPosterBaseline as landing_layeredPoster_canon_baseline, meta as landing_layeredPoster_canon_baselineMeta } from "./landing/layered-poster/branches/canon/baseline/baseline";
 import { meta as species_motionMeta } from "./motion/species.meta";
 import { meta as motion_auroraHeadlineMeta } from "./motion/aurora-headline/tree.meta";
 import * as motion_auroraHeadlineFixtures from "./motion/aurora-headline/aurora-headline.fixtures";
@@ -451,10 +456,40 @@ export const FOREST: SpeciesNode[] = [
         meta: landing_channelHero_keyArtMeta,
         leaves: [
         {
+          key: "over-print",
+          ref: "key-art/over-print",
+          meta: landing_channelHero_keyArt_overPrintMeta,
+          Component: landing_channelHero_keyArt_overPrint as ForestComponent,
+        },
+        {
           key: "poster-wall",
           ref: "key-art/poster-wall",
           meta: landing_channelHero_keyArt_posterWallMeta,
           Component: landing_channelHero_keyArt_posterWall as ForestComponent,
+        },
+        ],
+      },
+      ],
+    },
+    {
+      key: "layered-poster",
+      species: "landing",
+      ref: "landing/layered-poster",
+      meta: landing_layeredPosterMeta,
+      fixtures: landing_layeredPosterFixtures.ALL_FIXTURES as Record<string, unknown>,
+      defaultFixture: landing_layeredPosterFixtures.DEFAULT_FIXTURE as string,
+      frameAt: landing_layeredPosterFixtures.frameAt as (progress: number) => unknown,
+
+      branches: [
+      {
+        key: "canon",
+        meta: landing_layeredPoster_canonMeta,
+        leaves: [
+        {
+          key: "baseline",
+          ref: "canon/baseline",
+          meta: landing_layeredPoster_canon_baselineMeta,
+          Component: landing_layeredPoster_canon_baseline as ForestComponent,
         },
         ],
       },
