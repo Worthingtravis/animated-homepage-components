@@ -50,6 +50,12 @@ designer can drive the component in the target app without a backend.
    is a branded surface with fixed literals, note the exception in a comment at
    the top of the leaf (this is the documented extract-vm carve-out).
 
+   **Check the target supports container queries.** Every breakpoint in a
+   leaf is `@lg:` / `@2xl:` / `@4xl:`, resolved against the `@container` on
+   the leaf's own root. Tailwind v4 ships these built in; a v3 target needs
+   `@tailwindcss/container-queries` or every one of them silently no-ops and
+   the leaf lands frozen at its narrowest layout with nothing failing.
+
    **Editor mode needs no reconciling — that is the point.** A creator's look
    travels as ambient CSS variables on the creator-page wrapper, so a leaf
    inherits it by being dropped inside. Do **not** copy `CreatorSurface` into

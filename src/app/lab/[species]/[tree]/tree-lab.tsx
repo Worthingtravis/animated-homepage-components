@@ -246,14 +246,9 @@ export function TreeLab({ species, treeKey }: { species: string; treeKey: string
       */}
       <section
         aria-label="Preview"
-        /*
-          `grid-cols-1` is not decoration here — it is `minmax(0, 1fr)`. Without
-          it, compare mode fell back to an implicit auto track whose minimum is
-          the widest leaf's MIN-CONTENT, so one leaf with a horizontal rail
-          (Live Marquee's ticker) stretched the whole lab to 1138px inside a
-          390px phone. Every preview track must be allowed to be narrower than
-          its content.
-        */
+        // `grid-cols-1` is `minmax(0, 1fr)`: without it an implicit track takes
+        // the widest leaf's MIN-CONTENT, and one ticker rail stretches the
+        // whole lab past the phone it is being viewed on.
         className={cn("grid grid-cols-1 gap-6", state.compareAll && "xl:grid-cols-2")}
       >
         {shown.map((leaf) => {

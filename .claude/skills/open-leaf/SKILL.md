@@ -48,6 +48,9 @@ If no branch fits the direction, grow one first: `/grow-branch`.
 - `dark:` on any utility
 - hardcoded colors: `text-white`, `bg-black`, `bg-slate-900`, hex literals
 - `toFixed`, `toLocaleString` — the VM arrives pre-formatted
+- viewport breakpoints: `sm:`, `md:`, `lg:`, `xl:`, `2xl:`, and the
+  `max-lg:` / `min-[700px]:` forms. A leaf is dropped into whatever column
+  its consumer has and is never told how wide the window is.
 
 **Required:**
 
@@ -56,6 +59,12 @@ If no branch fits the direction, grow one first: `/grow-branch`.
 - switch on `vm.state`, never on derived truthiness
 - honour `vm.reducedMotion` — render the resting frame, do not just slow down
 - render every optional field conditionally (`vm.eyebrow ? … : null`)
+- `@container` on EVERY root the leaf can return (empty and loading too),
+  and every breakpoint as a container query: `@lg:`, `@2xl:`, `@4xl:`.
+  The house mapping from the old viewport form is in README.md,
+  "A leaf measures its own box". The one exception is a `fixed` viewport
+  overlay — it really is the window — which still gets its own
+  `@container` so its contents measure the overlay.
 
 **Allowed and encouraged:** deriving inline from `vm.progress`
 (`Math.sin(vm.progress * TAU)`), inline `style` for animated transforms and

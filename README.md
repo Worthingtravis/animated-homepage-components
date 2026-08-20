@@ -902,7 +902,8 @@ every fixture** and greps every source file:
 
 **A leaf may not have** — `useState`, `useEffect`, `useReducer`, `useRef`,
 `useMemo`, `useCallback`, `fetch`, data hooks, raw `<img>`, `dark:` prefixes,
-hardcoded colors, viewport breakpoints (`sm:` / `md:` / `lg:`), or any
+hardcoded colors, viewport breakpoints (`sm:` / `md:` / `lg:` / `xl:` / `2xl:`,
+including the `max-lg:` and `min-[700px]:` forms), or any
 formatting of a VM value.
 
 **A leaf must** — take the tree's VM as its props, switch on the explicit

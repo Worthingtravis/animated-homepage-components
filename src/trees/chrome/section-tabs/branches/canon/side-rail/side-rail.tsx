@@ -66,9 +66,8 @@ export function SectionTabsSideRail(vm: SectionTabsVM) {
       data-state={vm.state}
       data-layout={vm.layout}
       className={cn(
-        "@container",
-        "grid w-full gap-6",
-        narrow ? "grid-cols-1" : "grid-cols-1 @2xl:grid-cols-[minmax(11rem,15rem)_1fr]",
+        "@container grid w-full grid-cols-1 gap-6",
+        !narrow && "@2xl:grid-cols-[minmax(11rem,15rem)_1fr]",
       )}
     >
       <div className="flex min-w-0 flex-col gap-3">

@@ -216,7 +216,12 @@ export function ChannelHeroPosterWall(vm: ChannelHeroVM) {
               wordmarks survive being printed over illustration, and it cannot
               be faked with a shadow — it has to sit around every letterform.
             */}
-            <span className="relative z-10 block max-w-[7ch] break-words text-4xl font-black uppercase leading-[0.76] tracking-tighter @sm:text-5xl @2xl:text-6xl @4xl:text-7xl">
+            {/*
+              The ladder stops at `@2xl:` on purpose. The camera above is
+              `max-w-3xl`, so past ~768px the wordmark's own box stops growing
+              — a wider step would be keyed to a width this text never sees.
+            */}
+            <span className="relative z-10 block max-w-[7ch] break-words text-4xl font-black uppercase leading-[0.76] tracking-tighter @sm:text-5xl @2xl:text-6xl">
               <span
                 aria-hidden
                 className="absolute inset-0 text-transparent"

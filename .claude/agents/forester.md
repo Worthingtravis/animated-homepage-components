@@ -41,6 +41,10 @@ wrong, fix `tools/grow/templates/` — that fixes every future component too.
 In a **leaf**: no hooks of any kind, no fetch, no raw `<img>`, no `dark:`, no
 hardcoded colors, no `toFixed`/`toLocaleString`. Semantic tokens only. Honour
 `vm.reducedMotion`. Switch on explicit `vm.state`, never derived truthiness.
+No viewport breakpoints (`sm:`/`md:`/`lg:`/`xl:`/`2xl:`, and the `max-lg:` /
+`min-[700px]:` forms): a leaf measures its own box, so every root it can
+return carries `@container` and every breakpoint is `@lg:`/`@2xl:`/`@4xl:`.
+The one exception is a `fixed` viewport overlay, which really is the window.
 
 In a **VM**: every displayed value pre-formatted as a string, every action a
 callback, transport (`progress`) as a prop, no side effects.

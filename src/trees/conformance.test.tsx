@@ -62,6 +62,9 @@ const LEAF_SOURCES = read(
   ),
 );
 
+/** Every source rule fans out over the same cases; build them once. */
+const LEAF_CASES = LEAF_SOURCES.map((file) => [file.rel, file] as const);
+
 const trees = allTrees(FOREST);
 
 describe("forest shape", () => {
@@ -146,7 +149,7 @@ describe("leaf purity (extract-vm phase 4)", () => {
     ],
   ];
 
-  it.each(LEAF_SOURCES.map((file) => [file.rel, file] as const))(
+  it.each(LEAF_CASES)(
     "%s stays pure",
     (_rel, file) => {
       const violations = FORBIDDEN.filter(([pattern]) => pattern.test(file.source)).map(
@@ -157,53 +160,58 @@ describe("leaf purity (extract-vm phase 4)", () => {
   );
 
   /*
-   * A leaf measures ITS OWN BOX, never the window.
+   * A leaf measures ITS OWN BOX, never the window. The rule and the house
+   * viewport→container mapping live in README.md ("A leaf measures its own
+   * box"); what follows is only its enforcement.
    *
-   * A leaf is dropped into whatever column its consumer has — half a lab row,
-   * a narrow sidebar, a full page — and it is never told how wide the window
-   * is. Viewport breakpoints answer the wrong question, and they fail
-   * *silently*: on a 1440px desktop the lab renders two leaves side by side at
-   * 548px each, where `md:` still reads 1440 and opens a two-column split in a
-   * 300px column. So every breakpoint in a leaf is a container query, and every
-   * leaf root carries `@container` for them to resolve against.
+   * Enforced by SHAPE, not by a list: any `sm|md|lg|xl|2xl` variant, with or
+   * without the `max-`/`min-` prefix, plus any arbitrary width variant
+   * (`min-[700px]:`). Every container form starts with `@`, so the test is
+   * "this variant segment does not start with @" — which covers the variants
+   * Tailwind has not shipped yet as well as the ones it has.
    *
-   * The one exception is a viewport overlay. A `fixed` element really is the
-   * window, and nothing can query its own box — so a class string that also
-   * declares `fixed` may use viewport breakpoints. Give that overlay its own
-   * `@container` and everything inside it goes back to measuring its box.
-   *
-   * The house mapping, when converting an existing leaf, subtracts the page
-   * chrome a leaf normally sits inside (~128px), so a rule fires when the LEAF
-   * reaches the width it was designed for:
-   *
-   *   sm: → @lg     md: → @2xl     lg: → @4xl     xl: → @5xl     2xl: → @6xl
+   * The one exception is a viewport overlay: a `fixed` element really IS the
+   * window, and nothing can query its own box. A class string that declares
+   * `fixed` as a bare token may use viewport prefixes for its own sizing —
+   * `bg-fixed` does not count, which is why the token is matched exactly.
    */
-  const VIEWPORT_BREAKPOINT = /(?<![@\w-])(?:sm|md|lg|xl|2xl):/;
+  const VIEWPORT_VARIANT = /^(?:(?:max|min)-)?(?:sm|md|lg|xl|2xl)$/;
+  const ARBITRARY_WIDTH_VARIANT = /^(?:max|min)-\[/;
+  /* Class strings appear as any of the three literal forms; scan all of them,
+     so the first leaf to build a class in a template literal is not exempt. */
+  const STRING_LITERAL = /"[^"\n]*"|'[^'\n]*'|`[^`]*`/g;
 
-  it.each(LEAF_SOURCES.map((file) => [file.rel, file] as const))(
-    "%s measures its own box, not the window",
-    (_rel, file) => {
-      const offenders = (file.source.match(/"[^"\n]*"/g) ?? []).filter(
-        (text) => VIEWPORT_BREAKPOINT.test(text) && !text.includes("fixed"),
+  function viewportVariants(classText: string): string[] {
+    return classText.split(/\s+/).flatMap((token) => {
+      const segments = token.split(":");
+      segments.pop(); // the utility itself is never a variant
+      return segments.filter(
+        (segment) =>
+          !segment.startsWith("@") &&
+          (VIEWPORT_VARIANT.test(segment) || ARBITRARY_WIDTH_VARIANT.test(segment)),
       );
-      expect(
-        offenders,
-        `${file.rel} uses a viewport breakpoint — use the container form (@lg:, @2xl:, @4xl:)`,
-      ).toEqual([]);
-    },
-  );
+    });
+  }
 
-  it.each(LEAF_SOURCES.map((file) => [file.rel, file] as const))(
-    "%s declares a container for its breakpoints to resolve against",
-    (_rel, file) => {
-      expect(
-        file.source.includes("@container"),
-        `${file.rel} must put @container on the root it lays out inside`,
-      ).toBe(true);
-    },
-  );
+  it.each(LEAF_CASES)("%s measures its own box, not the window", (_rel, file) => {
+    const offenders = (file.source.match(STRING_LITERAL) ?? [])
+      .map((literal) => literal.slice(1, -1))
+      .filter((text) => !text.split(/\s+/).includes("fixed"))
+      .flatMap(viewportVariants);
+    expect(
+      offenders,
+      `${file.rel} uses a viewport breakpoint — use the container form (@lg:, @2xl:, @4xl:)`,
+    ).toEqual([]);
+  });
 
-  it.each(LEAF_SOURCES.map((file) => [file.rel, file] as const))(
+  /*
+   * The other half of the rule — every root a leaf can render carries
+   * `@container` — is checked against the RENDERED root, in "every leaf
+   * survives every fixture" below. A source-level grep for the string would
+   * pass on a leaf that puts it on one root and forgets three others.
+   */
+
+  it.each(LEAF_CASES)(
     "%s imports its VM type from the tree, not a sibling",
     (_rel, file) => {
       const importsVm = /import\s+type\s*\{[^}]*VM[^}]*\}\s*from\s*["']\.\.\/\.\.\/[^"']+\.vm["']/.test(
@@ -265,7 +273,7 @@ describe("editor mode (creator-page hand-off)", () => {
   const ACCENT_TOKEN =
     /\b(?:text|bg|border|ring|from|via|to|fill|stroke|shadow|outline|decoration|divide|accent)-(?:primary|accent|ring)\b/;
 
-  it.each(LEAF_SOURCES.map((file) => [file.rel, file] as const))(
+  it.each(LEAF_CASES)(
     "%s reaches for the creator's accent",
     (_rel, file) => {
       expect(
@@ -361,7 +369,7 @@ describe("every leaf survives every fixture", () => {
     const roots = [...container.children];
     if (roots.length > 0) {
       expect(
-        roots.some((root) => root.className.toString().includes("@container")),
+        roots.some((root) => (root.getAttribute("class") ?? "").includes("@container")),
         "the leaf's rendered root must carry @container",
       ).toBe(true);
     }

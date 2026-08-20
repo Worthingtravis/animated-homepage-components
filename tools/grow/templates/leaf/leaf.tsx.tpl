@@ -62,7 +62,7 @@ export function __LEAF_EXPORT__(vm: __VM_TYPE__) {
 
       {vm.body ? <p className="mt-3 max-w-prose text-muted-foreground">{vm.body}</p> : null}
 
-      <ul className="mt-6 flex flex-wrap gap-2 @2xl:gap-3">
+      <ul className="mt-6 flex flex-wrap gap-2">
         {vm.items.map((item, index) => (
           <li
             key={item.id}
