@@ -71,8 +71,11 @@ VM, so no state crosses into a leaf. Radix owns the aria ids it generates; do
 not stamp `tab.triggerId` over them.
 
 **Only `*-connected.tsx`** may hold hooks, clocks, media queries or fetches.
-The organizer (`src/app/organize/`) is app-layer and may hold state, but every
-layout mutation must go through a pure function in `src/lib/section-layout.ts`.
+App-layer routes may hold state, but this site's **navigation is derived, never
+configured**: `src/lib/site-nav.ts` is pure functions from `FOREST` to entries,
+trails and neighbours, and every page reads it. Do not add a stored layout, a
+curation surface or a hand-written list of species — if a link is not derivable
+from the folder layout, it does not belong in the nav.
 
 Deriving inline from `vm.progress`, inline styles for animated transforms, and
 `data-*` layout attributes are all allowed.

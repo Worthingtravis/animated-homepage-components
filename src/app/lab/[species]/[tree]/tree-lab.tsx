@@ -9,7 +9,6 @@
  */
 
 import { useEffect, useReducer } from "react";
-import Link from "next/link";
 
 import { allLeaves, findTree, type LeafNode } from "@/lib/forest";
 import { LAB_CYCLE_MS } from "@/lib/lab-clock";
@@ -103,10 +102,9 @@ export function TreeLab({ species, treeKey }: { species: string; treeKey: string
 
   return (
     <div className="space-y-8">
+      {/* No back link — the trail above the lab is rendered by the page, from
+          the forest, and says where this tree actually sits. */}
       <header className="space-y-1">
-        <Link href="/lab" className="text-xs text-muted-foreground hover:text-foreground">
-          ← lab
-        </Link>
         <h1 className="text-2xl font-semibold text-foreground">{tree.meta.label}</h1>
         <p className="text-muted-foreground">{tree.meta.description}</p>
         <p className="font-mono text-xs text-muted-foreground">

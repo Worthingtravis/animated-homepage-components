@@ -689,47 +689,55 @@ had a chooser step** — only the paste-a-URL path does. So the question is not
 "should we remove the selection step", it is "why does the typed path need one
 when the curated path never did", which is a much smaller thing to answer.
 
-## The organizer
+## Navigation, derived
 
 ```bash
-pnpm dev    # → /organize
+pnpm dev    # → /  ·  /lab  ·  /lab/<species>  ·  /lab/<species>/<tree>
 ```
 
-Every leaf in the forest is a draggable card. Drop one on a tab and it moves
-behind that tab; the live result underneath rebuilds through the real container
-with the real chrome. Tab chrome, transition and duration are dropdowns, so the
-axes above are something you feel rather than read.
+This site used to be arrangeable. `/organize` let you drag any section onto a
+tab, per page, and remembered the result in `localStorage`; `/` and `/lab` read
+it back. It worked, and it answered a question nobody was asking — the shape of
+this site is not a matter of taste, it is a fact about the repository. So the
+organizer is gone, along with the section catalog, the stored site layout and
+the surface machinery, and navigation is **read from the forest** instead:
 
-The rules are not in the drag handlers. Every mutation goes through a pure
-function in `src/lib/section-layout.ts` — which is why the keyboard-friendly
-"Move to…" select is a peer of dragging rather than a degraded fallback, and
-why "a tab deleted while active" is a unit test instead of a thing you find by
-dragging. Layouts persist to `localStorage` and are reconciled against the
-forest on load, so a stale entry drops sections that no longer exist instead of
-rendering a blank page.
+| Route | What it is |
+|---|---|
+| `/` | the forest — every species, each with its trees |
+| `/lab` | every tree, grouped by the species it belongs to |
+| `/lab/<species>` | one species: what kind of problem it is for, and its trees |
+| `/lab/<species>/<tree>` | one tree: its leaves, its fixtures, its clock |
 
-### It arranges this site, not a mock of it
+Every level of the construct is addressable, and every level of the construct
+already existed — species had a folder and a `species.meta.ts` sentence long
+before they had a page. `src/lib/site-nav.ts` is the whole of it: pure functions
+from `FOREST` to entries, trails and neighbours, so the nav is a unit test
+rather than a thing you click around to check.
 
-The organizer edits a **surface** — a named page whose shape is a value.
-`src/lib/site-layout.ts` holds one `SectionLayout` per surface (`home`, `lab`)
-and every write is still one of `section-layout.ts`'s pure moves lifted onto
-exactly one of them. `SiteLayoutProvider` at the root owns that value, because
-`/organize` writes it and `/` and `/lab` read it, so no single route can own it.
-Each page mounts `<CuratedSurface>` around the content it ships with, and the
-"Live result" panel on the organizer is that same component reading that same
-value — not a preview of the page, the page.
+Three properties fall out of deriving it:
 
-Two properties keep this from being a way to break the site:
+- **Plant a tree and it appears; delete one and it leaves.** There is nothing to
+  keep in sync because there is nothing to configure. `site-nav.test.ts` asserts
+  the nav against the real registry, so a link that could go stale fails the
+  suite instead of a visitor.
+- **The trail says what a page *is*, not how you got there.** `crumbsFor` asks
+  the forest, so `/lab/commerce/product-card` reads
+  `the forest · lab · Commerce · Product Card` whether you walked there or
+  pasted the URL — and a species that does not exist cannot produce a step that
+  claims it does.
+- **`next` walks the whole repository once.** Tree neighbours are taken across
+  the flattened forest, so the last tree of one species leads into the first of
+  the next, and neither end wraps. An end looks like an end.
 
-- **A page with nothing in any tab renders the design it shipped with.** Empty
-  tabs are not curation, they are a page someone opened the organizer on and
-  walked away from. The shipped design is passed in as children, so the server
-  renders it, the static export contains it, and an unreadable `localStorage`
-  entry degrades to the site as shipped rather than to an empty tab bar.
-- **This site's own parts are sections too.** The forest index, the stats row
-  and the lab list are `builtin` entries in the catalog (`src/app/site-sections.tsx`),
-  so arranging a page can never delete its navigation — the tree list goes to
-  the shelf, and comes back.
+The header does not grow with the forest — it carries the two fixed rooms and
+the source link. Species are navigation one level in, on the lab rail, which is
+present on every page below `/lab` and marks the one you are in. That split is
+the one judgement call in the whole file, and it is written down at
+`HEADER_LINKS`.
+
+`chrome/section-tabs` is unaffected: it is a component in the forest, with its
+own contract, fixtures and lab. It simply no longer arranges this site.
 
 ## Porting a hero in from a consuming app
 

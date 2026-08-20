@@ -1,12 +1,12 @@
-import { CuratedSurface } from "./curated-surface";
 import { ForestIndexSection, ForestStatsSection } from "./site-sections";
 
 /**
- * The front page — its own headline, and below it whatever shape the curator
- * left the `home` surface in. Uncurated, that is the stats row and the forest
- * index, rendered on the server exactly as they always were. Curated, the same
- * two sections come back behind tabs, alongside anything else that was dragged
- * in. Neither section knows which of those happened.
+ * The front page — the forest, by species.
+ *
+ * There is one shape for this page and it is derived: every species that exists
+ * on disk, each with its trees. It used to be arrangeable, remembered per
+ * browser; what that bought was the possibility of a visitor seeing a different
+ * site from the one the repository describes.
  */
 export default function ForestPage() {
   return (
@@ -22,12 +22,8 @@ export default function ForestPage() {
         </p>
       </section>
 
-      <CuratedSurface surface="home" heading="This page" ariaLabel="Home sections">
-        <div className="space-y-10">
-          <ForestStatsSection />
-          <ForestIndexSection />
-        </div>
-      </CuratedSurface>
+      <ForestStatsSection />
+      <ForestIndexSection />
     </div>
   );
 }
