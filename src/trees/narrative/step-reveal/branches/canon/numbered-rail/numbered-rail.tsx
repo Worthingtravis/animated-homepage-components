@@ -20,7 +20,7 @@ export const meta: LeafMeta = {
 export function StepRevealNumberedRail(vm: StepRevealVM) {
   if (vm.state === "empty") {
     return (
-      <section className="rounded-lg border border-dashed border-border p-10 text-center">
+      <section className="@container rounded-lg border border-dashed border-border p-10 text-center">
         <p className="text-sm text-muted-foreground">No steps to walk through yet.</p>
       </section>
     );
@@ -29,7 +29,7 @@ export function StepRevealNumberedRail(vm: StepRevealVM) {
   const railFill = vm.reducedMotion ? 1 : vm.progress;
 
   return (
-    <section data-state={vm.state} className="py-8">
+    <section data-state={vm.state} className="@container py-8">
       <header className="max-w-2xl">
         {vm.eyebrow ? (
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">

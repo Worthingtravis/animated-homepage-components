@@ -137,9 +137,9 @@ function RailCard({ card }: { card: ClipCard }) {
 /** A result row: wide, ranked, quote-forward. Deliberately not a rail card. */
 function ResultRow({ card }: { card: ClipCard }) {
   return (
-    <li className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 md:flex-row md:items-center">
+    <li className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 @2xl:flex-row @2xl:items-center">
       {card.thumbnail ? (
-        <div className="relative shrink-0 overflow-hidden rounded-lg md:w-44">
+        <div className="relative shrink-0 overflow-hidden rounded-lg @2xl:w-44">
           <Image
             src={card.thumbnail.src}
             alt={card.thumbnail.alt}
@@ -174,7 +174,7 @@ function ResultRow({ card }: { card: ClipCard }) {
         </p>
       </div>
 
-      <div className="flex shrink-0 flex-col items-stretch gap-1 md:w-36">
+      <div className="flex shrink-0 flex-col items-stretch gap-1 @2xl:w-36">
         <SendButton card={card} block />
         {card.send.hint ? (
           <span className="text-center text-[0.6875rem] leading-tight text-muted-foreground">
@@ -258,7 +258,7 @@ export function ClipPickerShelfRail(vm: ClipPickerVM) {
       data-clip-picker={vm.scopeId}
       data-state={vm.state}
       data-density={vm.density}
-      className="flex w-full flex-col gap-6 rounded-2xl border border-border bg-background p-4"
+      className="@container flex w-full flex-col gap-6 rounded-2xl border border-border bg-background p-4"
     >
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">

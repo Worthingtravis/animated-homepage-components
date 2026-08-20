@@ -61,7 +61,7 @@ function Action({ action, compact }: { action: ExpandableCardAction; compact?: b
 export function ExpandableCardRowList(vm: ExpandableCardVM) {
   if (vm.state === "empty") {
     return (
-      <section className="mx-auto max-w-2xl rounded-xl border border-dashed border-border bg-card/40 p-10 text-center">
+      <section className="@container mx-auto max-w-2xl rounded-xl border border-dashed border-border bg-card/40 p-10 text-center">
         <p className="text-sm text-muted-foreground">{vm.emptyLabel ?? "Nothing to show yet."}</p>
       </section>
     );
@@ -70,7 +70,7 @@ export function ExpandableCardRowList(vm: ExpandableCardVM) {
   const panel = vm.panel;
 
   return (
-    <section data-state={vm.state} className="relative mx-auto max-w-2xl">
+    <section data-state={vm.state} className="@container relative mx-auto max-w-2xl">
       {vm.eyebrow || vm.headline || vm.body ? (
         <header className="mb-6 text-center">
           {vm.eyebrow ? (
@@ -128,7 +128,7 @@ export function ExpandableCardRowList(vm: ExpandableCardVM) {
                 </span>
               </span>
               {card.meta ? (
-                <span className="hidden shrink-0 font-mono text-xs text-muted-foreground sm:block">
+                <span className="hidden shrink-0 font-mono text-xs text-muted-foreground @lg:block">
                   {card.meta}
                 </span>
               ) : null}
@@ -142,7 +142,7 @@ export function ExpandableCardRowList(vm: ExpandableCardVM) {
       {panel ? (
         <div
           data-phase={panel.phase}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          className="@container fixed inset-0 z-50 flex items-center justify-center p-4"
         >
           <div
             aria-hidden

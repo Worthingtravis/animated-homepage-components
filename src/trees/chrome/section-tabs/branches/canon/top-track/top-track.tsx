@@ -63,7 +63,7 @@ export const meta: LeafMeta = {
 export function SectionTabsTopTrack(vm: SectionTabsVM) {
   if (vm.state === "empty") {
     return (
-      <div className="rounded-2xl border border-dashed border-primary/40 px-6 py-10 text-center">
+      <div className="@container rounded-2xl border border-dashed border-primary/40 px-6 py-10 text-center">
         <p className="text-sm text-muted-foreground">{vm.emptyLabel}</p>
       </div>
     );
@@ -78,7 +78,7 @@ export function SectionTabsTopTrack(vm: SectionTabsVM) {
       onValueChange={(next) => vm.tabs.find((tab) => tab.id === next)?.onSelect()}
       data-state={vm.state}
       data-layout={vm.layout}
-      className="flex w-full flex-col gap-5"
+      className="@container flex w-full flex-col gap-5"
     >
       {vm.heading ? (
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">

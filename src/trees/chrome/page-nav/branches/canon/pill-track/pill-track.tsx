@@ -36,7 +36,7 @@ export const meta: LeafMeta = {
 export function PageNavPillTrack(vm: PageNavVM) {
   if (vm.state === "empty") {
     return (
-      <div className="rounded-full border border-dashed border-border px-6 py-3 text-center">
+      <div className="@container rounded-full border border-dashed border-border px-6 py-3 text-center">
         <p className="text-xs text-muted-foreground">Nowhere to navigate yet.</p>
       </div>
     );
@@ -48,7 +48,7 @@ export function PageNavPillTrack(vm: PageNavVM) {
     <nav
       aria-label={vm.ariaLabel}
       data-state={vm.state}
-      className="flex items-center justify-center gap-3"
+      className="@container flex items-center justify-center gap-3"
     >
       {vm.brand ? (
         <a
@@ -72,7 +72,7 @@ export function PageNavPillTrack(vm: PageNavVM) {
               {vm.brand.initial}
             </span>
           )}
-          <span className="hidden sm:inline">{vm.brand.label}</span>
+          <span className="hidden @lg:inline">{vm.brand.label}</span>
         </a>
       ) : null}
 
@@ -186,7 +186,7 @@ export function PageNavPillTrack(vm: PageNavVM) {
           onClick={vm.menu.onToggle}
           aria-expanded={vm.menu.state === "open"}
           data-menu-state={vm.menu.state}
-          className="shrink-0 rounded-full border border-border px-3.5 py-2 text-sm font-medium text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:hidden"
+          className="shrink-0 rounded-full border border-border px-3.5 py-2 text-sm font-medium text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring @lg:hidden"
         >
           {vm.menu.label}
         </button>

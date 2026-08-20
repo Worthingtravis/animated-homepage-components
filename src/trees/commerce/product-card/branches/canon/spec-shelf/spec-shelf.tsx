@@ -93,6 +93,7 @@ export function ProductCardSpecShelf(vm: ProductCardVM) {
     <article
       data-state={vm.state}
       className={cn(
+        "@container",
         "flex w-full max-w-sm flex-col gap-3 rounded-3xl border border-border bg-card p-3",
         "shadow-sm transition-shadow duration-300",
         vm.state === "unavailable" ? "opacity-80" : "hover:shadow-lg",

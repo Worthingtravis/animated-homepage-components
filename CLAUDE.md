@@ -33,6 +33,28 @@ hand-made folder is how drift starts. If a generated file is wrong, fix
 `<img>`, no `dark:`, no hardcoded colors, no formatting of VM values. Semantic
 tokens only. Switch on `vm.state`. Honour `vm.reducedMotion`.
 
+**A leaf measures its own box, never the window.** Every root a leaf can render
+carries `@container`, and every breakpoint is a container query. `sm:` / `md:` /
+`lg:` fail the conformance suite, because a leaf is dropped into whatever column
+its consumer has — half a compare row, a sidebar, a full page — and is never
+told how wide the window is. Viewport rules fail *silently*: nothing crashes,
+the leaf just answers a question nobody asked. When converting an old leaf, the
+house mapping subtracts the page chrome a leaf sits inside (~128px):
+
+| viewport | container | | viewport | container |
+|---|---|---|---|---|
+| `sm:` 640 | `@lg:` 512 | | `xl:` 1280 | `@5xl:` 1024 |
+| `md:` 768 | `@2xl:` 672 | | `2xl:` 1536 | `@6xl:` 1152 |
+| `lg:` 1024 | `@4xl:` 896 | | | |
+
+Deviate from the table when the leaf's own geometry says so, and say why in a
+comment. The one exception is a **`fixed` viewport overlay** — a lightbox that
+covers the screen really *is* the window, and no element can query its own box,
+so it keeps viewport prefixes for its own sizing. Give it `@container` too, so
+everything *inside* it measures the overlay rather than the card that opened it.
+(`container-type: inline-size` does not trap a `fixed` descendant — a
+`transform` ancestor does — so the overlay can stay where it is.)
+
 **Editor mode** (`src/lib/editor-mode.ts`): the ONE surface that decides how
 every variant looks, mirroring laughingwhales.com's creator page. It is
 **ambient CSS on a wrapper, never a VM field** — a leaf participates by being

@@ -30,6 +30,7 @@ export function CountdownInlineStrip(vm: CountdownVM) {
     <section
       data-state={vm.state}
       className={cn(
+        "@container",
         "relative flex w-full flex-wrap items-center gap-x-4 gap-y-2 overflow-hidden rounded-lg border px-4 py-2.5 transition-colors duration-500",
         urgent ? "border-ring bg-primary/10" : "border-border bg-card",
       )}
@@ -82,7 +83,7 @@ export function CountdownInlineStrip(vm: CountdownVM) {
       )}
 
       {vm.deadlineLabel ? (
-        <span className="hidden text-xs text-muted-foreground sm:inline">{vm.deadlineLabel}</span>
+        <span className="hidden text-xs text-muted-foreground @lg:inline">{vm.deadlineLabel}</span>
       ) : null}
 
       {vm.cta ? (

@@ -902,10 +902,44 @@ every fixture** and greps every source file:
 
 **A leaf may not have** — `useState`, `useEffect`, `useReducer`, `useRef`,
 `useMemo`, `useCallback`, `fetch`, data hooks, raw `<img>`, `dark:` prefixes,
-hardcoded colors, or any formatting of a VM value.
+hardcoded colors, viewport breakpoints (`sm:` / `md:` / `lg:`), or any
+formatting of a VM value.
 
 **A leaf must** — take the tree's VM as its props, switch on the explicit
-`vm.state`, honour `vm.reducedMotion`, and use semantic tokens only.
+`vm.state`, honour `vm.reducedMotion`, use semantic tokens only, and carry
+`@container` on every root it renders.
+
+### A leaf measures its own box
+
+The invariant says any leaf can replace any other leaf. That is only true if a
+leaf is correct at whatever *width* it is handed — and a leaf is never told how
+wide the window is. It gets a column: half a compare row in the lab, a sidebar
+in one app, a full page in another.
+
+So every breakpoint in this forest is a **container query**. A viewport rule
+fails silently — nothing crashes, the leaf simply answers a question nobody
+asked. On a 1440px desktop the lab renders two leaves side by side at 548px
+each, where `md:` still reads 1440 and opens a two-column split inside a 300px
+column.
+
+Converting an existing leaf uses one mapping, which subtracts the page chrome a
+leaf normally sits inside (~128px), so a rule fires when the *leaf* reaches the
+width it was designed for:
+
+| viewport | container | viewport | container |
+|---|---|---|---|
+| `sm:` 640 | `@lg:` 512 | `xl:` 1280 | `@5xl:` 1024 |
+| `md:` 768 | `@2xl:` 672 | `2xl:` 1536 | `@6xl:` 1152 |
+| `lg:` 1024 | `@4xl:` 896 | | |
+
+The single exception is a **`fixed` viewport overlay** — a lightbox or dialog
+that covers the screen really *is* the window, and no element can query its own
+box, so it keeps viewport prefixes for its own sizing. It also declares
+`@container`, so its contents measure the overlay instead of the card that
+opened it. It can stay nested inside the leaf: `container-type: inline-size`
+does not make an ancestor a containing block for a `fixed` descendant (a
+`transform` ancestor does, which is worth remembering if a leaf ever animates a
+wrapper around one).
 
 **A VM must** — deliver every displayed value as a pre-formatted string, expose
 every action as a callback, carry animation transport as a prop, and have zero

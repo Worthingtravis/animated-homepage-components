@@ -22,14 +22,14 @@ export function AuroraHeadlineStackedRule(vm: AuroraHeadlineVM) {
 
   if (vm.state === "empty") {
     return (
-      <section className="rounded-none border-t border-border py-12">
+      <section className="@container rounded-none border-t border-border py-12">
         <p className="text-sm text-muted-foreground">Nothing to show yet.</p>
       </section>
     );
   }
 
   return (
-    <section data-state={vm.state} className="border-t border-border py-10">
+    <section data-state={vm.state} className="@container border-t border-border py-10">
       <div className="flex items-baseline gap-4">
         {vm.eyebrow ? (
           <p className="shrink-0 text-xs font-medium uppercase tracking-[0.24em] text-muted-foreground">
@@ -51,7 +51,7 @@ export function AuroraHeadlineStackedRule(vm: AuroraHeadlineVM) {
       {vm.body ? <p className="mt-4 max-w-prose text-muted-foreground">{vm.body}</p> : null}
 
       {vm.items.length > 0 ? (
-        <ol className="mt-8 grid gap-px border border-border bg-border sm:grid-cols-3">
+        <ol className="mt-8 grid gap-px border border-border bg-border @lg:grid-cols-3">
           {vm.items.map((item, index) => {
             const active = !vm.reducedMotion && Math.floor(fill * vm.items.length) === index;
             return (

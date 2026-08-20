@@ -79,7 +79,7 @@ function NestingFigure({
 }) {
   return (
     <div className="space-y-5">
-      <div className="rounded-xl bg-muted/40 p-3 sm:p-5">
+      <div className="rounded-xl bg-muted/40 p-3 @lg:p-5">
         {figure.levels.reduceRight<ReactNode>((inner, level, index) => {
           const depth = figure.levels.length - 1 - index;
           const arrived = fill >= depth / Math.max(1, figure.levels.length);
@@ -88,7 +88,7 @@ function NestingFigure({
               key={level.id}
               data-level={level.term}
               className={cn(
-                "rounded-lg border p-3 transition-colors sm:p-4",
+                "rounded-lg border p-3 transition-colors @lg:p-4",
                 arrived ? "border-primary/40 bg-card" : "border-border bg-card/60",
               )}
               style={{ opacity: arrived ? 1 : 0.55 }}
@@ -138,7 +138,7 @@ function SplitFigure({
 }) {
   return (
     <div className="space-y-5">
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 @lg:grid-cols-3">
         {figure.columns.map((column, index) => {
           const tone = SPLIT_TONE[column.tone];
           const local = Math.min(1, Math.max(0, fill * figure.columns.length - index));
@@ -204,7 +204,7 @@ function TransportFigure({
         </div>
       </div>
 
-      <ul className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
+      <ul className="grid gap-x-6 gap-y-2 @lg:grid-cols-2">
         {figure.rows.map((row, index) => (
           <li
             key={row.id}
@@ -234,7 +234,7 @@ function FormattingFigure({
         return (
           <li
             key={row.id}
-            className="grid items-center gap-3 rounded-lg border border-border bg-card p-4 sm:grid-cols-[1fr_auto_1fr]"
+            className="grid items-center gap-3 rounded-lg border border-border bg-card p-4 @lg:grid-cols-[1fr_auto_1fr]"
           >
             <div>
               <code className="font-mono text-xs text-muted-foreground line-through decoration-primary/60">
@@ -245,12 +245,12 @@ function FormattingFigure({
 
             <span
               aria-hidden
-              className="hidden h-px bg-primary/50 sm:block"
+              className="hidden h-px bg-primary/50 @lg:block"
               style={{ width: `${16 + 24 * local}px` }}
             />
 
             <span
-              className="justify-self-start rounded-md bg-primary/10 px-2.5 py-1 font-mono text-sm font-medium text-foreground ring-1 ring-primary/25 sm:justify-self-end"
+              className="justify-self-start rounded-md bg-primary/10 px-2.5 py-1 font-mono text-sm font-medium text-foreground ring-1 ring-primary/25 @lg:justify-self-end"
               style={{ opacity: 0.4 + 0.6 * local, transform: `translateX(${(1 - local) * -8}px)` }}
             >
               {row.arrives}
@@ -270,7 +270,7 @@ function MatrixFigure({
   fill: number;
 }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid gap-4 @lg:grid-cols-2">
       {figure.grids.map((grid) => {
         const columns = grid.cells[0]?.length ?? 0;
         const total = Math.max(1, grid.cells.length * columns);
@@ -381,7 +381,7 @@ export function ForestPrimerChaptered(vm: ForestPrimerVM) {
     return (
       <section
         data-state={vm.state}
-        className="rounded-2xl border border-dashed border-primary/30 bg-card/40 p-10 text-center"
+        className="@container rounded-2xl border border-dashed border-primary/30 bg-card/40 p-10 text-center"
       >
         <p className="text-sm text-muted-foreground">
           {vm.headline}
@@ -395,13 +395,13 @@ export function ForestPrimerChaptered(vm: ForestPrimerVM) {
   return (
     <section
       data-state={vm.state}
-      className="overflow-hidden rounded-2xl border border-border bg-card"
+      className="@container overflow-hidden rounded-2xl border border-border bg-card"
     >
       <div className="h-1 w-full bg-muted">
         <div className="h-full bg-primary" style={{ width: `${spine * 100}%` }} />
       </div>
 
-      <header className="px-6 pb-8 pt-8 sm:px-10 sm:pt-10">
+      <header className="px-6 pb-8 pt-8 @lg:px-10 @lg:pt-10">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           {vm.eyebrow ? (
             <p className="font-mono text-xs uppercase tracking-[0.24em] text-primary">
@@ -415,7 +415,7 @@ export function ForestPrimerChaptered(vm: ForestPrimerVM) {
           ) : null}
         </div>
 
-        <h2 className="mt-4 max-w-3xl text-balance text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+        <h2 className="mt-4 max-w-3xl text-balance text-3xl font-semibold tracking-tight text-foreground @lg:text-4xl">
           {vm.headline}
         </h2>
 
@@ -424,17 +424,17 @@ export function ForestPrimerChaptered(vm: ForestPrimerVM) {
         ) : null}
       </header>
 
-      <div className="px-6 sm:px-10">
+      <div className="px-6 @lg:px-10">
         {vm.chapters.map((chapter) => (
           <article
             key={chapter.id}
             data-chapter={chapter.id}
             data-position={chapter.position}
-            className="border-t border-border py-10 first:border-t-0 sm:py-14"
+            className="border-t border-border py-10 first:border-t-0 @lg:py-14"
             style={revealStyle(chapter, vm.reducedMotion)}
           >
-            <div className="grid gap-6 sm:grid-cols-[auto_1fr] sm:gap-8">
-              <div className="flex sm:flex-col sm:items-center">
+            <div className="grid gap-6 @lg:grid-cols-[auto_1fr] @lg:gap-8">
+              <div className="flex @lg:flex-col @lg:items-center">
                 <span
                   className={cn(
                     "flex h-12 w-12 items-center justify-center rounded-full border font-mono text-sm font-semibold transition-colors",
@@ -445,12 +445,12 @@ export function ForestPrimerChaptered(vm: ForestPrimerVM) {
                 </span>
                 <span
                   aria-hidden
-                  className="ml-4 mt-6 hidden w-px flex-1 bg-primary/20 sm:ml-0 sm:block"
+                  className="ml-4 mt-6 hidden w-px flex-1 bg-primary/20 @lg:ml-0 @lg:block"
                 />
               </div>
 
               <div className="min-w-0 space-y-5">
-                <h3 className="text-xl font-semibold text-foreground sm:text-2xl">
+                <h3 className="text-xl font-semibold text-foreground @lg:text-2xl">
                   {chapter.title}
                 </h3>
 
@@ -459,7 +459,7 @@ export function ForestPrimerChaptered(vm: ForestPrimerVM) {
                 <p className="max-w-2xl text-sm text-muted-foreground">{chapter.caption}</p>
 
                 {chapter.pullQuote ? (
-                  <p className="border-l-2 border-accent pl-4 text-lg font-medium text-balance text-foreground sm:text-xl">
+                  <p className="border-l-2 border-accent pl-4 text-lg font-medium text-balance text-foreground @lg:text-xl">
                     {chapter.pullQuote}
                   </p>
                 ) : null}
@@ -470,7 +470,7 @@ export function ForestPrimerChaptered(vm: ForestPrimerVM) {
       </div>
 
       {vm.closingLine ? (
-        <footer className="border-t border-border px-6 py-10 text-center sm:px-10">
+        <footer className="border-t border-border px-6 py-10 text-center @lg:px-10">
           <span
             className="inline-block rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground"
             style={{ opacity: 0.5 + 0.5 * spine }}

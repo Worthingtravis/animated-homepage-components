@@ -129,9 +129,9 @@ function SendButton({ card }: { card: ClipCard }) {
 
 function Card({ card }: { card: ClipCard }) {
   return (
-    <li className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-3 sm:flex-row sm:items-center">
+    <li className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-3 @lg:flex-row @lg:items-center">
       {card.thumbnail ? (
-        <div className="relative shrink-0 overflow-hidden rounded-xl sm:w-40">
+        <div className="relative shrink-0 overflow-hidden rounded-xl @lg:w-40">
           <Image
             src={card.thumbnail.src}
             alt={card.thumbnail.alt}
@@ -167,8 +167,8 @@ function Card({ card }: { card: ClipCard }) {
         </p>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2 sm:flex-col">
-        <div className="flex-1 sm:w-32 sm:flex-none">
+      <div className="flex shrink-0 items-center gap-2 @lg:flex-col">
+        <div className="flex-1 @lg:w-32 @lg:flex-none">
           <SendButton card={card} />
         </div>
         {card.onPreview ? (
@@ -176,7 +176,7 @@ function Card({ card }: { card: ClipCard }) {
             type="button"
             onClick={card.onPreview}
             aria-label={card.previewAriaLabel ?? undefined}
-            className="min-h-11 shrink-0 rounded-xl border border-border px-4 text-sm text-muted-foreground hover:border-ring hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-32"
+            className="min-h-11 shrink-0 rounded-xl border border-border px-4 text-sm text-muted-foreground hover:border-ring hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring @lg:w-32"
           >
             Preview
           </button>
@@ -259,7 +259,7 @@ export function ClipPickerOneColumn(vm: ClipPickerVM) {
       data-clip-picker={vm.scopeId}
       data-state={vm.state}
       data-density={vm.density}
-      className="mx-auto flex w-full max-w-2xl flex-col gap-6 rounded-2xl border border-border bg-background p-4"
+      className="@container mx-auto flex w-full max-w-2xl flex-col gap-6 rounded-2xl border border-border bg-background p-4"
     >
       {/* ------------------------------------------------------- purpose */}
       <header className="flex flex-col gap-1">

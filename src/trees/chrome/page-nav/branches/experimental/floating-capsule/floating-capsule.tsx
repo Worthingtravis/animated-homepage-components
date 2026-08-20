@@ -34,7 +34,7 @@ export const meta: LeafMeta = {
 export function PageNavFloatingCapsule(vm: PageNavVM) {
   if (vm.state === "empty") {
     return (
-      <div className="mx-auto max-w-md rounded-full border border-dashed border-border px-6 py-3 text-center">
+      <div className="@container mx-auto max-w-md rounded-full border border-dashed border-border px-6 py-3 text-center">
         <p className="text-xs text-muted-foreground">Nowhere to navigate yet.</p>
       </div>
     );
@@ -47,7 +47,7 @@ export function PageNavFloatingCapsule(vm: PageNavVM) {
   return (
     <div
       style={{ paddingInline: `${(t * 24).toFixed(2)}px`, paddingBlock: `${(t * 10).toFixed(2)}px` }}
-      className="w-full"
+      className="@container w-full"
     >
       <nav
         aria-label={vm.ariaLabel}
@@ -81,7 +81,7 @@ export function PageNavFloatingCapsule(vm: PageNavVM) {
               </span>
             )}
             {/* The wordmark is the one thing the capsule gives up for width. */}
-            <span style={{ opacity: 1 - t * 0.65 }} className="hidden sm:inline">
+            <span style={{ opacity: 1 - t * 0.65 }} className="hidden @lg:inline">
               {vm.brand.label}
             </span>
           </a>
@@ -92,7 +92,7 @@ export function PageNavFloatingCapsule(vm: PageNavVM) {
           className={cn(
             "flex min-w-0 items-center gap-1 overflow-x-auto",
             vm.brand ? "ml-auto" : "",
-            vm.menu ? "hidden sm:flex" : "flex",
+            vm.menu ? "hidden @lg:flex" : "flex",
           )}
         >
           {vm.items.map((item) => {
@@ -184,7 +184,7 @@ export function PageNavFloatingCapsule(vm: PageNavVM) {
             aria-expanded={vm.menu.state === "open"}
             data-menu-state={vm.menu.state}
             className={cn(
-              "shrink-0 rounded-full border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:hidden",
+              "shrink-0 rounded-full border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring @lg:hidden",
               vm.brand || vm.actions.length > 0 ? "" : "ml-auto",
             )}
           >

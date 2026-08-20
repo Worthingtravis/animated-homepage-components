@@ -26,6 +26,14 @@
  * built ONLY out of the three inks a creator can move. `color-mix` against
  * `--background` is what makes one ink produce a whole sky, so the poster is
  * genuinely theirs rather than a picture with their colour dabbed on it.
+ *
+ * ── The poster is sized by its own box, never by the window ────────────────
+ * A one-sheet is a printed object at a fixed proportion: the mosaic, the logo
+ * hole and the wordmark all have to agree, and they only agree if they read the
+ * same width. Viewport rules broke that agreement — at 1440px in a 548px lab
+ * column the art opened three 160px panels while the wordmark stayed at 72px,
+ * so the logo was bigger than the picture it was signing. `@container` keeps
+ * the whole sheet on one measurement.
  */
 
 import Image from "next/image";
@@ -83,7 +91,7 @@ const FIELD = [
 export function ChannelHeroPosterWall(vm: ChannelHeroVM) {
   if (vm.state === "empty") {
     return (
-      <section className="flex min-h-64 items-center justify-center rounded-lg border border-dashed border-border p-12">
+      <section className="@container flex min-h-64 items-center justify-center rounded-lg border border-dashed border-border p-8 @md:p-12">
         <p className="text-sm text-muted-foreground">No key art to print yet.</p>
       </section>
     );
@@ -91,8 +99,8 @@ export function ChannelHeroPosterWall(vm: ChannelHeroVM) {
 
   if (vm.state === "loading") {
     return (
-      <section aria-busy="true" className="overflow-hidden rounded-xl border border-border bg-card">
-        <div className="mx-auto grid max-w-2xl grid-cols-3 gap-1 p-6">
+      <section aria-busy="true" className="@container overflow-hidden rounded-xl border border-border bg-card">
+        <div className="mx-auto grid max-w-2xl grid-cols-2 gap-1 p-6 @2xl:grid-cols-3">
           {Array.from({ length: 9 }, (_, index) => (
             <div key={index} className="aspect-square bg-muted" />
           ))}
@@ -124,12 +132,12 @@ export function ChannelHeroPosterWall(vm: ChannelHeroVM) {
     <section
       data-state={vm.state}
       data-poster-wall
-      className="overflow-hidden rounded-xl border border-border"
+      className="@container overflow-hidden rounded-xl border border-border"
       style={{ backgroundImage: FIELD }}
     >
       <div
         data-poster-camera
-        className="mx-auto w-full max-w-3xl origin-center px-4 py-8 sm:px-6 sm:py-12"
+        className="mx-auto w-full max-w-3xl origin-center px-3 py-6 @lg:px-4 @lg:py-8 @2xl:px-6 @2xl:py-12"
         style={{
           transform: `scale(${(1 + (1 - settled) * 0.14).toFixed(4)})`,
           opacity: Number((0.15 + 0.85 * settled).toFixed(3)),
@@ -150,8 +158,8 @@ export function ChannelHeroPosterWall(vm: ChannelHeroVM) {
               className="size-4 rounded-sm ring-1 ring-ring"
             />
           ) : null}
-          <span className="text-foreground">{vm.channelName}</span>
-          <span>{vm.channelHandle}</span>
+          <span className="max-w-full truncate text-foreground">{vm.channelName}</span>
+          <span className="max-w-full truncate">{vm.channelHandle}</span>
           {vm.status ? (
             <span className="flex items-center gap-1.5">
               <span
@@ -171,7 +179,7 @@ export function ChannelHeroPosterWall(vm: ChannelHeroVM) {
         </div>
 
         {/* The art. Hard, thin gutters — the panels are butted, not spaced. */}
-        <div className="grid grid-flow-row-dense grid-cols-2 gap-1 bg-border p-1 md:grid-cols-3">
+        <div className="grid grid-flow-row-dense grid-cols-2 gap-1 bg-border p-1 @2xl:grid-cols-3">
           {/*
             The logo hole. No plate, no border, no blur behind it: on a poster
             the logo IS the art at that spot. Revealed by a bottom-up wipe out
@@ -186,8 +194,8 @@ export function ChannelHeroPosterWall(vm: ChannelHeroVM) {
             className={cn(
               "relative col-span-2 flex flex-col items-center justify-center gap-3 px-3 py-6 text-center",
               surrounded
-                ? "row-span-2 row-start-2 md:col-start-2 md:row-start-2"
-                : "md:col-span-3 md:py-12",
+                ? "row-span-2 row-start-2 @2xl:col-start-2 @2xl:row-start-2"
+                : "@2xl:col-span-3 @2xl:py-12",
             )}
           >
             <span aria-hidden className="absolute inset-0" style={scene(vm.links.length)} />
@@ -197,7 +205,7 @@ export function ChannelHeroPosterWall(vm: ChannelHeroVM) {
             />
 
             {vm.headlineLead ? (
-              <p className="relative text-[0.6rem] font-black uppercase leading-none tracking-[0.5em] text-foreground sm:text-xs">
+              <p className="relative text-[0.55rem] font-black uppercase leading-none tracking-[0.4em] text-foreground @lg:tracking-[0.5em] @2xl:text-xs">
                 {vm.headlineLead}
               </p>
             ) : null}
@@ -208,7 +216,7 @@ export function ChannelHeroPosterWall(vm: ChannelHeroVM) {
               wordmarks survive being printed over illustration, and it cannot
               be faked with a shadow — it has to sit around every letterform.
             */}
-            <span className="relative z-10 block max-w-[7ch] break-words text-5xl font-black uppercase leading-[0.76] tracking-tighter sm:text-7xl">
+            <span className="relative z-10 block max-w-[7ch] break-words text-4xl font-black uppercase leading-[0.76] tracking-tighter @sm:text-5xl @2xl:text-6xl @4xl:text-7xl">
               <span
                 aria-hidden
                 className="absolute inset-0 text-transparent"

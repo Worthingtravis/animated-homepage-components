@@ -12,6 +12,11 @@
  *
  * The one thing it will not do is imply the channel is live when it is not: the
  * tally light, the wipe and the ticker all read `vm.state`, not `vm.progress`.
+ *
+ * Every breakpoint is a CONTAINER query, and the ticker rail is why it matters
+ * most here: a row of fixed-width cards has a min-content width far wider than
+ * a phone, so the rail must be told how wide its own box is rather than how
+ * wide the window is, and it must never be allowed to size its parent.
  */
 
 import Image from "next/image";
@@ -42,7 +47,7 @@ function enter(vm: ChannelHeroVM, index: number) {
 export function ChannelHeroLiveMarquee(vm: ChannelHeroVM) {
   if (vm.state === "empty") {
     return (
-      <section className="rounded-lg border border-dashed border-border p-12 text-center">
+      <section className="@container rounded-lg border border-dashed border-border p-8 text-center @md:p-12">
         <p className="text-sm text-muted-foreground">No channel on air.</p>
       </section>
     );
@@ -50,9 +55,9 @@ export function ChannelHeroLiveMarquee(vm: ChannelHeroVM) {
 
   if (vm.state === "loading") {
     return (
-      <section aria-busy="true" className="overflow-hidden rounded-2xl border border-border">
+      <section aria-busy="true" className="@container overflow-hidden rounded-2xl border border-border">
         <div className="h-1.5 w-1/3 bg-muted" />
-        <div className="flex min-h-64 items-end bg-card p-6">
+        <div className="flex min-h-56 items-end bg-card p-5 @xl:min-h-64 @xl:p-6">
           <div className="w-full space-y-3">
             <div className="h-5 w-40 rounded bg-muted" />
             <div className="h-10 w-2/3 rounded bg-muted" />
@@ -69,7 +74,7 @@ export function ChannelHeroLiveMarquee(vm: ChannelHeroVM) {
   return (
     <section
       data-state={vm.state}
-      className="overflow-hidden rounded-2xl border border-border bg-card text-card-foreground"
+      className="@container overflow-hidden rounded-2xl border border-border bg-card text-card-foreground"
     >
       {/* Tally bar — full width only once the entrance has finished. */}
       <div className="h-1.5 w-full bg-muted">
@@ -82,7 +87,7 @@ export function ChannelHeroLiveMarquee(vm: ChannelHeroVM) {
         />
       </div>
 
-      <div className="flex min-h-72 flex-col justify-end gap-6 bg-gradient-to-b from-card to-background p-6 sm:p-8">
+      <div className="flex min-h-56 flex-col justify-end gap-5 bg-gradient-to-b from-card to-background p-5 @xl:min-h-72 @xl:gap-6 @xl:p-6 @3xl:p-8">
         {/* Lower third */}
         <div style={enter(vm, 0)} className="flex items-center gap-4">
           {vm.channelAvatar ? (
@@ -96,7 +101,7 @@ export function ChannelHeroLiveMarquee(vm: ChannelHeroVM) {
             />
           ) : null}
           <div className="min-w-0">
-            <p className="flex items-center gap-2 text-[0.7rem] font-black uppercase tracking-[0.3em]">
+            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.7rem] font-black uppercase tracking-[0.3em]">
               {vm.status ? (
                 <>
                   <span
@@ -114,7 +119,7 @@ export function ChannelHeroLiveMarquee(vm: ChannelHeroVM) {
                   </span>
                 </>
               ) : (
-                <span className="text-muted-foreground">{vm.channelHandle}</span>
+                <span className="min-w-0 truncate text-muted-foreground">{vm.channelHandle}</span>
               )}
               {vm.status?.category ? (
                 <span className="truncate font-semibold tracking-[0.16em] text-muted-foreground">
@@ -128,7 +133,7 @@ export function ChannelHeroLiveMarquee(vm: ChannelHeroVM) {
 
         <h1
           style={enter(vm, 1)}
-          className="text-balance text-3xl font-black uppercase leading-[0.95] tracking-tight text-foreground sm:text-5xl"
+          className="text-balance text-2xl font-black uppercase leading-[0.95] tracking-tight text-foreground @sm:text-3xl @xl:text-4xl @3xl:text-5xl"
         >
           {vm.headlineLead}{" "}
           <span className="bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">
@@ -203,11 +208,11 @@ export function ChannelHeroLiveMarquee(vm: ChannelHeroVM) {
       {vm.links.length > 0 ? (
         <div className="border-t border-border bg-card">
           {vm.linksEyebrow ? (
-            <p className="px-6 pt-3 text-[0.65rem] font-bold uppercase tracking-[0.24em] text-muted-foreground sm:px-8">
+            <p className="px-5 pt-3 text-[0.65rem] font-bold uppercase tracking-[0.24em] text-muted-foreground @xl:px-6 @3xl:px-8">
               {vm.linksEyebrow}
             </p>
           ) : null}
-          <ul className="flex snap-x gap-3 overflow-x-auto px-6 py-3 sm:px-8">
+          <ul className="flex w-full min-w-0 snap-x gap-3 overflow-x-auto px-5 py-3 @xl:px-6 @3xl:px-8">
             {vm.links.map((link) => (
               <li key={link.id} className="snap-start">
                 <a
@@ -216,7 +221,8 @@ export function ChannelHeroLiveMarquee(vm: ChannelHeroVM) {
                   data-icon={link.iconId}
                   data-recommended={link.recommended}
                   className={cn(
-                    "flex w-52 shrink-0 flex-col rounded-md border px-3 py-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                    "flex w-40 shrink-0 flex-col rounded-md border px-3 py-2 transition-colors @lg:w-48 @3xl:w-52",
+                    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
                     link.recommended
                       ? "border-ring bg-background"
                       : "border-border hover:border-ring hover:bg-background",

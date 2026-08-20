@@ -53,6 +53,7 @@ export function ProductCardDetailRow(vm: ProductCardVM) {
     <article
       data-state={vm.state}
       className={cn(
+        "@container",
         "flex w-full max-w-3xl items-stretch gap-4 rounded-2xl border border-border bg-card p-4",
         "transition-colors duration-300",
         vm.state === "unavailable" ? "opacity-80" : "hover:border-primary/50",

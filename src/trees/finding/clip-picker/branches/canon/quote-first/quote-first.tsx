@@ -244,7 +244,7 @@ export function ClipPickerQuoteFirst(vm: ClipPickerVM) {
       data-clip-picker={vm.scopeId}
       data-state={vm.state}
       data-density={vm.density}
-      className="mx-auto flex w-full max-w-3xl flex-col gap-6 rounded-2xl border border-border bg-background p-4 sm:p-6"
+      className="@container mx-auto flex w-full max-w-3xl flex-col gap-6 rounded-2xl border border-border bg-background p-4 @lg:p-6"
     >
       <header className="flex flex-col gap-1">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">

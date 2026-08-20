@@ -66,7 +66,7 @@ function Action({ action }: { action: ExpandableCardAction }) {
 export function ExpandableCardInlineDetail(vm: ExpandableCardVM) {
   if (vm.state === "empty") {
     return (
-      <section className="rounded-xl border border-dashed border-border bg-card/40 p-10 text-center">
+      <section className="@container rounded-xl border border-dashed border-border bg-card/40 p-10 text-center">
         <p className="text-sm text-muted-foreground">{vm.emptyLabel ?? "Nothing to show yet."}</p>
       </section>
     );
@@ -75,7 +75,7 @@ export function ExpandableCardInlineDetail(vm: ExpandableCardVM) {
   const panel = vm.panel;
 
   return (
-    <section data-state={vm.state} className="flex flex-col gap-5">
+    <section data-state={vm.state} className="@container flex flex-col gap-5">
       {vm.eyebrow || vm.headline || vm.body ? (
         <header>
           {vm.eyebrow ? (
@@ -94,7 +94,7 @@ export function ExpandableCardInlineDetail(vm: ExpandableCardVM) {
         </header>
       ) : null}
 
-      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      <ul className="grid grid-cols-2 gap-3 @lg:grid-cols-3 @4xl:grid-cols-4">
         {vm.cards.map((card) => (
           <li key={card.id}>
             <button
@@ -149,10 +149,10 @@ export function ExpandableCardInlineDetail(vm: ExpandableCardVM) {
           style={panel.motion.surface}
           className="overflow-hidden rounded-xl border border-primary/40 bg-card shadow-lg"
         >
-          <div style={panel.motion.content} className="flex flex-col gap-5 p-5 sm:flex-row">
+          <div style={panel.motion.content} className="flex flex-col gap-5 p-5 @lg:flex-row">
             <div
               style={panel.motion.media}
-              className="relative aspect-video w-full shrink-0 overflow-hidden rounded-lg bg-muted sm:w-64"
+              className="relative aspect-video w-full shrink-0 overflow-hidden rounded-lg bg-muted @lg:w-64"
             >
               <Image
                 src={panel.card.media.src}

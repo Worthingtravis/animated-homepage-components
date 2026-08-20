@@ -9,6 +9,10 @@
  * headline rather than a card beside it, and the links become a single divided
  * list — which is why this leaf stays calm under a nine-item link set where a
  * grid would start to look like a menu.
+ *
+ * Its breakpoints are CONTAINER queries: the stack has no second column to
+ * collapse, but type size and the link rows still have to answer the width the
+ * leaf was actually handed — half a lab row, a narrow sidebar, a full page.
  */
 
 import Image from "next/image";
@@ -41,7 +45,7 @@ function enter(vm: ChannelHeroVM, index: number) {
 export function ChannelHeroStackedBillboard(vm: ChannelHeroVM) {
   if (vm.state === "empty") {
     return (
-      <section className="rounded-lg border border-dashed border-border p-12 text-center">
+      <section className="@container rounded-lg border border-dashed border-border p-8 text-center @md:p-12">
         <p className="text-sm text-muted-foreground">No channel to introduce yet.</p>
       </section>
     );
@@ -49,7 +53,7 @@ export function ChannelHeroStackedBillboard(vm: ChannelHeroVM) {
 
   if (vm.state === "loading") {
     return (
-      <section aria-busy="true" className="mx-auto max-w-2xl space-y-5 py-16 text-center">
+      <section aria-busy="true" className="@container mx-auto max-w-2xl space-y-5 py-16 text-center">
         <div className="mx-auto h-6 w-40 rounded-full bg-muted" />
         <div className="mx-auto h-12 w-full rounded bg-muted" />
         <div className="mx-auto h-12 w-3/4 rounded bg-muted" />
@@ -60,7 +64,10 @@ export function ChannelHeroStackedBillboard(vm: ChannelHeroVM) {
   }
 
   return (
-    <section data-state={vm.state} className="mx-auto flex max-w-3xl flex-col items-center gap-7 py-12 text-center">
+    <section
+      data-state={vm.state}
+      className="@container mx-auto flex max-w-3xl flex-col items-center gap-6 py-10 text-center @xl:gap-7 @xl:py-12"
+    >
       <div style={enter(vm, 0)} className="flex flex-col items-center gap-4">
         {vm.channelAvatar ? (
           <Image
@@ -98,7 +105,7 @@ export function ChannelHeroStackedBillboard(vm: ChannelHeroVM) {
             ) : null}
           </p>
         ) : (
-          <p className="font-mono text-xs uppercase tracking-[0.28em] text-muted-foreground">
+          <p className="max-w-full truncate font-mono text-xs uppercase tracking-[0.28em] text-muted-foreground">
             {vm.channelHandle}
           </p>
         )}
@@ -106,7 +113,7 @@ export function ChannelHeroStackedBillboard(vm: ChannelHeroVM) {
 
       <h1
         style={enter(vm, 1)}
-        className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight text-foreground sm:text-5xl"
+        className="text-balance text-3xl font-semibold leading-[1.08] tracking-tight text-foreground @sm:text-4xl @xl:text-5xl"
       >
         {vm.headlineLead}{" "}
         <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
@@ -190,7 +197,7 @@ export function ChannelHeroStackedBillboard(vm: ChannelHeroVM) {
                   onClick={link.onActivate}
                   data-icon={link.iconId}
                   data-recommended={link.recommended}
-                  className="flex items-baseline justify-between gap-4 py-3 transition-colors hover:bg-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  className="flex flex-col gap-0.5 py-3 transition-colors hover:bg-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring @sm:flex-row @sm:items-baseline @sm:justify-between @sm:gap-4"
                 >
                   <span
                     className={cn(
@@ -200,7 +207,7 @@ export function ChannelHeroStackedBillboard(vm: ChannelHeroVM) {
                   >
                     {link.label}
                   </span>
-                  <span className="text-right text-xs text-muted-foreground">{link.detail}</span>
+                  <span className="text-xs text-muted-foreground @sm:text-right">{link.detail}</span>
                 </a>
               </li>
             ))}

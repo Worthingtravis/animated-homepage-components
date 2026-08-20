@@ -54,7 +54,7 @@ export const meta: LeafMeta = {
 export function SectionTabsHoverDock(vm: SectionTabsVM) {
   if (vm.state === "empty") {
     return (
-      <div className="rounded-2xl border border-dashed border-primary/40 px-6 py-10 text-center">
+      <div className="@container rounded-2xl border border-dashed border-primary/40 px-6 py-10 text-center">
         <p className="text-sm text-muted-foreground">{vm.emptyLabel}</p>
       </div>
     );
@@ -76,6 +76,7 @@ export function SectionTabsHoverDock(vm: SectionTabsVM) {
       data-state={vm.state}
       data-layout={vm.layout}
       className={cn(
+        "@container",
         "grid w-full gap-5",
         narrow ? "grid-cols-1" : "grid-cols-[auto_1fr] items-start gap-x-6",
       )}

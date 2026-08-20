@@ -32,7 +32,7 @@ export function CountdownFlipStack(vm: CountdownVM) {
     return (
       <section
         data-state={vm.state}
-        className="rounded-2xl border border-ring bg-card p-10 text-center"
+        className="@container rounded-2xl border border-ring bg-card p-10 text-center"
       >
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
           {vm.eyebrow ?? "Closed"}
@@ -48,6 +48,7 @@ export function CountdownFlipStack(vm: CountdownVM) {
     <section
       data-state={vm.state}
       className={cn(
+        "@container",
         "rounded-2xl border bg-card p-10 transition-colors duration-500",
         urgent ? "border-ring" : "border-border",
       )}

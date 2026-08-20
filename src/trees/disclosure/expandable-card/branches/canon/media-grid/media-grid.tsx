@@ -73,7 +73,7 @@ function ActionButton({
 export function ExpandableCardMediaGrid(vm: ExpandableCardVM) {
   if (vm.state === "empty") {
     return (
-      <section className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border bg-card/40 p-8">
+      <section className="@container flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border bg-card/40 p-8">
         <p className="text-sm text-muted-foreground">{vm.emptyLabel ?? "Nothing to show yet."}</p>
       </section>
     );
@@ -82,7 +82,7 @@ export function ExpandableCardMediaGrid(vm: ExpandableCardVM) {
   const panel = vm.panel;
 
   return (
-    <section data-state={vm.state} className="relative">
+    <section data-state={vm.state} className="@container relative">
       {vm.eyebrow || vm.headline || vm.body ? (
         <header className="mb-6">
           {vm.eyebrow ? (
@@ -101,7 +101,7 @@ export function ExpandableCardMediaGrid(vm: ExpandableCardVM) {
         </header>
       ) : null}
 
-      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid grid-cols-1 gap-4 @lg:grid-cols-2 @4xl:grid-cols-3">
         {vm.cards.map((card) => (
           <li key={card.id}>
             <article
@@ -166,7 +166,7 @@ export function ExpandableCardMediaGrid(vm: ExpandableCardVM) {
       {panel ? (
         <div
           data-phase={panel.phase}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
+          className="@container fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
         >
           <div
             aria-hidden

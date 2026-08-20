@@ -135,7 +135,7 @@ function PaneShell({ pane }: { pane: PaneDockPane }) {
 export function PaneDockCommandSheet(vm: PaneDockVM) {
   if (vm.state === "empty") {
     return (
-      <section className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border bg-card/40 p-8">
+      <section className="@container flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border bg-card/40 p-8">
         <p className="text-sm text-muted-foreground">{vm.emptyLabel}</p>
       </section>
     );
@@ -152,7 +152,7 @@ export function PaneDockCommandSheet(vm: PaneDockVM) {
       data-pane-dock={vm.scopeId}
       data-state={vm.state}
       data-density={vm.density}
-      className="flex flex-col gap-4 rounded-2xl border border-border bg-background p-4"
+      className="@container flex flex-col gap-4 rounded-2xl border border-border bg-background p-4"
     >
       <header className="flex flex-wrap items-start gap-x-3 gap-y-1">
         <div className="min-w-0 flex-1">
@@ -239,18 +239,18 @@ export function PaneDockCommandSheet(vm: PaneDockVM) {
       <div
         className={cn(
           "flex min-h-0 flex-col gap-3",
-          vm.density === "narrow" ? null : "lg:flex-row",
+          vm.density === "narrow" ? null : "@4xl:flex-row",
         )}
       >
         {lead.length > 0 ? (
-          <div className="flex min-w-0 flex-col gap-3 lg:flex-1">
+          <div className="flex min-w-0 flex-col gap-3 @4xl:flex-1">
             {lead.map((pane) => (
               <PaneShell key={pane.id} pane={pane} />
             ))}
           </div>
         ) : null}
 
-        <div className="flex min-w-0 flex-col gap-3 lg:flex-[2]">
+        <div className="flex min-w-0 flex-col gap-3 @4xl:flex-[2]">
           {stage.map((pane) => (
             <PaneShell key={pane.id} pane={pane} />
           ))}
@@ -260,7 +260,7 @@ export function PaneDockCommandSheet(vm: PaneDockVM) {
         </div>
 
         {aside.length > 0 ? (
-          <div className="flex min-w-0 flex-col gap-3 lg:flex-1">
+          <div className="flex min-w-0 flex-col gap-3 @4xl:flex-1">
             {aside.map((pane) => (
               <PaneShell key={pane.id} pane={pane} />
             ))}

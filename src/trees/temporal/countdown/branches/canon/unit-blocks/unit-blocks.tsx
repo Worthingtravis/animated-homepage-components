@@ -29,7 +29,7 @@ export function CountdownUnitBlocks(vm: CountdownVM) {
     return (
       <section
         data-state={vm.state}
-        className="rounded-xl border border-border bg-card p-8 text-center"
+        className="@container rounded-xl border border-border bg-card p-8 text-center"
       >
         {vm.eyebrow ? (
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
@@ -50,6 +50,7 @@ export function CountdownUnitBlocks(vm: CountdownVM) {
     <section
       data-state={vm.state}
       className={cn(
+        "@container",
         "rounded-xl border bg-card p-8 transition-colors duration-500",
         urgent ? "border-ring" : "border-border",
       )}

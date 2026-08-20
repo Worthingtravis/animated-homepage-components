@@ -24,7 +24,7 @@ export function AuroraHeadlineOrbitGlow(vm: AuroraHeadlineVM) {
 
   if (vm.state === "empty") {
     return (
-      <section className="grid min-h-64 place-items-center rounded-3xl bg-muted">
+      <section className="@container grid min-h-64 place-items-center rounded-3xl bg-muted">
         <p className="text-sm text-muted-foreground">Nothing to show yet.</p>
       </section>
     );
@@ -33,7 +33,7 @@ export function AuroraHeadlineOrbitGlow(vm: AuroraHeadlineVM) {
   return (
     <section
       data-state={vm.state}
-      className="relative isolate overflow-hidden rounded-3xl border border-border bg-card px-8 py-16"
+      className="@container relative isolate overflow-hidden rounded-3xl border border-border bg-card px-8 py-16"
     >
       <div
         aria-hidden

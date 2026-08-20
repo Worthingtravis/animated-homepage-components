@@ -38,6 +38,7 @@ export function ProductCardPriceTag(vm: ProductCardVM) {
     <article
       data-state={vm.state}
       className={cn(
+        "@container",
         "relative flex aspect-[4/5] w-full max-w-sm flex-col justify-end overflow-hidden rounded-3xl",
         "bg-muted ring-1 ring-border transition-shadow duration-300",
         vm.state === "added" ? "ring-2 ring-primary" : "hover:shadow-xl",

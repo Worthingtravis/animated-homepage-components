@@ -156,6 +156,53 @@ describe("leaf purity (extract-vm phase 4)", () => {
     },
   );
 
+  /*
+   * A leaf measures ITS OWN BOX, never the window.
+   *
+   * A leaf is dropped into whatever column its consumer has — half a lab row,
+   * a narrow sidebar, a full page — and it is never told how wide the window
+   * is. Viewport breakpoints answer the wrong question, and they fail
+   * *silently*: on a 1440px desktop the lab renders two leaves side by side at
+   * 548px each, where `md:` still reads 1440 and opens a two-column split in a
+   * 300px column. So every breakpoint in a leaf is a container query, and every
+   * leaf root carries `@container` for them to resolve against.
+   *
+   * The one exception is a viewport overlay. A `fixed` element really is the
+   * window, and nothing can query its own box — so a class string that also
+   * declares `fixed` may use viewport breakpoints. Give that overlay its own
+   * `@container` and everything inside it goes back to measuring its box.
+   *
+   * The house mapping, when converting an existing leaf, subtracts the page
+   * chrome a leaf normally sits inside (~128px), so a rule fires when the LEAF
+   * reaches the width it was designed for:
+   *
+   *   sm: → @lg     md: → @2xl     lg: → @4xl     xl: → @5xl     2xl: → @6xl
+   */
+  const VIEWPORT_BREAKPOINT = /(?<![@\w-])(?:sm|md|lg|xl|2xl):/;
+
+  it.each(LEAF_SOURCES.map((file) => [file.rel, file] as const))(
+    "%s measures its own box, not the window",
+    (_rel, file) => {
+      const offenders = (file.source.match(/"[^"\n]*"/g) ?? []).filter(
+        (text) => VIEWPORT_BREAKPOINT.test(text) && !text.includes("fixed"),
+      );
+      expect(
+        offenders,
+        `${file.rel} uses a viewport breakpoint — use the container form (@lg:, @2xl:, @4xl:)`,
+      ).toEqual([]);
+    },
+  );
+
+  it.each(LEAF_SOURCES.map((file) => [file.rel, file] as const))(
+    "%s declares a container for its breakpoints to resolve against",
+    (_rel, file) => {
+      expect(
+        file.source.includes("@container"),
+        `${file.rel} must put @container on the root it lays out inside`,
+      ).toBe(true);
+    },
+  );
+
   it.each(LEAF_SOURCES.map((file) => [file.rel, file] as const))(
     "%s imports its VM type from the tree, not a sibling",
     (_rel, file) => {
@@ -304,5 +351,19 @@ describe("every leaf survives every fixture", () => {
     // computed value into the DOM.
     expect(container.innerHTML).not.toContain("NaN");
     expect(container.innerHTML).not.toContain("undefined");
+    /*
+     * Every state a leaf can render — empty and loading included — is laid out
+     * inside a container. Checking the RENDERED root rather than the source is
+     * what catches the real mistake: an `@container` that sits on some inner
+     * div while the state that actually needs measuring returns its own root
+     * without one.
+     */
+    const roots = [...container.children];
+    if (roots.length > 0) {
+      expect(
+        roots.some((root) => root.className.toString().includes("@container")),
+        "the leaf's rendered root must carry @container",
+      ).toBe(true);
+    }
   });
 });

@@ -54,7 +54,7 @@ export const meta: LeafMeta = {
 export function SectionTabsPopoverMenu(vm: SectionTabsVM) {
   if (vm.state === "empty" || !vm.overlay) {
     return (
-      <div className="rounded-2xl border border-dashed border-primary/40 px-6 py-10 text-center">
+      <div className="@container rounded-2xl border border-dashed border-primary/40 px-6 py-10 text-center">
         <p className="text-sm text-muted-foreground">{vm.emptyLabel}</p>
       </div>
     );
@@ -63,7 +63,7 @@ export function SectionTabsPopoverMenu(vm: SectionTabsVM) {
   const overlay = vm.overlay;
 
   return (
-    <div data-state={vm.state} data-layout={vm.layout} className="flex w-full flex-col gap-5">
+    <div data-state={vm.state} data-layout={vm.layout} className="@container flex w-full flex-col gap-5">
       <div className="flex flex-wrap items-center gap-3">
         {vm.heading ? (
           <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">

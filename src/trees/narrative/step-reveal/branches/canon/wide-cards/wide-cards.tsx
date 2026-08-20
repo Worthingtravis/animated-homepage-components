@@ -20,14 +20,14 @@ export const meta: LeafMeta = {
 export function StepRevealWideCards(vm: StepRevealVM) {
   if (vm.state === "empty") {
     return (
-      <section className="rounded-xl border border-dashed border-border p-10 text-center">
+      <section className="@container rounded-xl border border-dashed border-border p-10 text-center">
         <p className="text-sm text-muted-foreground">No steps to walk through yet.</p>
       </section>
     );
   }
 
   return (
-    <section data-state={vm.state} className="py-8">
+    <section data-state={vm.state} className="@container py-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-xl">
           {vm.eyebrow ? (
@@ -45,7 +45,7 @@ export function StepRevealWideCards(vm: StepRevealVM) {
         ) : null}
       </header>
 
-      <ol className="mt-8 flex flex-col gap-3 lg:flex-row lg:flex-wrap">
+      <ol className="mt-8 flex flex-col gap-3 @4xl:flex-row @4xl:flex-wrap">
         {vm.steps.map((step, index) => {
           const active = step.position === "active";
           const Wrapper = vm.onSelectStep ? "button" : "div";
@@ -55,7 +55,7 @@ export function StepRevealWideCards(vm: StepRevealVM) {
               data-position={step.position}
               className={cn(
                 "min-w-0 transition-[flex-grow] duration-500 ease-out",
-                active ? "lg:grow-[3]" : "lg:grow",
+                active ? "@4xl:grow-[3]" : "@4xl:grow",
               )}
               // Basis, not zero: below its basis the row wraps instead of crushing
               // every inactive card into a column of single words.
@@ -103,7 +103,7 @@ export function StepRevealWideCards(vm: StepRevealVM) {
                 <p
                   className={cn(
                     "mt-2 text-sm text-muted-foreground transition-opacity duration-300",
-                    active ? "opacity-100" : "opacity-0 lg:h-0 lg:overflow-hidden",
+                    active ? "opacity-100" : "opacity-0 @4xl:h-0 @4xl:overflow-hidden",
                   )}
                 >
                   {step.description}

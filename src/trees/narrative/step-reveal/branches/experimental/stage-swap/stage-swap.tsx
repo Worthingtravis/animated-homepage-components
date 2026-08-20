@@ -21,7 +21,7 @@ export const meta: LeafMeta = {
 export function StepRevealStageSwap(vm: StepRevealVM) {
   if (vm.state === "empty") {
     return (
-      <section className="grid min-h-72 place-items-center rounded-3xl bg-muted">
+      <section className="@container grid min-h-72 place-items-center rounded-3xl bg-muted">
         <p className="text-sm text-muted-foreground">No steps to walk through yet.</p>
       </section>
     );
@@ -33,7 +33,7 @@ export function StepRevealStageSwap(vm: StepRevealVM) {
   return (
     <section
       data-state={vm.state}
-      className="relative overflow-hidden rounded-3xl border border-border bg-card px-8 py-14"
+      className="@container relative overflow-hidden rounded-3xl border border-border bg-card px-8 py-14"
     >
       {/* Oversized ordinal as a watermark — the only element tied to the raw index. */}
       <span
@@ -87,7 +87,7 @@ export function StepRevealStageSwap(vm: StepRevealVM) {
             const label = (
               <>
                 <span className="font-mono text-xs">{step.ordinal}</span>
-                <span className={cn("ml-2 text-xs", isActive ? "inline" : "hidden sm:inline")}>
+                <span className={cn("ml-2 text-xs", isActive ? "inline" : "hidden @lg:inline")}>
                   {step.title}
                 </span>
               </>

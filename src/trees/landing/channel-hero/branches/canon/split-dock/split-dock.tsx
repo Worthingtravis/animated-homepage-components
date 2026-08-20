@@ -11,6 +11,14 @@
  *
  * This is the leaf that most closely answers laughingwhales.com's own hero, and
  * it is the one to reach for when porting that page into the forest.
+ *
+ * ── Why every breakpoint here is a CONTAINER query ─────────────────────────
+ * A leaf is dropped into whatever column its consumer has. It is never told how
+ * wide the window is, and it must not care: the lab shows two leaves side by
+ * side, so on a 1440px desktop this leaf renders in 548px — where a `md:`
+ * viewport rule would happily open a 60/40 split with a 303px headline column
+ * carrying 60px type. `@container` measures the box the leaf was actually
+ * given, which is the only width that was ever true.
  */
 
 import Image from "next/image";
@@ -48,7 +56,7 @@ function enter(vm: ChannelHeroVM, index: number) {
 export function ChannelHeroSplitDock(vm: ChannelHeroVM) {
   if (vm.state === "empty") {
     return (
-      <section className="rounded-lg border border-dashed border-border p-12 text-center">
+      <section className="@container rounded-lg border border-dashed border-border p-8 text-center @md:p-12">
         <p className="text-sm text-muted-foreground">No channel to introduce yet.</p>
       </section>
     );
@@ -56,14 +64,14 @@ export function ChannelHeroSplitDock(vm: ChannelHeroVM) {
 
   if (vm.state === "loading") {
     return (
-      <section aria-busy="true" className="grid gap-8 py-10 md:grid-cols-12">
-        <div className="space-y-4 md:col-span-7">
+      <section aria-busy="true" className="@container grid grid-cols-1 gap-8 py-10 @3xl:grid-cols-12">
+        <div className="space-y-4 @3xl:col-span-7">
           <div className="h-4 w-32 rounded bg-muted" />
           <div className="h-14 w-full rounded bg-muted" />
           <div className="h-14 w-4/5 rounded bg-muted" />
           <div className="h-4 w-3/5 rounded bg-muted" />
         </div>
-        <div className="md:col-span-5">
+        <div className="@3xl:col-span-5">
           <div className="h-48 rounded-2xl bg-muted" />
         </div>
         <span className="sr-only">Loading channel…</span>
@@ -72,18 +80,24 @@ export function ChannelHeroSplitDock(vm: ChannelHeroVM) {
   }
 
   return (
-    <section data-state={vm.state} className="py-8">
-      <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-12 md:gap-10">
+    <section data-state={vm.state} className="@container py-8">
+      {/* The split opens at 48rem of CONTAINER, not of window. Below that the
+          claim and the channel card stack, which is the same answer a phone
+          gets and the same answer a narrow sidebar gets. */}
+      <div className="grid grid-cols-1 items-start gap-8 @3xl:grid-cols-12 @3xl:gap-10">
         {/* LEFT — the claim */}
-        <div className="flex flex-col gap-6 md:col-span-7">
+        <div className="flex min-w-0 flex-col gap-6 @3xl:col-span-7">
           <p
             style={enter(vm, LEAD)}
-            className="font-mono text-xs uppercase tracking-[0.28em] text-muted-foreground transition-none"
+            /* A handle is one unbreakable token. Long ones ("@skillcheckk_official_backup_account")
+               overflowed a phone-width column and scrolled the whole page sideways — the fixture
+               was right about the input, so the leaf has to be right about the width. */
+            className="max-w-full truncate font-mono text-xs uppercase tracking-[0.28em] text-muted-foreground transition-none"
           >
             {vm.channelHandle}
           </p>
 
-          <h1 className="text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <h1 className="text-balance text-3xl font-semibold leading-[1.05] tracking-tight text-foreground @sm:text-4xl @xl:text-5xl @4xl:text-6xl">
             <span style={enter(vm, LEAD)} className="block">
               {vm.headlineLead}
             </span>
@@ -116,7 +130,7 @@ export function ChannelHeroSplitDock(vm: ChannelHeroVM) {
           {vm.subheadline ? (
             <p
               style={enter(vm, SUB)}
-              className="max-w-xl text-pretty text-base text-muted-foreground sm:text-lg"
+              className="max-w-xl text-pretty text-base text-muted-foreground @xl:text-lg"
             >
               {vm.subheadline}
             </p>
@@ -156,7 +170,7 @@ export function ChannelHeroSplitDock(vm: ChannelHeroVM) {
         </div>
 
         {/* RIGHT — the channel card */}
-        <aside style={enter(vm, CARD)} className="md:col-span-5">
+        <aside style={enter(vm, CARD)} className="min-w-0 @3xl:col-span-5">
           <div className="rounded-2xl border border-border bg-card p-5 text-card-foreground">
             <div className="flex items-center gap-4">
               {vm.channelAvatar ? (
@@ -235,7 +249,7 @@ export function ChannelHeroSplitDock(vm: ChannelHeroVM) {
               {vm.linksEyebrow}
             </p>
           ) : null}
-          <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-4 grid grid-cols-1 gap-3 @md:grid-cols-2 @3xl:grid-cols-3">
             {vm.links.map((link) => (
               <li key={link.id}>
                 <a

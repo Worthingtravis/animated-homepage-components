@@ -37,7 +37,7 @@ describe("StepRevealWideCards", () => {
     const { container } = render(<StepRevealWideCards {...ALL_FIXTURES["Step 2"]} />);
     const active = container.querySelectorAll('[data-position="active"]');
     expect(active).toHaveLength(1);
-    expect(active[0].className).toContain("lg:grow-[3]");
+    expect(active[0].className).toContain("@4xl:grow-[3]");
   });
 
   it("renders read-only when the sequence is not steerable", () => {

@@ -41,7 +41,7 @@ export function CountdownRingDial(vm: CountdownVM) {
   return (
     <section
       data-state={vm.state}
-      className="flex flex-col items-center gap-5 rounded-xl border border-border bg-card p-8 text-center"
+      className="@container flex flex-col items-center gap-5 rounded-xl border border-border bg-card p-8 text-center"
     >
       {vm.eyebrow ? (
         <p

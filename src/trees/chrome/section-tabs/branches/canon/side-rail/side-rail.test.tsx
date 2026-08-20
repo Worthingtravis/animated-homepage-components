@@ -16,9 +16,11 @@ describe("SectionTabsSideRail", () => {
 
   it("stands beside the panel when wide, and above it when narrow", () => {
     // The structural decision, and the reason `layout` is on the contract: a
-    // rail is a wide-screen affordance and pretending otherwise eats a phone.
+    // rail is a WIDE-BOX affordance and pretending otherwise eats a phone —
+    // and "wide" is the width this leaf was handed, not the width of the
+    // window, so the rail is a container breakpoint.
     const { container: wide } = render(<SectionTabsSideRail {...ALL_FIXTURES[DEFAULT_FIXTURE]!} />);
-    expect(wide.querySelector("[data-layout='wide']")?.className).toContain("md:grid-cols-");
+    expect(wide.querySelector("[data-layout='wide']")?.className).toContain("@2xl:grid-cols-");
     cleanup();
     const { container: narrow } = render(
       <SectionTabsSideRail {...ALL_FIXTURES["Narrow layout"]!} />,

@@ -216,7 +216,7 @@ export function ClipPickerDeck(vm: ClipPickerVM) {
       data-clip-picker={vm.scopeId}
       data-state={vm.state}
       data-density={vm.density}
-      className="mx-auto flex w-full max-w-xl flex-col gap-5 rounded-2xl border border-border bg-background p-4"
+      className="@container mx-auto flex w-full max-w-xl flex-col gap-5 rounded-2xl border border-border bg-background p-4"
     >
       <header className="flex flex-col gap-1">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">

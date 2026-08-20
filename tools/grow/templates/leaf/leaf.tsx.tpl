@@ -8,6 +8,14 @@
  *  - no raw <img> — use next/image
  *  - honour `vm.reducedMotion`: when true, render the resting frame
  *
+ * It measures ITS OWN BOX, never the window. Every root below carries
+ * `@container`, and every breakpoint is a container query — `@lg:`, `@2xl:`,
+ * `@4xl:` — because a leaf is dropped into whatever column its consumer has
+ * and is never told how wide the window is. A `sm:`/`md:`/`lg:` prefix fails
+ * the conformance suite. (The one exception is a `fixed` viewport overlay:
+ * that really is the window. Give the overlay its own `@container` so its
+ * contents go back to measuring a box.)
+ *
  * Deriving values from `vm.progress` inline is fine — that is presentation,
  * not business logic.
  */
@@ -28,7 +36,7 @@ export function __LEAF_EXPORT__(vm: __VM_TYPE__) {
 
   if (vm.state === "empty") {
     return (
-      <section className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border bg-card/40 p-8">
+      <section className="@container flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border bg-card/40 p-8">
         <p className="text-sm text-muted-foreground">Nothing to show yet.</p>
       </section>
     );
@@ -37,7 +45,7 @@ export function __LEAF_EXPORT__(vm: __VM_TYPE__) {
   return (
     <section
       data-state={vm.state}
-      className="relative overflow-hidden rounded-xl border border-border bg-card p-8"
+      className="@container relative overflow-hidden rounded-xl border border-border bg-card p-8"
     >
       {vm.eyebrow ? (
         <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
@@ -54,7 +62,7 @@ export function __LEAF_EXPORT__(vm: __VM_TYPE__) {
 
       {vm.body ? <p className="mt-3 max-w-prose text-muted-foreground">{vm.body}</p> : null}
 
-      <ul className="mt-6 flex flex-wrap gap-2">
+      <ul className="mt-6 flex flex-wrap gap-2 @2xl:gap-3">
         {vm.items.map((item, index) => (
           <li
             key={item.id}

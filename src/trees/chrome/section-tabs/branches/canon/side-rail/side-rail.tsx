@@ -49,7 +49,7 @@ export const meta: LeafMeta = {
 export function SectionTabsSideRail(vm: SectionTabsVM) {
   if (vm.state === "empty") {
     return (
-      <div className="rounded-2xl border border-dashed border-primary/40 px-6 py-10 text-center">
+      <div className="@container rounded-2xl border border-dashed border-primary/40 px-6 py-10 text-center">
         <p className="text-sm text-muted-foreground">{vm.emptyLabel}</p>
       </div>
     );
@@ -66,8 +66,9 @@ export function SectionTabsSideRail(vm: SectionTabsVM) {
       data-state={vm.state}
       data-layout={vm.layout}
       className={cn(
+        "@container",
         "grid w-full gap-6",
-        narrow ? "grid-cols-1" : "grid-cols-1 md:grid-cols-[minmax(11rem,15rem)_1fr]",
+        narrow ? "grid-cols-1" : "grid-cols-1 @2xl:grid-cols-[minmax(11rem,15rem)_1fr]",
       )}
     >
       <div className="flex min-w-0 flex-col gap-3">

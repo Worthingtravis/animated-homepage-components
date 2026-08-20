@@ -65,7 +65,7 @@ function Action({ action }: { action: ExpandableCardAction }) {
 export function ExpandableCardFullBleed(vm: ExpandableCardVM) {
   if (vm.state === "empty") {
     return (
-      <section className="flex min-h-56 items-center justify-center rounded-2xl border border-dashed border-border bg-card/40">
+      <section className="@container flex min-h-56 items-center justify-center rounded-2xl border border-dashed border-border bg-card/40">
         <p className="text-sm text-muted-foreground">{vm.emptyLabel ?? "Nothing to show yet."}</p>
       </section>
     );
@@ -74,7 +74,7 @@ export function ExpandableCardFullBleed(vm: ExpandableCardVM) {
   const panel = vm.panel;
 
   return (
-    <section data-state={vm.state} className="relative">
+    <section data-state={vm.state} className="@container relative">
       {vm.eyebrow || vm.headline || vm.body ? (
         <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -95,14 +95,14 @@ export function ExpandableCardFullBleed(vm: ExpandableCardVM) {
         </header>
       ) : null}
 
-      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <ul className="grid grid-cols-1 gap-3 @lg:grid-cols-2 @5xl:grid-cols-3">
         {vm.cards.map((card, index) => (
           <li
             key={card.id}
             // A deliberately uneven grid — every third tile is tall. It is
             // index arithmetic about *layout*, which is presentation; the VM
             // still decides nothing about size.
-            className={index % 3 === 0 ? "sm:row-span-2" : undefined}
+            className={index % 3 === 0 ? "@lg:row-span-2" : undefined}
           >
             <button
               type="button"
@@ -145,7 +145,7 @@ export function ExpandableCardFullBleed(vm: ExpandableCardVM) {
       </ul>
 
       {panel ? (
-        <div data-phase={panel.phase} className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center sm:p-6">
+        <div data-phase={panel.phase} className="@container fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center sm:p-6">
           <div
             aria-hidden
             style={panel.motion.backdrop}
@@ -159,7 +159,7 @@ export function ExpandableCardFullBleed(vm: ExpandableCardVM) {
             aria-labelledby={panel.titleId}
             data-transition={panel.motion.transition}
             style={panel.motion.surface}
-            className="relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-3xl border border-border bg-card shadow-2xl sm:max-h-[86vh] sm:max-w-3xl sm:rounded-3xl"
+            className="relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-3xl border border-border bg-card shadow-2xl @lg:max-h-[86vh] @lg:max-w-3xl @lg:rounded-3xl"
           >
             <div style={panel.motion.content} className="flex max-h-full min-h-0 flex-col">
               <div
@@ -182,7 +182,7 @@ export function ExpandableCardFullBleed(vm: ExpandableCardVM) {
                   ) : null}
                   <h3
                     id={panel.titleId}
-                    className="mt-1 text-balance text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+                    className="mt-1 text-balance text-2xl font-semibold tracking-tight text-foreground @lg:text-3xl"
                   >
                     {panel.card.title}
                   </h3>

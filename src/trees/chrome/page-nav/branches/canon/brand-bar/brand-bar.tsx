@@ -39,7 +39,7 @@ export const meta: LeafMeta = {
 export function PageNavBrandBar(vm: PageNavVM) {
   if (vm.state === "empty") {
     return (
-      <div className="border-b border-dashed border-border px-4 py-4 text-center">
+      <div className="@container border-b border-dashed border-border px-4 py-4 text-center">
         <p className="text-xs text-muted-foreground">Nowhere to navigate yet.</p>
       </div>
     );
@@ -58,7 +58,7 @@ export function PageNavBrandBar(vm: PageNavVM) {
         borderBottomColor:
           vm.state === "condensed" ? "var(--color-border)" : "transparent",
       }}
-      className="flex w-full items-center gap-6 border-b bg-background px-4 transition-colors duration-200 sm:px-6"
+      className="@container flex w-full items-center gap-6 border-b bg-background px-4 transition-colors duration-200 @lg:px-6"
     >
       {vm.brand ? (
         <a
@@ -92,7 +92,7 @@ export function PageNavBrandBar(vm: PageNavVM) {
         className={cn(
           "flex min-w-0 items-center gap-1 overflow-x-auto",
           vm.brand ? "ml-auto" : "",
-          vm.menu ? "hidden sm:flex" : "flex",
+          vm.menu ? "hidden @lg:flex" : "flex",
         )}
       >
         {vm.items.map((item) => {
@@ -180,7 +180,7 @@ export function PageNavBrandBar(vm: PageNavVM) {
           aria-expanded={vm.menu.state === "open"}
           data-menu-state={vm.menu.state}
           className={cn(
-            "shrink-0 rounded-lg border border-border px-3 py-2 text-sm font-medium text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:hidden",
+            "shrink-0 rounded-lg border border-border px-3 py-2 text-sm font-medium text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring @lg:hidden",
             vm.brand || vm.actions.length > 0 ? "" : "ml-auto",
           )}
         >

@@ -28,7 +28,7 @@ export function AuroraHeadlineBaseline(vm: AuroraHeadlineVM) {
 
   if (vm.state === "empty") {
     return (
-      <section className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border bg-card/40 p-8">
+      <section className="@container flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border bg-card/40 p-8">
         <p className="text-sm text-muted-foreground">Nothing to show yet.</p>
       </section>
     );
@@ -37,7 +37,7 @@ export function AuroraHeadlineBaseline(vm: AuroraHeadlineVM) {
   return (
     <section
       data-state={vm.state}
-      className="relative overflow-hidden rounded-xl border border-border bg-card p-8"
+      className="@container relative overflow-hidden rounded-xl border border-border bg-card p-8"
     >
       {vm.eyebrow ? (
         <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
