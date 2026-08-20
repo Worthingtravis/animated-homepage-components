@@ -21,7 +21,7 @@ export function SiteHeader() {
 
   return (
     <header className="border-b border-border">
-      <nav className="mx-auto flex w-full max-w-6xl items-baseline gap-6 px-6 py-4 xl:max-w-[88rem] 2xl:max-w-[104rem]">
+      <nav className="mx-auto flex w-full max-w-[120rem] items-baseline gap-6 px-6 py-4">
         <Link
           href={HOME_HREF}
           aria-current={isActivePath(pathname, HOME_HREF) ? "page" : undefined}

@@ -24,6 +24,7 @@ import {
   PRIMER_CHAPTER_COUNT,
   PRIMER_TRANSPORTS,
 } from "./forest-primer.vm";
+import { measureProgress } from "./forest-primer-connected";
 
 const summary = summarizeForest(FOREST, {
   preferred: { species: "narrative", tree: "forest-primer" },
@@ -131,5 +132,35 @@ describe("chapter position and progress are decided here, not in a leaf", () => 
     expect(chapters[2].progress).toBeGreaterThan(0);
     expect(chapters[2].progress).toBeLessThan(1);
     expect(chapters.slice(3).every((chapter) => chapter.progress === 0)).toBe(true);
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * Scroll transport.
+ * ------------------------------------------------------------------ */
+
+describe("measureProgress", () => {
+  const VIEWPORT = 900;
+
+  it("is 0 for a primer sitting at the top of the document, unscrolled", () => {
+    // `/` renders the primer near the document top, above the 85% start line.
+    // Measured against a line it never has to cross, it used to open at ~0.33 —
+    // chapter 3 of 6 — before the reader had scrolled at all.
+    expect(measureProgress({ top: 96, height: 4000 }, VIEWPORT, 0)).toBe(0);
+  });
+
+  it("is 0 for a primer further down the page that has not been reached", () => {
+    expect(measureProgress({ top: VIEWPORT, height: 4000 }, VIEWPORT, 0)).toBe(0);
+  });
+
+  it("advances as the page scrolls", () => {
+    const first = measureProgress({ top: 96 - 400, height: 4000 }, VIEWPORT, 400);
+    const later = measureProgress({ top: 96 - 1200, height: 4000 }, VIEWPORT, 1200);
+    expect(first).toBeGreaterThan(0);
+    expect(later).toBeGreaterThan(first);
+  });
+
+  it("reaches 1 once the primer has been scrolled past", () => {
+    expect(measureProgress({ top: -4000, height: 4000 }, VIEWPORT, 6000)).toBe(1);
   });
 });

@@ -3,11 +3,15 @@ import { notFound } from "next/navigation";
 import { findTreeEntry, treeEntries } from "@/lib/site-nav";
 import { FOREST } from "@/trees/generated";
 
-import { Crumbs, SpeciesRail, TreeSteps } from "../../../forest-nav";
+import { Crumbs, TreeSteps } from "../../../forest-nav";
+import { LabShell } from "../../../page-shell";
 import { TreeLab } from "./tree-lab";
 
 export function generateStaticParams() {
-  return treeEntries(FOREST).map((tree) => ({ species: tree.speciesKey, tree: tree.key }));
+  return treeEntries(FOREST).map((tree) => ({
+    species: tree.speciesKey,
+    tree: tree.key,
+  }));
 }
 
 /**
@@ -28,15 +32,14 @@ export default async function TreeLabPage({
   if (!entry) notFound();
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-3">
+    <LabShell species={species} tree={tree}>
+      <div className="space-y-8">
         <Crumbs species={species} tree={tree} />
-        <SpeciesRail current={species} />
+
+        <TreeLab species={species} treeKey={tree} />
+
+        <TreeSteps species={species} tree={tree} />
       </div>
-
-      <TreeLab species={species} treeKey={tree} />
-
-      <TreeSteps species={species} tree={tree} />
-    </div>
+    </LabShell>
   );
 }

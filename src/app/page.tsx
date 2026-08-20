@@ -1,5 +1,6 @@
 import { ForestPrimerConnected } from "@/trees/narrative/forest-primer/forest-primer-connected";
 
+import { PageWidth } from "./page-shell";
 import { ForestIndexSection, ForestStatsSection } from "./site-sections";
 
 /**
@@ -12,19 +13,21 @@ import { ForestIndexSection, ForestStatsSection } from "./site-sections";
  */
 export default function ForestPage() {
   return (
-    <div className="space-y-10">
-      {/*
-       * The paragraph that used to sit here said what chapter 1 of the primer
-       * now draws — species, tree, branch, leaf, and why none of them own
-       * state. Saying it twice is how the two copies start disagreeing. The
-       * heading stays: a page needs an h1 whether or not the primer loaded.
-       */}
-      <h1 className="text-3xl font-semibold text-foreground">Animated homepage components</h1>
+    <PageWidth>
+      <div className="space-y-10">
+        {/*
+         * The paragraph that used to sit here said what chapter 1 of the primer
+         * now draws — species, tree, branch, leaf, and why none of them own
+         * state. Saying it twice is how the two copies start disagreeing. The
+         * heading stays: a page needs an h1 whether or not the primer loaded.
+         */}
+        <h1 className="text-3xl font-semibold text-foreground">Animated homepage components</h1>
 
-      <ForestPrimerConnected />
+        <ForestPrimerConnected />
 
-      <ForestStatsSection />
-      <ForestIndexSection />
-    </div>
+        <ForestStatsSection />
+        <ForestIndexSection />
+      </div>
+    </PageWidth>
   );
 }

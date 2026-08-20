@@ -53,12 +53,90 @@ export function Crumbs({ species, tree }: { species?: string; tree?: string }) {
 /* --------------------------------------------------------------- the rail */
 
 /**
- * Every species, on every lab page.
+ * The forest itself, as a rail — every species, and under it every tree.
  *
- * This is where the forest's own top level becomes navigation. It is not in the
- * header because the header is on every page and this list grows every time
- * somebody plants a species — one level in, there is room for it to keep
- * arriving.
+ * It replaced a row of species chips. The chips cost a full band of vertical
+ * space at the top of every lab page to say only what the breadcrumb already
+ * said, and they stopped at the species: reaching a tree meant a page in
+ * between. A rail in the left gutter costs no vertical space at all and reaches
+ * any tree in one press, which is why it can afford to list them.
+ *
+ * Shaped after `chrome/pane-dock`'s `canon/one-rail` leaf, deliberately: this
+ * site's own chrome should look like the chrome it curates.
+ *
+ * Below `lg` there is no gutter to sit in, so the layout renders `SpeciesRail`
+ * instead — the chips, still earning their place on a narrow screen.
+ */
+export function ForestRail({ species, tree }: { species?: string; tree?: string }) {
+  const entries = speciesEntries(FOREST);
+  if (entries.length === 0) return null;
+
+  return (
+    <nav
+      aria-label="Forest"
+      className="sticky top-6 flex max-h-[calc(100dvh-5rem)] flex-col gap-4 overflow-y-auto rounded-xl border border-border bg-card p-3"
+    >
+      {entries.map((entry) => {
+        const currentSpecies = entry.key === species;
+        return (
+          <div key={entry.key} className="flex flex-col gap-1">
+            <Link
+              href={entry.href}
+              aria-current={currentSpecies && !tree ? "page" : undefined}
+              className={cn(
+                "rounded px-2 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors",
+                "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                currentSpecies ? "text-primary" : "text-muted-foreground hover:text-primary",
+              )}
+            >
+              {entry.label}
+            </Link>
+            {entry.trees.map((treeEntry) => {
+              const current = currentSpecies && treeEntry.key === tree;
+              return (
+                <Link
+                  key={treeEntry.ref}
+                  href={treeEntry.href}
+                  aria-current={current ? "page" : undefined}
+                  className={cn(
+                    "flex flex-col items-start gap-0.5 rounded-lg border px-2 py-1.5 text-left transition-colors",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    current
+                      ? "border-primary/40 bg-primary/10"
+                      : "border-transparent hover:border-primary/40 hover:bg-muted",
+                  )}
+                >
+                  <span className="flex w-full items-center gap-2">
+                    <span
+                      className={cn(
+                        "min-w-0 flex-1 truncate text-sm font-medium",
+                        current ? "text-primary" : "text-foreground",
+                      )}
+                    >
+                      {treeEntry.label}
+                    </span>
+                    <span className="shrink-0 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-medium leading-none text-accent-foreground">
+                      {treeEntry.leafCount}
+                    </span>
+                  </span>
+                  <span className="line-clamp-2 text-[11px] leading-snug text-muted-foreground">
+                    {treeEntry.description}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        );
+      })}
+    </nav>
+  );
+}
+
+/**
+ * Every species, as chips.
+ *
+ * What the lab used to wear on every page. It survives as the narrow-screen
+ * answer, where there is no gutter for `ForestRail` to sit in.
  */
 export function SpeciesRail({ current }: { current?: string }) {
   const species = speciesEntries(FOREST);

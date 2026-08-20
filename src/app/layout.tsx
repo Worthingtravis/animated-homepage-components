@@ -24,17 +24,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         */}
         <EditorModeProvider>
           <EditorModeShell>
-        <SiteHeader />
-        {/*
-          Widths step up rather than going edge-to-edge: the lab's compare-all
-          puts several leaves side by side and a full-bleed leaf (brand-bar)
-          needs room to read as full-bleed, but prose on the forest index still
-          has to stay a readable measure. The header uses the same steps so the
-          two never drift out of alignment.
-        */}
-        <main className="mx-auto w-full max-w-6xl px-6 py-10 xl:max-w-[88rem] 2xl:max-w-[104rem]">
-          {children}
-        </main>
+            <SiteHeader />
+            {/*
+              Full-bleed on purpose. Width is a decision each page makes — see
+              `page-shell.tsx` — because the lab puts a rail in the gutter
+              beside a column that prose pages still want narrowed. The header
+              spans the widest of those shells, so the rail's left edge and the
+              brand line up.
+            */}
+            <main className="w-full px-6 py-10">{children}</main>
           </EditorModeShell>
         </EditorModeProvider>
       </body>

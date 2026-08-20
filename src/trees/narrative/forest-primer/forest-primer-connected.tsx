@@ -59,11 +59,22 @@ export type ForestPrimerConnectedProps = {
  * chapter should be finished by the time it is a third of the way up the
  * screen, or the last chapter only completes once it has left. Start when the
  * top crosses 85% of the viewport, finish when the bottom crosses 15%.
+ *
+ * A primer that begins ABOVE that start line never crosses it — which is
+ * exactly where this one sits on `/`, near the top of the document. Measured
+ * against the line it would have to reach, it opens a third of the way through
+ * itself: chapter 3 of 6, before the reader has scrolled at all. So the start
+ * line is the later of the two: the 85% mark, or wherever the primer actually
+ * begins. Anything further down the page is unaffected.
  */
-function measureProgress(element: HTMLElement, viewportHeight: number): number {
-  const rect = element.getBoundingClientRect();
-  const start = viewportHeight * 0.85;
+export function measureProgress(
+  rect: { top: number; height: number },
+  viewportHeight: number,
+  scrollY: number,
+): number {
+  const documentTop = rect.top + scrollY;
   const end = viewportHeight * 0.15;
+  const start = Math.min(viewportHeight * 0.85, documentTop);
   const span = Math.max(1, rect.height - (start - end));
   return clampProgress((start - rect.top) / span);
 }
@@ -76,7 +87,13 @@ function useScrollProgress(enabled: boolean) {
   const sample = useCallback(() => {
     const element = hostRef.current;
     if (!element) return;
-    setProgress(measureProgress(element, window.innerHeight || 1));
+    setProgress(
+      measureProgress(
+        element.getBoundingClientRect(),
+        window.innerHeight || 1,
+        window.scrollY,
+      ),
+    );
   }, []);
 
   useEffect(() => {
