@@ -127,7 +127,7 @@ export function SectionTabsPopoverMenu(vm: SectionTabsVM) {
                         <span
                           aria-hidden
                           className={cn(
-                            "mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md text-xs font-bold",
+                            "mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md text-[0.6875rem] font-bold leading-none tracking-tight",
                             active ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground",
                           )}
                         >

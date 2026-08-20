@@ -17,6 +17,9 @@
  *
  *   · the ACTIVE marker always shows its label, so the dock is never mute
  *   · every marker carries its `initial` and an `aria-label` with the full text
+ *     — and its badge, so a count is never hidden behind a pointer
+ *   · a marker with a badge wears a dot while collapsed, so nothing the badge
+ *     was announcing disappears just because the dock is small
  *   · focus opens the same card hover does, so a keyboard sees what a mouse sees
  *   · `layout === "narrow"` — which is where touch actually lives — drops the
  *     dock entirely and renders a labelled strip instead
@@ -59,6 +62,11 @@ export function SectionTabsHoverDock(vm: SectionTabsVM) {
 
   const activeTab = vm.tabs.find((tab) => tab.state === "active") ?? vm.tabs[0];
   const narrow = vm.layout === "narrow";
+  /*
+   * The dock's whole idea is a reveal, so reduced motion cannot remove it — it
+   * removes the travel. Labels and badges still appear, they just cut in.
+   */
+  const reveal = vm.reducedMotion ? "transition-none" : "transition-all duration-200";
 
   return (
     <Tabs
@@ -79,15 +87,27 @@ export function SectionTabsHoverDock(vm: SectionTabsVM) {
           "min-w-0 gap-1.5",
           narrow
             ? "flex items-center overflow-x-auto rounded-full border border-border/60 bg-card/60 p-1 [scrollbar-width:none]"
-            : "sticky top-6 flex flex-col items-start rounded-full border border-border/50 bg-card/40 p-1.5 backdrop-blur-md",
+            /*
+               `items-stretch`, not `items-start`: the list is as wide as its
+               widest child (the active marker, which carries a label), so
+               left-aligned children left a dead column beside every collapsed
+               marker and an inconsistent hit target. Stretched, every marker is
+               one full-width row that happens to start with a circle. And a
+               tall column wants a rail radius — `rounded-full` on it produced a
+               capsule whose curve fought the rows inside it.
+            */
+            : "sticky top-6 flex flex-col items-stretch rounded-2xl border border-border/50 bg-card/40 p-1.5 backdrop-blur-md",
         )}
       >
         {vm.tabs.map((tab) => {
           const active = tab.state === "active";
           const className = cn(
-            "group flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full transition-all duration-200",
+            "group flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full",
+            reveal,
             "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-            narrow ? "px-3.5 py-2 text-sm font-medium" : "py-1.5 pl-1.5 pr-3",
+            narrow
+              ? "px-3.5 py-2 text-sm font-medium"
+              : "w-full justify-start py-1.5 pl-1.5 pr-3",
             active
               ? "bg-primary/15 text-primary ring-1 ring-primary/25"
               : "text-muted-foreground hover:bg-accent/10 hover:text-accent",
@@ -110,16 +130,31 @@ export function SectionTabsHoverDock(vm: SectionTabsVM) {
             </>
           ) : (
             <>
+              {/*
+                `initial` may be two characters when a sibling label collides
+                with this one ("Shop" / "Support"), so the marker is sized for
+                two — the type scale gives, not the circle.
+              */}
               <span
                 aria-hidden
                 className={cn(
-                  "flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors",
+                  "relative flex size-7 shrink-0 items-center justify-center rounded-full text-[0.6875rem] font-bold leading-none tracking-tight transition-colors",
                   active
                     ? "bg-primary/25 text-primary"
                     : "bg-muted text-muted-foreground group-hover:bg-accent/20 group-hover:text-accent",
                 )}
               >
                 {tab.initial}
+                {/*
+                  Collapsed, the marker is the only thing on screen — so a tab
+                  carrying a badge says so with a dot rather than dropping the
+                  fact entirely until it is selected, which is the one moment a
+                  badge no longer needs to summon anyone. The count itself is on
+                  the trigger's accessible name; this is decoration.
+                */}
+                {tab.badge && !active ? (
+                  <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-accent ring-2 ring-card" />
+                ) : null}
               </span>
               {/*
                 The label is drawn for the active marker always, and for the
@@ -129,7 +164,8 @@ export function SectionTabsHoverDock(vm: SectionTabsVM) {
               */}
               <span
                 className={cn(
-                  "overflow-hidden text-sm font-medium transition-all duration-200",
+                  "overflow-hidden text-sm font-medium",
+                  reveal,
                   active
                     ? "max-w-[12rem]"
                     : "max-w-0 opacity-0 group-hover:max-w-[12rem] group-hover:opacity-100 group-focus-visible:max-w-[12rem] group-focus-visible:opacity-100",
@@ -137,10 +173,29 @@ export function SectionTabsHoverDock(vm: SectionTabsVM) {
               >
                 {tab.label}
               </span>
-              {tab.badge && active ? (
-                <span className="rounded-full bg-primary/25 px-1.5 py-0.5 text-[0.625rem] font-semibold leading-none text-primary">
-                  {tab.badge}
-                </span>
+              {/*
+                The badge travels with the label: full text for the active
+                marker always, and revealed on the same hover/focus for the
+                rest. Collapsed it is not gone — it is the dot on the circle.
+              */}
+              {tab.badge ? (
+                active ? (
+                  <span className="rounded-full bg-primary/25 px-1.5 py-0.5 text-[0.625rem] font-semibold leading-none text-primary">
+                    {tab.badge}
+                  </span>
+                ) : (
+                  <span
+                    className={cn(
+                      "flex overflow-hidden",
+                      reveal,
+                      "max-w-0 opacity-0 group-hover:max-w-[6rem] group-hover:opacity-100 group-focus-visible:max-w-[6rem] group-focus-visible:opacity-100",
+                    )}
+                  >
+                    <span className="rounded-full bg-accent/20 px-1.5 py-0.5 text-[0.625rem] font-semibold leading-none text-accent">
+                      {tab.badge}
+                    </span>
+                  </span>
+                )
               ) : null}
             </>
           );
@@ -148,9 +203,10 @@ export function SectionTabsHoverDock(vm: SectionTabsVM) {
           const trigger = (
             <TabsTrigger
               value={tab.id}
-              // The marker is a circle with one character in it, so the full
-              // label has to reach assistive tech some other way.
-              aria-label={tab.label}
+              // The marker is a circle with one or two characters in it, so the
+              // full label has to reach assistive tech some other way — and so
+              // does the badge, which is drawn as a bare dot while collapsed.
+              aria-label={tab.badge ? `${tab.label} (${tab.badge})` : tab.label}
               disabled={tab.state === "disabled"}
               data-tab-state={tab.state}
               className={className}

@@ -15,15 +15,40 @@ describe("SectionTabsHoverDock", () => {
   });
 
   /*
-   * These four are the price of the idea. A dock whose labels only exist on
+   * These are the price of the idea. A dock whose labels only exist on
    * hover is unusable with a finger or a keyboard, so the ways it stays legible
    * without a pointer are asserted rather than trusted.
    */
-  it("gives every marker its full label as an accessible name", () => {
+  it("gives every marker its full label — and its badge — as an accessible name", () => {
     render(<SectionTabsHoverDock {...ALL_FIXTURES[DEFAULT_FIXTURE]!} />);
-    for (const label of ["Home", "About", "Shop", "Support"]) {
-      expect(screen.getByLabelText(label)).toBeTruthy();
+    // The badge is drawn as a bare dot while collapsed, so the count has to be
+    // in the name or it does not exist for a screen reader.
+    for (const name of ["Home", "About", "Shop (4)", "Support (New)"]) {
+      expect(screen.getByLabelText(name)).toBeTruthy();
     }
+  });
+
+  it("never drops a badge: an inactive marker keeps its text and wears a dot", () => {
+    render(<SectionTabsHoverDock {...ALL_FIXTURES[DEFAULT_FIXTURE]!} />);
+    // "Shop" is inactive in this fixture; its "4" used to vanish entirely.
+    expect(screen.getByText("4")).toBeTruthy();
+    expect(screen.getByText("New")).toBeTruthy();
+    const shop = screen.getByLabelText("Shop (4)");
+    expect(shop.querySelector(".bg-accent")).toBeTruthy();
+  });
+
+  it("tells two markers with the same first letter apart", () => {
+    render(<SectionTabsHoverDock {...ALL_FIXTURES[DEFAULT_FIXTURE]!} />);
+    const shop = screen.getByLabelText("Shop (4)").textContent ?? "";
+    const support = screen.getByLabelText("Support (New)").textContent ?? "";
+    expect(shop.startsWith("Sh")).toBe(true);
+    expect(support.startsWith("Su")).toBe(true);
+  });
+
+  it("cuts the reveal rather than sliding it when motion is reduced", () => {
+    render(<SectionTabsHoverDock {...ALL_FIXTURES["Reduced motion · mid-change"]!} />);
+    const marker = document.querySelector("[data-tab-state='idle']");
+    expect(marker?.className).toContain("transition-none");
   });
 
   it("keeps the label text in the DOM rather than swapping it in on hover", () => {

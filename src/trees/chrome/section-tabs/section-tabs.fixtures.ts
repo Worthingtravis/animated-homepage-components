@@ -18,7 +18,7 @@ import { createElement, type ReactNode } from "react";
 import { resolveMotion } from "./section-tabs.transitions";
 import {
   buildPanel,
-  buildTab,
+  buildTabs,
   clampProgress,
   formatSectionCount,
   resolveDirection,
@@ -93,21 +93,19 @@ function build(
     scopeId: SCOPE,
     ariaLabel: options.ariaLabel ?? "Page sections",
     heading: options.heading ?? null,
-    tabs: tabs.map((tab) =>
-      buildTab(
-        {
-          id: tab.id,
-          label: tab.label,
-          badge: tab.badge,
-          hint: tab.hint,
-          disabled: tab.disabled,
-          onSelect: noop,
-          onPreview: tab.preview ? noop : null,
-          preview: tab.preview,
-        },
-        activeId,
-        SCOPE,
-      ),
+    tabs: buildTabs(
+      tabs.map((tab) => ({
+        id: tab.id,
+        label: tab.label,
+        badge: tab.badge,
+        hint: tab.hint,
+        disabled: tab.disabled,
+        onSelect: noop,
+        onPreview: tab.preview ? noop : null,
+        preview: tab.preview,
+      })),
+      activeId,
+      SCOPE,
     ),
     panels: tabs.map((tab) => {
       const phase = resolvePhase(tab.id, activeId, leavingId, progress);

@@ -38,7 +38,7 @@ import { useForestLeaf } from "@/lib/use-forest-leaf";
 import { resolveMotion } from "./section-tabs.transitions";
 import {
   buildPanel,
-  buildTab,
+  buildTabs,
   formatSectionCount,
   resolveDirection,
   resolvePhase,
@@ -276,30 +276,28 @@ export function SectionTabsConnected({
       scopeId: id,
       ariaLabel,
       heading,
-      tabs: tabs.map((tab) =>
-        buildTab(
-          {
-            id: tab.id,
-            label: tab.label,
-            badge: tab.badge ?? null,
-            hint: tab.hint ?? null,
-            disabled: tab.disabled,
-            onSelect: () => select(tab.id),
-            onPreview: tab.summary ? () => undefined : null,
-            preview: tab.summary
-              ? {
-                  title: tab.label,
-                  summary: tab.summary,
-                  meta:
-                    tab.sectionCount === undefined
-                      ? null
-                      : formatSectionCount(tab.sectionCount),
-                }
-              : null,
-          },
-          resolvedActiveId,
-          id,
-        ),
+      tabs: buildTabs(
+        tabs.map((tab) => ({
+          id: tab.id,
+          label: tab.label,
+          badge: tab.badge ?? null,
+          hint: tab.hint ?? null,
+          disabled: tab.disabled,
+          onSelect: () => select(tab.id),
+          onPreview: tab.summary ? () => undefined : null,
+          preview: tab.summary
+            ? {
+                title: tab.label,
+                summary: tab.summary,
+                meta:
+                  tab.sectionCount === undefined
+                    ? null
+                    : formatSectionCount(tab.sectionCount),
+              }
+            : null,
+        })),
+        resolvedActiveId,
+        id,
       ),
       panels: tabs.map((tab) => {
         const phase = resolvePhase(tab.id, resolvedActiveId, leavingId, progress);

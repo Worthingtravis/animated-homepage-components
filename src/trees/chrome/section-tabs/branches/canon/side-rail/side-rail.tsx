@@ -117,7 +117,7 @@ export function SectionTabsSideRail(vm: SectionTabsVM) {
                   <span
                     aria-hidden
                     className={cn(
-                      "flex size-6 shrink-0 items-center justify-center rounded-md text-xs font-bold",
+                      "flex size-6 shrink-0 items-center justify-center rounded-md text-[0.6875rem] font-bold leading-none tracking-tight",
                       active ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground",
                     )}
                   >

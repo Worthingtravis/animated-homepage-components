@@ -94,7 +94,12 @@ export type SectionTabsTab = {
   badge: string | null;
   /** Pre-formatted secondary line, for rails and menus with room for one. */
   hint: string | null;
-  /** Pre-computed single character for collapsed / icon-only chrome. */
+  /**
+   * Pre-computed marker text for collapsed / icon-only chrome. Usually one
+   * character; two when a sibling label would otherwise collide with it —
+   * "Shop" and "Support" must not both be a bare `S`. Set-level, so it is
+   * computed by `buildTabs`, never by a leaf.
+   */
   initial: string;
   state: SectionTabsTabState;
 
@@ -249,8 +254,53 @@ export function formatSectionCount(count: number): string {
 }
 
 /** Pre-compute a tab's fallback initial. Runs in the container, not a leaf. */
-export function tabInitial(label: string): string {
-  return label.trim().charAt(0).toUpperCase() || "•";
+export function tabInitial(label: string, length = 1): string {
+  const trimmed = label.trim();
+  if (!trimmed) return "\u2022";
+  const head = trimmed.slice(0, Math.max(1, length));
+  return head.charAt(0).toUpperCase() + head.slice(1);
+}
+
+/**
+ * How far an initial may grow. Two, because a marker is a small circle and the
+ * type scale is already carrying two characters; a three-character initial
+ * would overflow it, and past that the honest answer is the label itself, which
+ * every leaf reveals some other way (hover, focus, an accessible name).
+ */
+const MAX_INITIAL_LENGTH = 2;
+
+/**
+ * Give colliding labels a distinguishing initial.
+ *
+ * `tabInitial` is per-label and cannot see its siblings, so "Shop" and
+ * "Support" both come back as `S` — and in a collapsed dock or an avatar rail
+ * that makes two markers literally identical. Uniqueness is a property of the
+ * SET, so it is resolved here, once, where the whole set is known. A label that
+ * does not collide is left exactly as it was.
+ */
+export function disambiguateInitials(labels: readonly string[]): string[] {
+  const initials = labels.map((label) => tabInitial(label));
+
+  for (let length = 2; length <= MAX_INITIAL_LENGTH; length += 1) {
+    const seen = new Map<string, number>();
+    for (const initial of initials) seen.set(initial, (seen.get(initial) ?? 0) + 1);
+    if (![...seen.values()].some((count) => count > 1)) break;
+
+    let changed = false;
+    for (let index = 0; index < initials.length; index += 1) {
+      const current = initials[index] as string;
+      if ((seen.get(current) ?? 0) < 2) continue;
+      const next = tabInitial(labels[index] as string, length);
+      if (next !== current) {
+        initials[index] = next;
+        changed = true;
+      }
+    }
+    // Identical labels can never be told apart. Stop rather than spin.
+    if (!changed) break;
+  }
+
+  return initials;
 }
 
 /** Stable, SSR-safe DOM ids. One rule, so every leaf agrees about them. */
@@ -325,13 +375,19 @@ export function buildTab(
   },
   activeId: string | null,
   scope: string,
+  /**
+   * The set-level initial, when one is known. Omitted, a single tab gets the
+   * plain first character — correct for a caller that legitimately builds one
+   * tab and has no siblings to collide with.
+   */
+  initial?: string,
 ): SectionTabsTab {
   return {
     id: raw.id,
     label: raw.label,
     badge: raw.badge ?? null,
     hint: raw.hint ?? null,
-    initial: tabInitial(raw.label),
+    initial: initial ?? tabInitial(raw.label),
     state: raw.disabled ? "disabled" : raw.id === activeId ? "active" : "idle",
     triggerId: triggerIdFor(scope, raw.id),
     panelId: panelIdFor(scope, raw.id),
@@ -339,6 +395,21 @@ export function buildTab(
     onPreview: raw.onPreview ?? null,
     preview: raw.preview ?? null,
   };
+}
+
+/**
+ * Build a whole set of tabs. This is what the container and the fixtures use:
+ * anything that depends on the other tabs — today, the disambiguated initial —
+ * can only be resolved with the set in hand. `buildTab` stays exported for the
+ * caller that genuinely has one tab.
+ */
+export function buildTabs(
+  raws: readonly Parameters<typeof buildTab>[0][],
+  activeId: string | null,
+  scope: string,
+): SectionTabsTab[] {
+  const initials = disambiguateInitials(raws.map((raw) => raw.label));
+  return raws.map((raw, index) => buildTab(raw, activeId, scope, initials[index]));
 }
 
 /** The one place a raw panel becomes a VM panel, motion already resolved. */
