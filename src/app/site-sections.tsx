@@ -27,8 +27,28 @@ export function ForestStatsSection() {
         ] as const
       ).map(([label, value]) => (
         <div key={label}>
-          <dt className="text-muted-foreground">{label}</dt>
-          <dd className="text-2xl font-semibold text-foreground">{value}</dd>
+          {/*
+            The Label role, not body copy. Every other "this is chrome, not
+            content" caption in the system is 11px uppercase at 0.14em, and
+            these four are the most chrome-like type on the page — a legend
+            under a count. They read as body text only because they were never
+            given the role.
+          */}
+          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            {label}
+          </dt>
+          {/*
+            The figure is in the DOM and the CSS counts up to it — see
+            `.stat-tally` in globals.css. Nothing here knows that: no state, no
+            clock, no client boundary. The number this renders is the number a
+            reader ends on.
+          */}
+          <dd
+            className="stat-tally text-2xl font-semibold tabular-nums text-foreground"
+            style={{ "--tally-to": String(value) } as React.CSSProperties}
+          >
+            <span className="stat-figure">{value}</span>
+          </dd>
         </div>
       ))}
     </dl>

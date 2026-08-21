@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="The forest">
+  <!--
+    The site's mark, drawn rather than borrowed.
+
+    The header says the conifer as an emoji and a tab strip cannot: an emoji
+    favicon is a different glyph on every platform and mush at 16px. So this is
+    the same idea as a shape — a two-tier conifer knocked out of a plate in the
+    primary token, no stroke thinner than a device pixel at 16px, and no
+    negative space narrower than one.
+
+    It carries the theme the only way a favicon can: prefers-color-scheme inside
+    the file, so the plate and the knockout are the same two tokens the page
+    resolves. The values are literal because no stylesheet reaches here; they are
+    globals.css converted out of oklch, and they move when it does.
+  -->
+  <style>
+    .plate { fill: #3967df; }
+    .tree  { fill: #fafcfe; }
+    @media (prefers-color-scheme: dark) {
+      .plate { fill: #7e9dff; }
+      .tree  { fill: #0a0d14; }
+    }
+  </style>
+  <rect class="plate" width="32" height="32" rx="7" />
+  <path class="tree" d="M16 4 23 15 9 15Z" />
+  <path class="tree" d="M16 11 27 24 5 24Z" />
+  <path class="tree" d="M14.4 23h3.2v5h-3.2z" />
+</svg>

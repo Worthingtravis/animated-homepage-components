@@ -120,3 +120,133 @@ body {
     transition-duration: 150ms !important;
   }
 }
+
+/*
+ * ---------------------------------------------------------------------------
+ * Motion on this site is driven by reading position, never by a clock.
+ * ---------------------------------------------------------------------------
+ *
+ * The primer already decided this. Its transport is a reading line — a fixed
+ * height down the viewport, where the eye actually is — and a chapter lights up
+ * exactly while that line is inside it. Nothing on the primer autoplays,
+ * because a paragraph that animates before you reach it is animating at nobody.
+ *
+ * Everything below extends that one law to the rest of the front page, in CSS,
+ * on a `view()` timeline. Same driver, no clock, no observer, no state: these
+ * are server components and they stay server components. The stagger down a
+ * species is not configured either — each card is on its own timeline, so its
+ * position on screen IS its delay, which is the same argument the rest of the
+ * repository makes about deriving from what already exists.
+ *
+ * Two rules hold everywhere here:
+ *
+ *   1. The static state is the ARRIVED state. Reduced motion, an old browser,
+ *      or a stylesheet that never loads all land on a finished page. Every
+ *      keyframe below is a `from`, and the implicit `to` is whatever the
+ *      element already was.
+ *   2. Scrubbed motion is not eased like timed motion. A count is `linear`
+ *      because it is a count; a reveal is `ease-out` so it resolves early and
+ *      is not still arriving when the reader is already reading it.
+ */
+
+/*
+ * The one registered property on the site. `--tally` is an integer so it
+ * interpolates as integers, which is what makes a counter countable.
+ */
+@property --tally {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/*
+ * The forest counts itself.
+ *
+ * These four numbers are the page's only proof that nothing here is written
+ * down — they are counted off disk by `forestStats(FOREST)` on every build. So
+ * they arrive by being counted, from zero, as the reader scrolls onto them,
+ * and all four at once because it is one tally of one thing.
+ *
+ * The real number stays in the DOM. The counter is a pseudo-element that only
+ * takes over where the timeline exists, so a browser without scroll-driven
+ * animations shows the figure it always showed, and a screen reader reads a
+ * number rather than a decoration.
+ */
+.stat-tally {
+  --tally: var(--tally-to);
+  counter-reset: tally var(--tally);
+  /* The figure below is taken out of flow; this is the box it is taken out of. */
+  position: relative;
+}
+
+@supports (animation-timeline: view()) {
+  @media not (prefers-reduced-motion: reduce) {
+    .stat-tally {
+      animation: tally-count linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 45%;
+    }
+
+    .stat-tally::before {
+      content: counter(tally);
+    }
+
+    /* The figure survives for assistive tech; the counter is what is seen. */
+    .stat-tally > .stat-figure {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+}
+
+@keyframes tally-count {
+  from {
+    --tally: 0;
+  }
+}
+
+/*
+ * The canopy resolves.
+ *
+ * A species heading comes out of blur as the reading line reaches it — the one
+ * material idea on this page, and the right one for an index of a LAB: the
+ * thing you are about to look at coming into focus. The cards under it only
+ * rise and fade, because seven headings blurring is an accent and forty cards
+ * blurring is a cost.
+ *
+ * Both finish inside `entry` rather than at `cover`, so the last section on the
+ * page still arrives when the document has no more scroll left to give.
+ */
+@supports (animation-timeline: view()) {
+  @media not (prefers-reduced-motion: reduce) {
+    .canopy-heading {
+      animation: canopy-resolve ease-out both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 85%;
+    }
+
+    .canopy-card {
+      animation: canopy-rise ease-out both;
+      animation-timeline: view();
+      animation-range: entry 15% entry 90%;
+    }
+  }
+}
+
+@keyframes canopy-resolve {
+  from {
+    opacity: 0.4;
+    filter: blur(5px);
+  }
+}
+
+@keyframes canopy-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}

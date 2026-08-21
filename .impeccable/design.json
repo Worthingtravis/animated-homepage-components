@@ -1,0 +1,382 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-20T00:00:00Z",
+  "title": "Design System: Animated Homepage Components",
+  "extensions": {
+    "colorMeta": {
+      "signal-indigo": {
+        "role": "primary",
+        "displayName": "Signal Indigo",
+        "canonical": "oklch(0.55 0.19 265)",
+        "tonalRamp": [
+          "oklch(0.15 0.19 265)",
+          "oklch(0.26 0.19 265)",
+          "oklch(0.37 0.19 265)",
+          "oklch(0.49 0.19 265)",
+          "oklch(0.60 0.19 265)",
+          "oklch(0.71 0.19 265)",
+          "oklch(0.83 0.19 265)",
+          "oklch(0.95 0.19 265)"
+        ]
+      },
+      "understory-green": {
+        "role": "secondary",
+        "displayName": "Understory Green",
+        "canonical": "oklch(0.72 0.16 165)",
+        "tonalRamp": [
+          "oklch(0.15 0.16 165)",
+          "oklch(0.26 0.16 165)",
+          "oklch(0.37 0.16 165)",
+          "oklch(0.49 0.16 165)",
+          "oklch(0.60 0.16 165)",
+          "oklch(0.71 0.16 165)",
+          "oklch(0.83 0.16 165)",
+          "oklch(0.95 0.16 165)"
+        ]
+      },
+      "plate-white": {
+        "role": "neutral",
+        "displayName": "Plate White",
+        "canonical": "oklch(0.99 0.003 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.003 250)",
+          "oklch(0.26 0.003 250)",
+          "oklch(0.37 0.003 250)",
+          "oklch(0.49 0.003 250)",
+          "oklch(0.60 0.003 250)",
+          "oklch(0.71 0.003 250)",
+          "oklch(0.83 0.003 250)",
+          "oklch(0.95 0.003 250)"
+        ]
+      },
+      "specimen-ink": {
+        "role": "neutral",
+        "displayName": "Specimen Ink",
+        "canonical": "oklch(0.21 0.02 260)",
+        "tonalRamp": [
+          "oklch(0.15 0.02 260)",
+          "oklch(0.26 0.02 260)",
+          "oklch(0.37 0.02 260)",
+          "oklch(0.49 0.02 260)",
+          "oklch(0.60 0.02 260)",
+          "oklch(0.71 0.02 260)",
+          "oklch(0.83 0.02 260)",
+          "oklch(0.95 0.02 260)"
+        ]
+      },
+      "muted-ink": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "oklch(0.53 0.02 258)",
+        "tonalRamp": [
+          "oklch(0.15 0.02 258)",
+          "oklch(0.26 0.02 258)",
+          "oklch(0.37 0.02 258)",
+          "oklch(0.49 0.02 258)",
+          "oklch(0.60 0.02 258)",
+          "oklch(0.71 0.02 258)",
+          "oklch(0.83 0.02 258)",
+          "oklch(0.95 0.02 258)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "oklch(0.9 0.008 258)",
+        "tonalRamp": [
+          "oklch(0.15 0.008 258)",
+          "oklch(0.26 0.008 258)",
+          "oklch(0.37 0.008 258)",
+          "oklch(0.49 0.008 258)",
+          "oklch(0.60 0.008 258)",
+          "oklch(0.71 0.008 258)",
+          "oklch(0.83 0.008 258)",
+          "oklch(0.95 0.008 258)"
+        ]
+      },
+      "destructive": {
+        "role": "tertiary",
+        "displayName": "Destructive Red",
+        "canonical": "oklch(0.58 0.21 27)",
+        "tonalRamp": [
+          "oklch(0.15 0.21 27)",
+          "oklch(0.26 0.21 27)",
+          "oklch(0.37 0.21 27)",
+          "oklch(0.49 0.21 27)",
+          "oklch(0.60 0.21 27)",
+          "oklch(0.71 0.21 27)",
+          "oklch(0.83 0.21 27)",
+          "oklch(0.95 0.21 27)"
+        ]
+      },
+      "success": {
+        "role": "tertiary",
+        "displayName": "Success Green",
+        "canonical": "oklch(0.65 0.16 150)",
+        "tonalRamp": [
+          "oklch(0.15 0.16 150)",
+          "oklch(0.26 0.16 150)",
+          "oklch(0.37 0.16 150)",
+          "oklch(0.49 0.16 150)",
+          "oklch(0.60 0.16 150)",
+          "oklch(0.71 0.16 150)",
+          "oklch(0.83 0.16 150)",
+          "oklch(0.95 0.16 150)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Leaves only — posters, heroes, countdowns. The chrome never goes above Headline."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "The page h1. One per page, and the only large size in the chrome."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "A species heading, and the largest type inside any card."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Everything readable. 65–75ch in prose columns; container-width in cards."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase 0.14em small caps — the recurring signal that a piece of type is chrome, not content."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "The smallest real step — the figure inside a count chip, and dense numeric furniture inside leaves. A label on a fill, never prose."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "File paths, tokens, CLI verbs. Monospace for code, data and measurement only — never as a costume."
+      }
+    },
+    "shadows": [],
+    "shadowPolicy": "The chrome has no shadow vocabulary. Depth is a 1px hairline border plus a tonal step between plate and card. Shadows exist inside a few leaves as part of their own look and never migrate into the chrome.",
+    "motion": [
+      {
+        "name": "reading-position",
+        "value": "animation-timeline: view()",
+        "purpose": "The house driver. Chrome motion is scrubbed by where the reader is, never by a clock; nothing autoplays."
+      },
+      {
+        "name": "ease-measure",
+        "value": "linear",
+        "purpose": "Scrubbed motion that is a measurement — a count, a tally, a progress readout."
+      },
+      {
+        "name": "ease-arrive",
+        "value": "ease-out",
+        "purpose": "Scrubbed reveals, so they resolve early rather than still arriving while being read."
+      },
+      {
+        "name": "ease-house",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The decel curve for larger discrete transitions (300–500ms). Never bounce or elastic."
+      },
+      {
+        "name": "duration-feedback",
+        "value": "150ms",
+        "purpose": "Timed acknowledgement of a hover or focus, moving at most 2px."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "@media (prefers-reduced-motion: reduce)",
+        "purpose": "Kills travel, autoscroll and repetition; keeps colour and opacity transitions, which are the ones carrying meaning. The arrived state is always the static state."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "@lg",
+        "value": "512px",
+        "purpose": "Container query. Converted from a 640px viewport minus ~128px of page chrome."
+      },
+      {
+        "name": "@2xl",
+        "value": "672px",
+        "purpose": "Container query. Converted from 768px."
+      },
+      {
+        "name": "@4xl",
+        "value": "896px",
+        "purpose": "Container query. Converted from 1024px."
+      },
+      {
+        "name": "@5xl",
+        "value": "1024px",
+        "purpose": "Container query. Converted from 1280px."
+      },
+      {
+        "name": "@6xl",
+        "value": "1152px",
+        "purpose": "Container query. Converted from 1536px."
+      },
+      {
+        "name": "sm",
+        "value": "640px",
+        "purpose": "Viewport. Site chrome only — a harvestable component may never use it."
+      },
+      {
+        "name": "lg",
+        "value": "1024px",
+        "purpose": "Viewport. Site chrome only — the width at which the lab gains its left gutter."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single filled action on a card or panel. Its accessible name carries the subject, never just the verb.",
+      "html": "<button class=\"ds-btn-primary\" aria-label=\"Open lab: Countdown\">Open lab <span aria-hidden=\"true\">→</span></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: var(--primary-foreground); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; transition: opacity 150ms ease-out; } .ds-btn-primary span { transition: transform 150ms ease-out; } .ds-btn-primary:hover { opacity: 0.9; } .ds-btn-primary:hover span { transform: translateX(2px); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--ring); }"
+    },
+    {
+      "name": "Specimen Card",
+      "kind": "card",
+      "refersTo": "card-specimen",
+      "description": "The recurring unit of the whole site: a hairline white rectangle whose every figure is counted off disk. One link, its hit area stretched over the card.",
+      "html": "<li class=\"ds-card-specimen\"><h3>🌳 Countdown</h3><p class=\"ds-card-specimen-desc\">Time remaining until a fixed instant. The container owns the tick; leaves render padded strings and an explicit state.</p><p class=\"ds-card-specimen-meta\">2 branches · 4 leaves · 17 fixtures</p><div class=\"ds-card-specimen-foot\"><a href=\"#\" class=\"ds-card-specimen-action\" aria-label=\"Open lab: Countdown\">Open lab <span aria-hidden=\"true\">→</span></a></div></li>",
+      "css": ".ds-card-specimen { position: relative; display: flex; flex-direction: column; list-style: none; background: var(--card); color: var(--card-foreground); border: 1px solid var(--border); border-radius: 12px; padding: 20px; font-family: ui-sans-serif, system-ui, sans-serif; transition: border-color 150ms ease-out; } .ds-card-specimen:hover { border-color: var(--primary); } .ds-card-specimen:focus-within { border-color: var(--ring); } .ds-card-specimen h3 { margin: 0; font-size: 1rem; font-weight: 500; color: var(--foreground); } .ds-card-specimen-desc { margin: 4px 0 0; font-size: 0.875rem; line-height: 1.5; color: var(--muted-foreground); } .ds-card-specimen-meta { margin: 12px 0 0; font-size: 0.75rem; color: var(--muted-foreground); } .ds-card-specimen-foot { margin-top: auto; padding-top: 16px; } .ds-card-specimen-action { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: var(--primary-foreground); font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 8px; text-decoration: none; transition: opacity 150ms ease-out; } .ds-card-specimen-action::after { content: \"\"; position: absolute; inset: 0; border-radius: 12px; } .ds-card-specimen-action:hover { opacity: 0.9; } .ds-card-specimen-action:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--ring); }"
+    },
+    {
+      "name": "Species Chip",
+      "kind": "chip",
+      "refersTo": "chip-species",
+      "description": "A pill means 'a token of something enumerable', never 'a button'. Selected fills with the creator's primary; unselected is a hairline outline.",
+      "html": "<nav class=\"ds-chiprow\" aria-label=\"Species\"><a href=\"#\" class=\"ds-chip-species is-current\" aria-current=\"page\">Motion <span>1</span></a><a href=\"#\" class=\"ds-chip-species\">Narrative <span>2</span></a><a href=\"#\" class=\"ds-chip-species\">Chrome <span>3</span></a></nav>",
+      "css": ".ds-chiprow { display: flex; flex-wrap: wrap; gap: 8px; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-chip-species { border: 1px solid var(--border); background: var(--card); color: var(--muted-foreground); font-size: 0.875rem; padding: 6px 12px; border-radius: 9999px; text-decoration: none; transition: color 150ms ease-out, border-color 150ms ease-out; } .ds-chip-species span { margin-left: 8px; font-size: 0.75rem; opacity: 0.7; } .ds-chip-species:hover { border-color: var(--primary); color: var(--primary); } .ds-chip-species:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; } .ds-chip-species.is-current { border-color: var(--ring); background: var(--primary); color: var(--primary-foreground); }"
+    },
+    {
+      "name": "Count Chip",
+      "kind": "chip",
+      "refersTo": "chip-count",
+      "description": "The understory voice: a non-interactive quantitative badge. Ink on accent, never white.",
+      "html": "<span class=\"ds-chip-count\">4</span>",
+      "css": ".ds-chip-count { display: inline-block; background: var(--accent); color: var(--accent-foreground); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 10px; font-weight: 500; line-height: 1; padding: 2px 6px; border-radius: 9999px; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Rail Item",
+      "kind": "nav",
+      "refersTo": "rail-item",
+      "description": "One tree in the forest rail: name, count chip, and a two-line clamped description. The current item takes a translucent primary wash rather than a solid fill.",
+      "html": "<nav class=\"ds-rail\" aria-label=\"Forest\"><span class=\"ds-rail-species\">Temporal</span><a href=\"#\" class=\"ds-rail-item is-current\" aria-current=\"page\"><span class=\"ds-rail-row\"><span class=\"ds-rail-name\">Countdown</span><span class=\"ds-chip-count\">4</span></span><span class=\"ds-rail-desc\">Time remaining until a fixed instant.</span></a><a href=\"#\" class=\"ds-rail-item\"><span class=\"ds-rail-row\"><span class=\"ds-rail-name\">Step Reveal</span><span class=\"ds-chip-count\">3</span></span><span class=\"ds-rail-desc\">A sequence that advances on its own and can be steered.</span></a></nav>",
+      "css": ".ds-rail { display: flex; flex-direction: column; gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-rail-species { padding: 0 8px 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted-foreground); } .ds-rail-item { display: flex; flex-direction: column; gap: 2px; border: 1px solid transparent; border-radius: 8px; padding: 6px 8px; text-decoration: none; transition: border-color 150ms ease-out, background-color 150ms ease-out; } .ds-rail-row { display: flex; width: 100%; align-items: center; gap: 8px; } .ds-rail-name { flex: 1; min-width: 0; font-size: 0.875rem; font-weight: 500; color: var(--foreground); } .ds-rail-desc { font-size: 11px; line-height: 1.35; color: var(--muted-foreground); } .ds-rail-item:hover { border-color: color-mix(in oklab, var(--primary) 40%, transparent); background: var(--muted); } .ds-rail-item:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--ring); } .ds-rail-item.is-current { border-color: color-mix(in oklab, var(--primary) 40%, transparent); background: color-mix(in oklab, var(--primary) 10%, transparent); } .ds-rail-item.is-current .ds-rail-name { color: var(--primary); } .ds-chip-count { display: inline-block; background: var(--accent); color: var(--accent-foreground); font-size: 10px; font-weight: 500; line-height: 1; padding: 2px 6px; border-radius: 9999px; }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": "rail-item",
+      "description": "A baseline row of small links. The current page is the creator's primary; the rest are muted ink resolving to foreground on hover.",
+      "html": "<header class=\"ds-header\"><nav><a href=\"#\" class=\"ds-header-brand\">🌲 the forest</a><a href=\"#\" class=\"ds-header-link is-current\" aria-current=\"page\">lab</a><a href=\"#\" class=\"ds-header-link\">primer</a><a href=\"#\" class=\"ds-header-link ds-header-external\">github</a></nav></header>",
+      "css": ".ds-header { border-bottom: 1px solid var(--border); font-family: ui-sans-serif, system-ui, sans-serif; } .ds-header nav { display: flex; align-items: baseline; gap: 24px; padding: 16px 24px; } .ds-header-brand { font-size: 0.875rem; font-weight: 600; color: var(--foreground); text-decoration: none; } .ds-header-link { font-size: 0.875rem; color: var(--muted-foreground); text-decoration: none; transition: color 150ms ease-out; } .ds-header-link:hover { color: var(--foreground); } .ds-header-link:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; } .ds-header-link.is-current { color: var(--primary); } .ds-header-external { margin-left: auto; }"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Editor-dock scale: small, hairline, 6px. The caret, selection and accent colour are themed globally rather than per field.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Accent</span><input class=\"ds-input\" type=\"text\" value=\"#FF69B4\" /></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 4px; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-field-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted-foreground); } .ds-input { background: var(--card); color: var(--foreground); border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; font-size: 0.875rem; font-family: inherit; caret-color: var(--primary); accent-color: var(--primary); } .ds-input:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--ring); } .ds-input::selection { background: var(--primary); color: var(--primary-foreground); }"
+    },
+    {
+      "name": "Stat Tally",
+      "kind": "custom",
+      "refersTo": "card-specimen",
+      "description": "The forest counting itself. A registered --tally integer scrubs from zero on a view() timeline and feeds counter-reset; the real figure stays in the DOM for assistive tech and for any browser without scroll timelines.",
+      "html": "<dl class=\"ds-stats\"><div><dt>species</dt><dd class=\"ds-tally\" style=\"--tally-to: 8\"><span>8</span></dd></div><div><dt>trees</dt><dd class=\"ds-tally\" style=\"--tally-to: 12\"><span>12</span></dd></div><div><dt>leaves</dt><dd class=\"ds-tally\" style=\"--tally-to: 40\"><span>40</span></dd></div></dl>",
+      "css": "@property --tally { syntax: \"<integer>\"; inherits: false; initial-value: 0; } .ds-stats { display: flex; flex-wrap: wrap; gap: 24px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; } .ds-stats dt { color: var(--muted-foreground); } .ds-tally { --tally: var(--tally-to); counter-reset: tally var(--tally); margin: 0; font-size: 1.5rem; font-weight: 600; color: var(--foreground); font-variant-numeric: tabular-nums; } @supports (animation-timeline: view()) { @media not (prefers-reduced-motion: reduce) { .ds-tally { animation: ds-tally-count linear both; animation-timeline: view(); animation-range: entry 20% cover 45%; } .ds-tally::before { content: counter(tally); } .ds-tally > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } } @keyframes ds-tally-count { from { --tally: 0; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Guide",
+    "overview": "This is a naturalist's catalogue, not a product. The site is a neutral plate on which specimens are mounted, labelled, and looked at — and the specimens are forty leaves that each argue loudly for their own look. Every decision in the chrome follows from that division: the plate is flat, hairline-ruled, small-capped, and almost entirely uncoloured, so that a brutalist poster leaf and a glass page-nav leaf can sit two cards apart without the page taking a side.\n\nThe unusual constraint here is that the palette does not belong to this site. Five values — --primary, --primary-foreground (derived, never stored), --accent, --ring, --background — plus the font are ambient CSS on a wrapper, and a creator moves them. Every colour in the token set is a resting value: what the platform looks like before anyone has touched it. A component styled only in card / border / muted is not neutral, it is deaf to the creator, and it fails without crashing.\n\nDensity is high and unapologetic. This is a working surface for two people who already know the vocabulary — a curator and a coding agent — and the readability budget is spent on getting more of the forest on screen, not on marketing air.",
+    "keyCharacteristics": [
+      "Flat plate, hairline structure — 1px borders and tonal steps, no shadows in the chrome",
+      "A repaintable palette: five movable values, everything else fixed",
+      "Small-caps labels at 11px with 0.14em tracking as the recurring signal of 'this is chrome, not content'",
+      "Rounded-xl cards, rounded-full chips, generous internal padding, nothing lifted",
+      "Derived everything — no stored nav, no arrangeable sections, no hand-written list of species",
+      "Motion driven by reading position, never by a clock"
+    ],
+    "rules": [
+      {
+        "name": "The Five Movable Things Rule",
+        "body": "A creator can move exactly --primary, --primary-foreground (derived from the accent, never stored), --accent, --ring, and --background, plus the font. Never add a sixth. Never invent a component-scoped variable to get around it — theming is inherited, and a component that defines its own theming variable has re-invented the mechanism the wrapper already provides.",
+        "section": "colors"
+      },
+      {
+        "name": "The Deaf Leaf Rule",
+        "body": "Every component must reach for primary, accent, or ring somewhere. One styled purely in card / border / muted / foreground is not tastefully restrained — it is invisible to the creator's brand, and it fails silently because nothing crashes. This is a test, not a guideline.",
+        "section": "colors"
+      },
+      {
+        "name": "The Derived Foreground Rule",
+        "body": "A primary fill is always bg-primary + text-primary-foreground. bg-foreground and text-background are banned outright: they name tokens editor mode never touches, so a call to action painted in them stays platform-coloured on every creator page. White-on-accent is not safe to assume — a lime accent puts white text at 1.91:1, and even the platform's own default pink needs black.",
+        "section": "colors"
+      },
+      {
+        "name": "The Raw Letterform Rule",
+        "body": "Never paint a letterform in the creator's raw colour: bg-clip-text + text-transparent is banned, because --primary-foreground is derived against a ground and clipped text has no ground at all. The single exception is a wordmark that draws its own keyline around every glyph.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tracking-Follows-Size Rule",
+        "body": "Small caps get looser as they get smaller: 0.14em at label size, 0.18em–0.3em for the tiniest eyebrows inside leaves. Large type goes the other way — tracking-tight at Title and above, never wider.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Numeral Rule",
+        "body": "Any figure that changes in place — a count, a countdown, a scrubbing tally — is tabular-nums. Numerals that reflow while they animate read as a bug.",
+        "section": "typography"
+      },
+      {
+        "name": "The Own-Box Rule",
+        "body": "A leaf measures its own box, never the window. Every root a leaf can render carries @container, and every breakpoint is a container query — sm: / md: / lg: fail the conformance suite by shape, not by list. A component is dropped into whatever column its consumer has and is never told how wide the window is; a viewport rule fails silently. The one exception is a fixed viewport overlay, which really is the window.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat-Plate Rule",
+        "body": "If a chrome surface needs to read as separated, give it a border or a tonal step. If that is not enough separation, the layout is wrong — reach for space before reaching for a shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No-Coloured-Slab Rule",
+        "body": "No border-left accents above 1px, no hard offset shadows, no gradient fills in the chrome. A surface is a hairline rectangle on a tonal ground; if it needs emphasis, it gets an indigo border, not a costume.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Reading-Position Law",
+        "body": "Motion is driven by where the reader is, not by a clock. Nothing autoplays. Scrubbed motion is linear when it is a measurement and ease-out when it is an arrival. The arrived state is the static state: every keyframe is a from, so reduced motion, an unsupported browser, or a stylesheet that never loads all land on a finished page.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do style every component in primary / accent / ring somewhere, so a creator's colour can reach it.",
+      "Do pair a primary fill with text-primary-foreground, always — it is derived for contrast against whatever the creator picked.",
+      "Do measure a component's own box with @container queries and the house viewport→container mapping; give a fixed overlay @container too.",
+      "Do carry structure with a 1px Hairline border and a tonal step, and reach for space before reaching for a shadow.",
+      "Do use the 11px / 0.14em uppercase label as the signal that a piece of type is chrome rather than content.",
+      "Do put exactly one filled action on a surface, and give its accessible name the subject.",
+      "Do set tabular-nums on any figure that changes in place.",
+      "Do let motion be driven by reading position, and make the arrived state the static state."
+    ],
+    "donts": [
+      "Don't add a sixth movable value, a theme prop, or a component-scoped CSS variable. Theming is inherited ambient CSS.",
+      "Don't paint a fill in bg-foreground or text in text-background; don't clip a gradient into a letterform without a drawn keyline.",
+      "Don't use dark:, a hex literal, or a Tailwind palette colour (text-slate-500) anywhere a semantic token exists.",
+      "Don't use sm: / md: / lg: in a component that can be harvested — those are the site's chrome's privilege alone.",
+      "Don't introduce a shadow, gradient, or coloured slab into the site's chrome; leaf-level depth stays inside the leaf.",
+      "Don't grow the marketing furniture of a design system site or a component-library showcase: no swatch grids, no gradient hero, no 'trusted by', no copy-the-class-name affordances.",
+      "Don't add a dark-mode toggle. The theme follows prefers-color-scheme and nothing else.",
+      "Don't hand-write a list of species, a stored layout, or a curation surface. If a link is not derivable from the folder layout, it does not belong in the nav.",
+      "Don't put an interactive target below 24px: text under text-xs on a control needs an explicit height or a hit area carried past the drawn box.",
+      "Don't ship an interactive element without a focus-visible treatment — the UA outline does not look broken, which is exactly why it gets missed."
+    ]
+  }
+}

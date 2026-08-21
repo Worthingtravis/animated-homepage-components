@@ -23,6 +23,8 @@ import {
 } from "@/lib/site-nav";
 import { FOREST } from "@/trees/generated";
 
+import { ConiferMark } from "./conifer-mark";
+
 /* -------------------------------------------------------------- the trail */
 
 export function Crumbs({ species, tree }: { species?: string; tree?: string }) {
@@ -228,8 +230,11 @@ export function SpeciesSteps({ species }: { species: string }) {
 /** One tree. The same card everywhere a tree is listed — home, lab, species. */
 export function TreeCard({ tree }: { tree: TreeEntry }) {
   return (
-    <li className="relative flex flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary focus-within:border-ring">
-      <h3 className="font-medium text-foreground">🌳 {tree.label}</h3>
+    <li className="canopy-card group relative flex flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary focus-within:border-ring">
+      <h3 className="font-medium text-foreground">
+        <ConiferMark className="mr-1.5 inline-block size-4 align-[-0.15em]" />
+        {tree.label}
+      </h3>
       <p className="mt-1 text-sm text-muted-foreground">{tree.description}</p>
       <p className="mt-3 text-xs text-muted-foreground">
         {tree.branchCount} branches · {tree.leafCount} leaves · {tree.fixtureCount} fixtures
@@ -246,7 +251,17 @@ export function TreeCard({ tree }: { tree: TreeEntry }) {
           className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-ring transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 after:absolute after:inset-0 after:rounded-xl"
         >
           Open lab
-          <span aria-hidden="true">→</span>
+          {/*
+            The only motion here a reader can cause. It is 2px and 150ms because
+            it is an acknowledgement, not an event — and it travels the way the
+            card is about to.
+          */}
+          <span
+            aria-hidden="true"
+            className="transition-transform duration-150 ease-out group-hover:translate-x-0.5 group-focus-within:translate-x-0.5"
+          >
+            →
+          </span>
         </Link>
       </div>
     </li>
@@ -274,9 +289,13 @@ export function TreeGrid({ trees }: { trees: TreeEntry[] }) {
 export function SpeciesSection({ species }: { species: SpeciesEntry }) {
   return (
     <section className="space-y-4">
-      <div>
+      <div className="canopy-heading">
         <h2 className="text-xl font-semibold text-foreground">
-          <Link href={species.href} className="hover:text-primary">
+          {/* `py-1` on an inline link buys the target floor without moving the line. */}
+          <Link
+            href={species.href}
+            className="rounded py-1 transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
             {species.label}
           </Link>
         </h2>

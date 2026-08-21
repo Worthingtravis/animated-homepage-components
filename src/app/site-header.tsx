@@ -16,6 +16,16 @@ import { usePathname } from "next/navigation";
 import { HEADER_LINKS, HOME_HREF, isActivePath } from "@/lib/site-nav";
 import { cn } from "@/lib/utils";
 
+import { ConiferMark } from "./conifer-mark";
+
+/*
+ * Vertical padding on an INLINE link grows the hit area without growing the
+ * line box, so these clear the 24px target floor the rest of the system is
+ * held to and the header row does not move by a pixel.
+ */
+const HEADER_LINK =
+  "py-1 rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
+
 export function SiteHeader() {
   const pathname = usePathname() ?? HOME_HREF;
 
@@ -25,16 +35,20 @@ export function SiteHeader() {
         <Link
           href={HOME_HREF}
           aria-current={isActivePath(pathname, HOME_HREF) ? "page" : undefined}
-          className="text-sm font-semibold text-foreground"
+          className={cn(HEADER_LINK, "text-sm font-semibold text-foreground")}
         >
-          🌲 the forest
+          <ConiferMark className="mr-1.5 inline-block size-3.5 align-[-0.15em]" />
+          the forest
         </Link>
         {HEADER_LINKS.map((link) =>
           link.external ? (
             <a
               key={link.href}
               href={link.href}
-              className="ml-auto text-sm text-muted-foreground hover:text-foreground"
+              className={cn(
+                HEADER_LINK,
+                "ml-auto text-sm text-muted-foreground hover:text-foreground",
+              )}
             >
               {link.label}
             </a>
@@ -44,6 +58,7 @@ export function SiteHeader() {
               href={link.href}
               aria-current={isActivePath(pathname, link.href) ? "page" : undefined}
               className={cn(
+                HEADER_LINK,
                 "text-sm transition-colors",
                 isActivePath(pathname, link.href)
                   ? "text-primary"
