@@ -84,7 +84,7 @@ export function AuroraHeadlineOrbitGlow(vm: AuroraHeadlineVM) {
         <a
           href={vm.cta.href}
           onClick={vm.cta.onActivate}
-          className="mt-10 inline-flex items-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground"
+          className="mt-10 inline-flex items-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           {vm.cta.label}
         </a>

@@ -153,7 +153,20 @@ export function LayeredPosterBaseline(vm: LayeredPosterVM) {
           type="button"
           onClick={vm.replay.onActivate}
           className={cn(
-            "rounded-full border border-border px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-[0.2em] text-muted-foreground transition-colors",
+            "relative rounded-full border border-border px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-[0.2em] text-muted-foreground transition-colors",
+            /*
+             * A 0.6rem micro-pill draws at roughly 23px tall — under the 24px
+             * target floor, and the only control in the forest that was. It is
+             * drawn that small on purpose: it is a footnote under a poster, and
+             * a 44px pill would read as the poster's call to action instead of
+             * its replay. So the DRAWN size stays and the TOUCHED size grows —
+             * a transparent pseudo-element carries the hit area out to ~44px.
+             * This works here because the control is alone on its row; between
+             * adjacent chips the expanded areas would overlap and the last one
+             * painted would quietly eat its neighbour's taps.
+             */
+            "after:absolute after:left-1/2 after:top-1/2 after:h-11 after:min-w-[2.75rem] after:-translate-x-1/2 after:-translate-y-1/2 after:content-['']",
+            "after:w-full",
             "hover:border-ring hover:text-foreground",
             "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
           )}

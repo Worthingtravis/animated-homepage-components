@@ -221,7 +221,7 @@ export function ExpandableCardFullBleed(vm: ExpandableCardVM) {
                   <button
                     type="button"
                     onClick={panel.close.onClose}
-                    className="rounded-full px-4 py-2 text-sm text-muted-foreground hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    className="inline-flex min-h-11 items-center rounded-full px-4 text-sm text-muted-foreground hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   >
                     {panel.close.label}
                   </button>

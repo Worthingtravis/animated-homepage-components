@@ -177,7 +177,7 @@ export function ExpandableCardInlineDetail(vm: ExpandableCardVM) {
                 <button
                   type="button"
                   onClick={panel.close.onClose}
-                  className="shrink-0 rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  className="inline-flex min-h-11 shrink-0 items-center rounded-md border border-border px-3 text-xs text-muted-foreground hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 >
                   {panel.close.label}
                 </button>

@@ -209,7 +209,7 @@ export function ExpandableCardRowList(vm: ExpandableCardVM) {
                 <button
                   type="button"
                   onClick={panel.close.onClose}
-                  className="mt-6 w-full rounded-full border border-border py-2 text-sm text-muted-foreground hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  className="mt-6 flex min-h-11 w-full items-center rounded-full border border-border text-sm text-muted-foreground hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 >
                   {panel.close.label}
                 </button>

@@ -101,6 +101,7 @@ export function StepRevealStageSwap(vm: StepRevealVM) {
                     aria-current={isActive}
                     className={cn(
                       "max-w-[16rem] truncate rounded-full border px-4 py-2 transition-colors duration-300",
+                      "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
                       isActive
                         ? "border-ring bg-primary text-primary-foreground"
                         : step.position === "past"

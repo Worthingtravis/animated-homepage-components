@@ -116,7 +116,17 @@ export function ChannelHeroStackedBillboard(vm: ChannelHeroVM) {
         className="text-balance text-3xl font-semibold leading-[1.08] tracking-tight text-foreground @sm:text-4xl @xl:text-5xl"
       >
         {vm.headlineLead}{" "}
-        <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+        {/*
+          The highlight was a clipped `primary→accent` gradient, which paints
+          the largest text on the screen in the creator's raw accent. That is
+          the trap `editor-mode.ts` already pins a test to: #9CCB1A measured
+          1.91:1 upstream. A fill is the one place a creator's colour is SAFE,
+          because `--primary-foreground` is derived against it — so the
+          emphasis moves from the letterform to the plate behind it, and the
+          creator's colour gets louder rather than quieter.
+          `box-decoration-break: clone` keeps the padding on every wrapped line.
+        */}
+        <span className="bg-primary px-2 text-primary-foreground [box-decoration-break:clone] [-webkit-box-decoration-break:clone]">
           {vm.headlineHighlight}
         </span>
       </h1>

@@ -76,7 +76,7 @@ export function AuroraHeadlineStackedRule(vm: AuroraHeadlineVM) {
         <a
           href={vm.cta.href}
           onClick={vm.cta.onActivate}
-          className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
+          className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           {vm.cta.label} <span aria-hidden>→</span>
         </a>

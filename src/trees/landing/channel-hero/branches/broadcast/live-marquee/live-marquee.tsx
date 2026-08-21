@@ -136,7 +136,14 @@ export function ChannelHeroLiveMarquee(vm: ChannelHeroVM) {
           className="text-balance text-2xl font-black uppercase leading-[0.95] tracking-tight text-foreground @sm:text-3xl @xl:text-4xl @3xl:text-5xl"
         >
           {vm.headlineLead}{" "}
-          <span className="bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">
+          {/*
+            A chyron, not a gradient. Clipped-gradient text painted this in the
+            creator's raw accent — unguarded against `--background`. The filled
+            plate is the guarded form of the same emphasis: `bg-primary` with
+            the derived `--primary-foreground` on top, which is exactly what a
+            lower-third is anyway.
+          */}
+          <span className="bg-primary px-2 text-primary-foreground [box-decoration-break:clone] [-webkit-box-decoration-break:clone]">
             {vm.headlineHighlight}
           </span>
         </h1>

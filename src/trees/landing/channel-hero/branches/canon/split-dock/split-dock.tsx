@@ -119,9 +119,18 @@ export function ChannelHeroSplitDock(vm: ChannelHeroVM) {
                 {vm.headlineBadge.label}
               </span>
             ) : null}
+            {/*
+              The highlight owns its own line here, so the marker plate the
+              other canon leaf uses would paint a whole display row. The rule
+              is the same fix by a different route: the letterform stays in
+              `text-foreground`, which is contrast-guaranteed, and the
+              creator's colour moves into a NON-TEXT element underneath it,
+              where no contrast ratio is owed. `decoration-clone` is not needed
+              — a border is drawn once around the block, not per line.
+            */}
             <span
               style={enter(vm, HIGHLIGHT)}
-              className="mt-1 block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+              className="mt-1 block w-fit border-b-[0.12em] border-primary pb-1"
             >
               {vm.headlineHighlight}
             </span>

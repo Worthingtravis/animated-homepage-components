@@ -92,6 +92,15 @@ export function SectionTabsTopTrack(vm: SectionTabsVM) {
             type="button"
             onClick={vm.overflow.onScrollBack}
             aria-label={vm.overflow.backLabel}
+            /*
+              32px, and deliberately under the 44px touch figure. These arrows
+              sit ON TOP of the track they scroll, so growing them eats the
+              tabs they exist to reveal — and the same scroll is reachable by
+              swipe, trackpad, and arrow key on the tablist itself. WCAG 2.5.8
+              names that case: a small target is fine when an equivalent
+              control on the same page does the job. They stay above the 24px
+              floor, which is the number this forest actually enforces.
+            */
             className="absolute left-0 top-1/2 z-10 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-sm hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           >
             <span aria-hidden>‹</span>

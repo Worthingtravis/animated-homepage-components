@@ -361,7 +361,7 @@ export function ChannelHeroOverPrint(vm: ChannelHeroVM) {
                   target={action.external ? "_blank" : undefined}
                   data-kind={action.kind}
                   className={cn(
-                    "px-3 py-1.5 text-[0.6rem] font-black uppercase tracking-[0.2em] transition-colors",
+                    "inline-flex min-h-11 items-center px-3 text-[0.6rem] font-black uppercase tracking-[0.2em] transition-colors",
                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
                     index === 0
                       ? "bg-primary text-primary-foreground hover:opacity-90"

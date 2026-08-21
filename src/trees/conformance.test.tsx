@@ -205,6 +205,86 @@ describe("leaf purity (extract-vm phase 4)", () => {
   });
 
   /*
+   * Clipped-gradient text — `bg-clip-text` + `text-transparent` — paints the
+   * letterform itself in the creator's RAW `--primary`/`--accent`. That is the
+   * one direction editor mode does not guard. A FILL is safe because
+   * `--primary-foreground` is derived against the creator's colour (the
+   * #9CCB1A → 1.91:1 trap, pinned two describes down); text painted IN that
+   * colour has no derived ground at all, and it is always the largest type on
+   * the surface, which is why it looked deliberate on three channel-hero
+   * leaves for as long as it did.
+   *
+   * The exception is the same shape as the `fixed` overlay exception above: a
+   * leaf that draws a keyline around every letterform HAS given the gradient a
+   * known ground at a known width, so it is guarded by construction rather
+   * than by luck. `landing/channel-hero`'s `key-art/poster-wall` is that leaf,
+   * and the stroke is the reason its wordmark survives being printed over
+   * illustration in the first place.
+   */
+  it.each(LEAF_CASES)(
+    "%s does not clip a gradient into text without a keyline",
+    (_rel, file) => {
+      const clipsAGradient = /\bbg-clip-text\b/.test(file.source);
+      const drawsAKeyline = /WebkitTextStroke|text-stroke/.test(file.source);
+      expect(
+        !clipsAGradient || drawsAKeyline,
+        `${file.rel} clips a gradient into text. The creator's raw accent becomes the ` +
+          "reading colour with nothing derived behind it — use bg-primary + " +
+          "text-primary-foreground for a fill, or move the colour to a non-text rule.",
+      ).toBe(true);
+    },
+  );
+
+  /*
+   * Keyboard focus wears the creator's ring, or it wears the browser's.
+   *
+   * A leaf that omits `focus-visible` does not crash and does not look broken
+   * — the UA outline still appears, which is exactly why thirty-nine leaves
+   * grew the same explicit ring and the fortieth quietly did not. The cost only
+   * shows up on harvest: the leaf lands on a creator page whose focus colour is
+   * `--ring`, and this one control answers in the browser's blue.
+   */
+  it.each(LEAF_CASES)("%s themes its own focus ring", (_rel, file) => {
+    const interactive = /<(?:button|a|input|select|textarea)\b/.test(file.source);
+    expect(
+      !interactive || /focus-visible:/.test(file.source),
+      `${file.rel} renders an interactive element but never styles :focus-visible — ` +
+        "keyboard focus will fall back to the UA outline instead of --ring.",
+    ).toBe(true);
+  });
+
+  /*
+   * Target size, pinned at the floor rather than at the ideal.
+   *
+   * WCAG 2.5.8 asks for 24×24 CSS px; the 44px figure everyone quotes is 2.5.5
+   * (AAA) and Apple's HIG. Forty of this forest's leaves sit comfortably above
+   * the first number and several deliberately sit below the second, because
+   * `chrome/pane-dock` exists to argue that screen budget is real and a leaf
+   * that inflates every chip to 44px has lost that argument. So this rule does
+   * not enforce 44.
+   *
+   * What it enforces is the one combination that lands UNDER the floor: text
+   * below `text-xs` on an interactive element with nothing establishing a
+   * height. At 0.6rem the line box is ~11px, so even `py-1.5` totals ~23px —
+   * which is how `landing/layered-poster`'s replay pill got there. Either give
+   * the control a height (`min-h-*`, `h-*`, `size-*`) or carry the hit area
+   * past the drawn box with a pseudo-element, as that leaf now does.
+   */
+  const TINY_TEXT = /text-\[0\.[0-6]\d*rem\]|text-\[(?:[0-9]|1[01])px\]/;
+  const HAS_HEIGHT = /\b(?:min-h-|h-|size-|py-[3-9]|py-1[0-9])|after:h-1[1-9]|after:-inset/;
+
+  it.each(LEAF_CASES)("%s keeps interactive targets above the size floor", (_rel, file) => {
+    const offenders = (file.source.match(/<(?:button|a)\b[^>]*>/gs) ?? []).filter(
+      (tag) => TINY_TEXT.test(tag) && !HAS_HEIGHT.test(tag),
+    );
+    expect(
+      offenders.map((tag) => tag.slice(0, 80)),
+      `${file.rel} draws an interactive target below the 24px floor — give it a ` +
+        "height, or expand the hit area past the drawn box.",
+    ).toEqual([]);
+  });
+
+  /*
    * The other half of the rule — every root a leaf can render carries
    * `@container` — is checked against the RENDERED root, in "every leaf
    * survives every fixture" below. A source-level grep for the string would

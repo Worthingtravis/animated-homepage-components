@@ -29,7 +29,7 @@
  * no type scale, no card/border/muted override. A creator picks two colours, a
  * background and a font. Everything else on a creator page stays at the
  * platform's own tokens — so a leaf styled only in `card`/`border`/`muted`
- * is invisible to the creator's brand, and `every leaf wears the accent` in the
+ * is invisible to the creator's brand, and `reaches for the creator's accent` in the
  * conformance suite is the test that keeps that from happening quietly.
  */
 

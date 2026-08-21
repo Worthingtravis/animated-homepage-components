@@ -215,6 +215,19 @@ export function ChannelHeroPosterWall(vm: ChannelHeroVM) {
               gradient face on top. That outline is the whole reason game
               wordmarks survive being printed over illustration, and it cannot
               be faked with a shadow — it has to sit around every letterform.
+
+              It is also the CONTRAST GUARD, and that is why this is the one
+              leaf in the forest allowed to clip a gradient into text. Painting
+              display type in the creator's raw accent is normally the trap
+              `editor-mode.ts` pins a test to (#9CCB1A at 1.91:1), because
+              nothing derives a legible ground for it the way
+              `--primary-foreground` is derived for a fill. Here something
+              does: a `0.16em` stroke of `--background` is drawn around every
+              letterform, so the wordmark's ground is a known token at a known
+              width rather than whatever illustration happens to be behind it.
+              Take the keyline away and the gradient stops being earned — which
+              is exactly the shape `bans clipped-gradient text without a
+              keyline` checks for in the conformance suite.
             */}
             {/*
               The ladder stops at `@2xl:` on purpose. The camera above is
@@ -329,7 +342,7 @@ export function ChannelHeroPosterWall(vm: ChannelHeroVM) {
                   target={action.external ? "_blank" : undefined}
                   data-kind={action.kind}
                   className={cn(
-                    "px-4 py-2 text-[0.58rem] font-black uppercase tracking-[0.28em] transition-colors",
+                    "inline-flex min-h-11 items-center px-4 text-[0.58rem] font-black uppercase tracking-[0.28em] transition-colors",
                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
                     index === 0
                       ? "bg-primary text-primary-foreground hover:opacity-90"

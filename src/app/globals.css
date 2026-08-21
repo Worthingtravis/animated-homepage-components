@@ -63,12 +63,60 @@ body {
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
+/*
+ * Browser surfaces. Selection, the caret, form control accents and the
+ * scrollbar all ship with defaults that belong to no design system — and on a
+ * creator page they are the parts that stay platform-blue while everything the
+ * creator touched turns their colour. Theming them here costs nothing and is
+ * inherited by every leaf, which is the same argument editor mode makes.
+ */
+::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+:root {
+  accent-color: var(--primary);
+  caret-color: var(--primary);
+  scrollbar-color: var(--border) transparent;
+}
+
+:focus-visible {
+  outline-color: var(--ring);
+}
+
+/*
+ * Reduced motion, scoped to MOTION.
+ *
+ * The blanket `*` kill this replaces removed every transition on the page,
+ * including the colour changes that tell a person a control responded to them.
+ * "Prefers reduced motion" is a request about movement — vestibular triggers
+ * are travel, scale and spin — not a request to strip feedback, and stripping
+ * it makes a reduced-motion visitor's page harder to operate than everyone
+ * else's.
+ *
+ * So: no travel, no auto-scrolling, no repeating animation. Colour and opacity
+ * transitions survive, and they are the only ones that were carrying meaning.
+ *
+ * This is a BACKSTOP, not the mechanism. Every tree resolves reduced motion in
+ * its own transitions module before a preset ever runs — `resolveMotion` in
+ * both `section-tabs.transitions.ts` and `expandable-card.transitions.ts` —
+ * because a leaf must be able to honour
+ * `vm.reducedMotion` when it is harvested into an app that never loads this
+ * stylesheet.
+ */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-property: color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke, opacity !important;
+    transition-duration: 150ms !important;
   }
 }

@@ -235,7 +235,7 @@ export function ExpandableCardMediaGrid(vm: ExpandableCardVM) {
             <button
               type="button"
               onClick={panel.close.onClose}
-              className="absolute right-3 top-3 z-10 inline-flex size-8 items-center justify-center rounded-full bg-background/80 text-sm text-foreground ring-1 ring-border backdrop-blur hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              className="absolute right-3 top-3 z-10 inline-flex size-11 items-center justify-center rounded-full bg-background/80 text-sm text-foreground ring-1 ring-border backdrop-blur hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               <span aria-hidden>×</span>
               <span className="sr-only">{panel.close.label}</span>

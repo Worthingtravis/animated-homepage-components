@@ -284,7 +284,7 @@ export function ClipPickerQuoteFirst(vm: ClipPickerVM) {
                 type="button"
                 onClick={vm.search.onClear}
                 aria-label="Clear the search"
-                className="rounded-lg px-2 py-1 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex min-h-11 shrink-0 items-center self-stretch rounded-lg px-2 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 ✕
               </button>

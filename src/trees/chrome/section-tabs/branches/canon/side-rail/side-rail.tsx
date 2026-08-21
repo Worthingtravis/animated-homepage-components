@@ -94,7 +94,16 @@ export function SectionTabsSideRail(vm: SectionTabsVM) {
               "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
               narrow
                 ? "whitespace-nowrap rounded-full px-3.5 py-2"
-                : "w-full rounded-xl border-l-2 px-3 py-2.5",
+                : /*
+                   * A 2px coloured left edge is normally the tell of a card
+                   * wearing an accent stripe for decoration. Here it is the
+                   * SELECTED STATE of a vertical tab list — the convention every
+                   * sidebar tab set uses, and the only marker that survives the
+                   * rail collapsing to a single column of text. It is drawn on
+                   * every tab, transparent when inactive, so the label never
+                   * shifts when selection moves.
+                   */
+                  "w-full rounded-xl border-l-2 px-3 py-2.5",
               active
                 ? narrow
                   ? "bg-primary/15 text-primary ring-1 ring-primary/25"

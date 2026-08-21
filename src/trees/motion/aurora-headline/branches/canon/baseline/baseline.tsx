@@ -80,7 +80,7 @@ export function AuroraHeadlineBaseline(vm: AuroraHeadlineVM) {
         <a
           href={vm.cta.href}
           onClick={vm.cta.onActivate}
-          className="mt-6 inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+          className="mt-6 inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           {vm.cta.label}
         </a>

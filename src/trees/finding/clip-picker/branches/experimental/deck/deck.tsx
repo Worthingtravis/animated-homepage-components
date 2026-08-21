@@ -202,13 +202,24 @@ export function ClipPickerDeck(vm: ClipPickerVM) {
    * deck gives no other signal that it changed subject. The suggestions are the
    * way out of that state; a silent pile of unrelated clips is not.
    */
-  const deck: ClipCard[] =
+  /*
+   * Flattening is what makes the key a problem here and nowhere else. The three
+   * canon leaves render a card inside its shelf's `<section>`, so `card.id` is
+   * only ever compared against its own shelf's siblings. A deck deliberately
+   * throws that scope away — and a clip genuinely belongs in more than one
+   * shelf ("From this week" AND "Just chatting" are both true of the same
+   * clip), so `card.id` stops being unique the moment the curator does the
+   * normal thing. The shelf it was pulled from is what makes it unique again.
+   */
+  const deck: Array<{ key: string; card: ClipCard }> =
     vm.state === "results" || vm.state === "searching"
-      ? vm.results
+      ? vm.results.map((card) => ({ key: `result:${card.id}`, card }))
       : vm.state === "browse"
         ? [...vm.shelves]
             .sort((a, b) => Number(b.featured) - Number(a.featured))
-            .flatMap((shelf) => shelf.items)
+            .flatMap((shelf) =>
+              shelf.items.map((card) => ({ key: `${shelf.id}:${card.id}`, card })),
+            )
         : [];
 
   return (
@@ -260,7 +271,7 @@ export function ClipPickerDeck(vm: ClipPickerVM) {
                 type="button"
                 onClick={vm.search.onClear}
                 aria-label="Clear the search"
-                className="rounded-lg px-2 py-1 text-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex min-h-11 shrink-0 items-center self-stretch rounded-lg px-2 text-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 ✕
               </button>
@@ -293,8 +304,8 @@ export function ClipPickerDeck(vm: ClipPickerVM) {
                 className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2"
                 style={settle}
               >
-                {deck.map((card) => (
-                  <DeckCard key={card.id} card={card} />
+                {deck.map(({ key, card }) => (
+                  <DeckCard key={key} card={card} />
                 ))}
               </ul>
               <p className="text-center text-xs text-muted-foreground">
